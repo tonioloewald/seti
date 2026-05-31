@@ -8,9 +8,9 @@ A pre-registered, open search for **anomalous departures — static or time-vary
 
 ## Status
 
-🔒 **Pre-registration draft — NOT yet registered.** No project-specific data analysis has been run.
+📋 **Final pre-registration draft — NOT yet registered.** No project-specific data analysis has been run.
 
-This repository is **private** until the pre-registration is timestamped on the Open Science Framework (OSF). Once registered, it becomes **public**, and its commit history serves as an independent, public record that all analysis post-dates the locked plan.
+This repository is **public** so the entire drafting history is openly visible. The pre-registration will be timestamped on the Open Science Framework (OSF); the public commit history (on a force-push-protected `main`) is an independent record that all analysis post-dates the locked plan.
 
 ## Why this design
 

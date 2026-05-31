@@ -2,12 +2,12 @@
 
 *Pre-registration. A mechanism-agnostic technosignature search — motivated by, but not presupposing, long-lived intelligence.*
 
-**Status:** Draft for pre-registration (Open Science Framework). This document is to be timestamped and frozen *before* any project-specific analysis of the target data is performed. Subsequent analysis code and data products will be developed in a public version-controlled repository whose commit history post-dates this registration.
+**Status:** Final draft — pending OSF registration. This document is to be timestamped and frozen *before* any project-specific analysis of the target data is performed. Subsequent analysis code and data products will be developed in this public repository, with commit history that post-dates registration.
 
 **Date drafted:** 2026-05-31
 **Investigator:** Tonio Loewald (sole investigator)
 **Drafting assistance:** Google Gemini and Anthropic Claude (tools, not authors; see Acknowledgments)
-**Working repository:** https://github.com/tonioloewald/seti (private until registration, then public)
+**Working repository:** https://github.com/tonioloewald/seti (public)
 **License:** code Apache-2.0; documents and data products CC-BY-4.0
 **OSF registration DOI:** (to be assigned)
 
@@ -243,13 +243,13 @@ In none of these branches does success depend on detecting anything intelligent.
 
 - This pre-registration is timestamped on OSF before project-specific data analysis.
 - All code, queries, the frozen sample manifest, the natural-explanation battery implementation, and the residual catalogue are released in a public GitHub repository whose history post-dates registration.
-- **Amendments are public, dated, and rationale-bearing; superseded versions are retained** (logged in `AMENDMENTS.md`). We distinguish two kinds and label every result accordingly: *pre-data amendments* — refinements to the frozen plan made **before** any real target data is analyzed (e.g. from ongoing expert review), which remain fully **confirmatory**; and *post-data changes* — anything decided **after** real data has been seen, which are flagged **exploratory / post-hoc** and never presented as confirmatory. Both the immutable OSF registration timestamp and the public git history fix which is which; **pre-data amendments are registered as formal Updates to the OSF Registration** — OSF's native, immutable update mechanism — alongside the human-readable `AMENDMENTS.md` log. Because git history is mutable (force-push), the OSF Updates are the *authoritative* immutable record; the git log — with force-push protection enabled on `main` at the public-release step — is the companion record, not the sole authority. This pre-registration is deliberately frozen *before* feedback-gathering is complete, so that expert review arriving later enters as transparent pre-data amendments rather than silent edits.
+- **Amendments are public, dated, and rationale-bearing; superseded versions are retained** (logged in `AMENDMENTS.md`). We distinguish two kinds and label every result accordingly: *pre-data amendments* — refinements to the frozen plan made **before** any real target data is analyzed (e.g. from ongoing expert review), which remain fully **confirmatory**; and *post-data changes* — anything decided **after** real data has been seen, which are flagged **exploratory / post-hoc** and never presented as confirmatory. Both the immutable OSF registration timestamp and the public git history fix which is which; **pre-data amendments are registered as formal Updates to the OSF Registration** — OSF's native, immutable update mechanism — alongside the human-readable `AMENDMENTS.md` log. Because git history is mutable (force-push), the OSF Updates are the *authoritative* immutable record; the git log — with force-push and deletion protection enabled on `main` — is the companion record, not the sole authority. This pre-registration is deliberately frozen *before* feedback-gathering is complete, so that expert review arriving later enters as transparent pre-data amendments rather than silent edits.
 
 ---
 
 ## Acknowledgments
 
-This pre-registration was authored by the investigator (T. Loewald) with substantial drafting and analysis-design assistance from two AI systems used as tools — Google Gemini and Anthropic Claude (via Claude Code). They are acknowledged here, not credited as authors: all scientific judgments, the choice of methods, and responsibility for the contents rest with the investigator. The design was developed iteratively and will be reviewed by domain experts before registration.
+This pre-registration was authored by the investigator (T. Loewald) with substantial drafting and analysis-design assistance from two AI systems used as tools — Google Gemini and Anthropic Claude (via Claude Code). They are acknowledged here, not credited as authors: all scientific judgments, the choice of methods, and responsibility for the contents rest with the investigator. The design was developed iteratively through adversarial review. Consistent with the open-science commitments (§8), the plan is registered *before* feedback-gathering is complete, so that subsequent expert review enters as transparent pre-data amendments rather than silent edits.
 
 ---
 

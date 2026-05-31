@@ -35,3 +35,6 @@ venv/
 env/
 .ipynb_checkpoints/
 .pytest_cache/
+
+# Rendered build artifacts (derivable from source markdown)
+preregistration.html
