@@ -34,4 +34,7 @@ This repository is **private** until the pre-registration is timestamped on the 
 
 ## License
 
-**TODO — choose before public release.** Suggested: a permissive code license (e.g. MIT) for `pipeline/`, and CC-BY 4.0 for documents and data products.
+- **Code** (`pipeline/`, notebooks, scripts): **Apache-2.0** — see [`LICENSE`](LICENSE). Chosen over MIT for its explicit patent grant and patent-retaliation clause.
+- **Documents and data products** (the pre-registration, `docs/`, residual catalogues, manifests): **[CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/)**.
+
+Copyright © 2026 Tonio Loewald. Drafting and analysis-design assistance from Google Gemini and Anthropic Claude (tools, not authors); see the pre-registration's Acknowledgments.

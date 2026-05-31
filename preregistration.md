@@ -3,8 +3,10 @@
 **Status:** Draft for pre-registration (Open Science Framework). This document is to be timestamped and frozen *before* any project-specific analysis of the target data is performed. Subsequent analysis code and data products will be developed in a public version-controlled repository whose commit history post-dates this registration.
 
 **Date drafted:** 2026-05-31
-**Authors:** Tonio Loewald (lead); contributors TBD
-**Working repository:** (to be created — public GitHub)
+**Investigator:** Tonio Loewald (sole investigator)
+**Drafting assistance:** Google Gemini and Anthropic Claude (tools, not authors; see Acknowledgments)
+**Working repository:** https://github.com/tonioloewald/seti (private until registration, then public)
+**License:** code Apache-2.0; documents and data products CC-BY-4.0
 **OSF registration DOI:** (to be assigned)
 
 ---
@@ -35,7 +37,7 @@ We list these to bind ourselves: none may re-enter the analysis as a hidden prem
 - **That it optimizes for resilience** and therefore runs warm. Also a mechanism guess.
 - **That it follows any particular developmental or technological path.** We assume nothing about how persistence is achieved.
 
-These appear in §8's reference list and in §1.4 because they define the prior literature we are *departing from*, not premises we share.
+These appear in the References and in §1.5 because they define the prior literature we are *departing from*, not premises we share.
 
 ### 1.3 Assumptions we do make (scope, not truth-claims about aliens)
 
@@ -112,7 +114,7 @@ No white dwarf meeting these is excluded for being far away. Objects whose data 
 These are **the channels in which a maintained departure could currently show up**, given existing surveys — *not* predictions that persistence produces any particular signature. Each is a characterization tool applied *after* anomaly flagging, paired with its natural-explanation tests in §5.
 
 ### Channel A — Spectral-energy-distribution anomaly (infrared excess)
-A re-radiating component would distort the otherwise simple cooling-blackbody SED of a bare white dwarf. **Anomaly:** a suppressed expected SED with an added IR component at some blackbody temperature, scanned as a free parameter. Natural debris disks occupy ~300–1000 K [Farihi 2016]; a cold component (e.g. tens of K) would sit *below* that regime and be less confounded — but, **stated as a limitation,** a ~30 K blackbody peaks near ~100 µm (far-IR), so WISE's longest band (W4, 22 µm) samples only its Wien tail. We therefore treat the excess temperature as a **scanned free parameter**, report sensitivity vs. temperature explicitly, note the warm end is already partly constrained [Zuckerman 2022], and reserve the cold, clean band for far-IR / JWST-MIRI sensitivity assessment rather than over-claiming WISE coverage.
+A re-radiating component would distort the otherwise simple cooling-blackbody SED of a bare white dwarf. **Anomaly:** a suppressed expected SED with an added IR component at some blackbody temperature, scanned as a free parameter. Natural debris disks are typically warm — roughly a few ×100 K up to ~1000 K [Farihi 2016] (the operational boundary is derived empirically, not hard-coded; §5.2 item 1); a cold component (e.g. tens of K) would sit *below* that regime and be less confounded — but, **stated as a limitation,** a ~30 K blackbody peaks near ~100 µm (far-IR), so WISE's longest band (W4, 22 µm) samples only its Wien tail. We therefore treat the excess temperature as a **scanned free parameter**, report sensitivity vs. temperature explicitly, note the warm end is already partly constrained [Zuckerman 2022], and reserve the cold, clean band for far-IR / JWST-MIRI sensitivity assessment rather than over-claiming WISE coverage.
 
 ### Channel B — Transit / eclipse light-curve morphology
 The white-dwarf circumstellar zone is tight (~0.005–0.02 AU [Agol 2011]), giving hours-to-days periods, and white dwarfs are ~Earth-sized, so an occulter can block a large light fraction — cf. the first transiting white-dwarf planet WD 1856+534 b [Vanderburg et al. 2020]. **Anomaly:** asymmetric, irregular, flat-bottomed/square-wave, or anomalously deep transits inconsistent with a spherical body [Arnold 2005; Wright et al. 2016], in the methodological spirit of (but not assuming the conclusion of) the KIC 8462852 anomaly [Boyajian et al. 2016].
@@ -210,7 +212,7 @@ summed over every included object *i*, where `C_i` is that object's own injectio
 5. For the IR-flagged subset, retrieve and vet TESS light curves against the Channel-B battery.
 6. For polluted systems, evaluate the Channel-C clean-zone test.
 7. Compute per-object anomaly/residual scores; assemble the ranked residual catalogue.
-8. Derive the prevalence upper limit (RQ4) as a function of signal properties, given sample size and recovered sensitivity.
+8. Derive the prevalence upper limit (RQ4) as a function of signal properties, summing the per-object recovered sensitivities (§5.7).
 9. JWST/MIRI follow-up reserved for surviving high-residual candidates; **not** part of the registered statistical sample.
 
 **Discipline against post-hoc reasoning:** the battery, the scoring rule, and the threshold-*setting procedures* (§5.1) are fixed in this document before step 2; the numeric thresholds they yield are computed at analysis time from external or whole-sample data and may not be altered after inspecting individual candidates. Sensitivity (step 4) uses injected synthetic signals so detection thresholds are not tuned to real outliers. Any deviation, and any added data source (§5.4), is recorded as a dated public amendment with rationale; the public git history provides an independent timeline.
@@ -231,6 +233,12 @@ In none of these branches does success depend on detecting anything intelligent.
 - This pre-registration is timestamped on OSF before project-specific data analysis.
 - All code, queries, the frozen sample manifest, the natural-explanation battery implementation, and the residual catalogue are released in a public GitHub repository whose history post-dates registration.
 - Amendments are public, dated, and rationale-bearing; superseded versions are retained.
+
+---
+
+## Acknowledgments
+
+This pre-registration was authored by the investigator (T. Loewald) with substantial drafting and analysis-design assistance from two AI systems used as tools — Google Gemini and Anthropic Claude (via Claude Code). They are acknowledged here, not credited as authors: all scientific judgments, the choice of methods, and responsibility for the contents rest with the investigator. The design was developed iteratively and will be reviewed by domain experts before registration.
 
 ---
 
