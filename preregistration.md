@@ -86,10 +86,24 @@ Registered in anomaly-residual form. None is phrased as "we will detect intellig
 
 ## 3. Sample / sampling plan (frozen target list)
 
-- **Parent catalogue.** White-dwarf candidates from *Gaia* EDR3 [Gentile Fusillo et al. 2021]: 1,280,266 sources with a white-dwarf probability *P*_WD; ~359,000 high-confidence candidates at *P*_WD > 0.75. (Early project notes' "~200,000" corresponds to the older *Gaia* DR2 catalogue; we adopt EDR3 and state the cut explicitly.)
-- **Registered selection cut.** *P*_WD > 0.75 as the primary high-confidence sample, full *P*_WD distribution retained for sensitivity tests. Additional registered quality cuts (parallax S/N, photometric quality flags, Galactic-latitude / reddening limits to control cold-dust confusion) to be fixed in the final registration version **before** any cross-match to infrared data.
-- **Frozen manifest.** The exact source list (*Gaia* source IDs) and all thresholds will be committed as an immutable, checksummed manifest at registration time. No post-hoc additions/removals except via a documented, dated amendment.
-- **Cross-match targets.** WISE/NEOWISE (and, where available, Spitzer, 2MASS, far-IR archives) at frozen coordinates; TESS light curves for the filtered subset; JWST/MIRI archival or proposed follow-up for high-residual candidates only.
+**Parent catalogue.** White-dwarf candidates from *Gaia* EDR3 [Gentile Fusillo et al. 2021]: 1,280,266 sources with a white-dwarf probability *P*_WD; ~359,000 high-confidence candidates at *P*_WD > 0.75. (Early project notes' "~200,000" corresponds to the older *Gaia* DR2 catalogue; we adopt EDR3.)
+
+**Inclusion is by data sufficiency, not distance.** The search targets the white-dwarf data we actually have. That data set is *naturally* volume-limited by detectability — faint, distant white dwarfs tend to lack adequate photometry — but we impose **no hard distance or brightness horizon**: a distant white dwarf is included if, and only if, its data are good enough to run the test. The frozen inclusion gate is:
+
+1. **`P_WD > 0.75`** — high-confidence white dwarf (this already encodes *Gaia* astrometric confidence).
+2. **Astrometric / photometric sanity** — sane *Gaia* flags; **RUWE recorded, not cut** (high RUWE flags an unresolved companion → fed to natural-explanation battery item 2, not used to exclude).
+3. **Photospheric baseline constrained** — Teff determinable to a registered tolerance from the optical/near-IR SED (the photosphere against which any IR excess is measured). This is a *data-sufficiency* rule, **not** a distance cut: it admits any white dwarf with adequate optical/NIR photometry regardless of distance, and replaces the cruder parallax-S/N cut considered earlier.
+4. **At least one informative IR constraint** — a detection *or* a catalogued flux upper limit in ≥1 mid-IR band (WISE W1–W4 / Spitzer), so the object can contribute either a measurement or a bound.
+
+No white dwarf meeting these is excluded for being far away. Objects whose data cannot constrain the test contribute ~zero effective sensitivity (see below) and drop out *harmlessly*, without a hard cut.
+
+**Completeness is per-object (the consequence).** Because sensitivity varies object-to-object, the search assumes **no single uniform completeness**. Each object's detectability `C_i(T_x, Ω)` is measured by injection-recovery against *its own* photometry and local noise (§5.3), and the population upper limit sums these per-object sensitivities (§5.7). Every white dwarf then contributes exactly as much as its data afford — the standard heterogeneous-sensitivity occurrence-rate approach, and a direct implementation of "use everything, exclude nothing arbitrarily."
+
+**Contamination.** A moderate reddening ceiling removes only the worst cirrus fields; residual cold-dust confusion is handled per object via the local far-IR background (battery item 3) — per-object vetting in preference to aggressive pre-cuts.
+
+**Frozen manifest.** The exact source list (*Gaia* source IDs) and all inclusion-rule parameters are committed as an immutable, checksummed manifest at registration. No post-hoc additions/removals except via a dated, public amendment.
+
+**Cross-match targets.** WISE/NEOWISE (+ Spitzer/2MASS/far-IR where available) at frozen coordinates; TESS light curves for the filtered subset; JWST/MIRI archival or proposed follow-up for high-residual candidates only.
 
 ---
 
@@ -181,9 +195,9 @@ The channels are heterogeneous and many objects lack data in some of them, so we
 
 A clean null in Channel A yields, as a function of the injected anomaly properties, the standard zero-detection Poisson bound
 
-`f_max(T_x, Ω) ≈ 3.0 / (N_eff · C(T_x, Ω))`  (95% one-sided; 0 events → 3.0),
+`f_max(T_x, Ω) ≈ 3.0 / Σ_i C_i(T_x, Ω)`  (95% one-sided; 0 events → 3.0),
 
-where `N_eff` is the searched sample size and `C(T_x, Ω)` the injection-recovery completeness (§5.3). This is the headline result for the expected null: *"fewer than f_max of white dwarfs host a persistent cold IR-excess of temperature T_x and covering fraction Ω."*
+summed over every included object *i*, where `C_i` is that object's own injection-recovery completeness (§3, §5.3). Each white dwarf contributes exactly its own sensitivity — distant or poorly-measured objects contribute little, nearby well-measured ones contribute ≈1 — so no object is excluded by fiat and none is over-counted. (The uniform-sample form `f_max ≈ 3.0/(N_eff·C̄)` is just the special case where all `C_i` are equal.) This is the headline result for the expected null: *"fewer than f_max of white dwarfs host a persistent cold IR-excess of temperature T_x and covering fraction Ω."*
 
 ---
 
