@@ -1,6 +1,8 @@
-# SETI: An Anomaly-Residual Search for Signs of Persistence Around White Dwarfs
+# An Anomaly-Residual Search for Unexplained Thermal and Photometric Signatures Around White Dwarfs
 
-A pre-registered, open search for **persistent departures from the natural behavior of cooling stellar remnants** — anomalies that resist explanation by known astrophysics — around catalogued white dwarfs.
+*A mechanism-agnostic technosignature search — motivated by, but not presupposing, long-lived intelligence.*
+
+A pre-registered, open search for **anomalous departures — static or time-varying — from the natural behavior of cooling stellar remnants** that resist explanation by known astrophysics, around catalogued white dwarfs.
 
 > We make **no assumptions about how a long-lived civilization arises, what it wants, or what it builds** (no Dyson spheres, no energy-maximization, no efficiency/resilience optimization). We look for *something that fails to look like known nature*, then try to explain it away. The most likely interesting outcome is not life but **new natural astrophysics**; the most likely outcome overall is a clean null, which yields a quantitative upper limit. See [`preregistration.md`](preregistration.md).
 
