@@ -236,7 +236,7 @@ In none of these branches does success depend on detecting anything intelligent.
 
 ## References
 
-*(Verified against primary sources during drafting unless marked “[verify]”. References to mechanism-assuming prior work are cited as the literature we depart from, per §1.2/§1.5, not as shared premises.)*
+*(All references verified against primary sources. References to mechanism-assuming prior work are cited as the literature we depart from, per §1.2/§1.5, not as shared premises.)*
 
 - Agol, E. 2011, "Transit Surveys for Earths in the Habitable Zones of White Dwarfs," *ApJL* 731, L31. arXiv:1103.2791
 - Arnold, L. F. A. 2005, "Transit Lightcurve Signatures of Artificial Objects," *ApJ* 627, 534. arXiv:astro-ph/0503580
