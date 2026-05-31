@@ -237,7 +237,7 @@ In none of these branches does success depend on detecting anything intelligent.
 
 - This pre-registration is timestamped on OSF before project-specific data analysis.
 - All code, queries, the frozen sample manifest, the natural-explanation battery implementation, and the residual catalogue are released in a public GitHub repository whose history post-dates registration.
-- Amendments are public, dated, and rationale-bearing; superseded versions are retained.
+- **Amendments are public, dated, and rationale-bearing; superseded versions are retained** (logged in `AMENDMENTS.md`). We distinguish two kinds and label every result accordingly: *pre-data amendments* — refinements to the frozen plan made **before** any real target data is analyzed (e.g. from ongoing expert review), which remain fully **confirmatory**; and *post-data changes* — anything decided **after** real data has been seen, which are flagged **exploratory / post-hoc** and never presented as confirmatory. The OSF timestamp and the public git history fix which is which. This pre-registration is deliberately frozen *before* feedback-gathering is complete, so that expert review arriving later enters as transparent pre-data amendments rather than silent edits.
 
 ---
 
