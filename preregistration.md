@@ -245,7 +245,7 @@ In none of these branches does success depend on detecting anything intelligent.
 - Farihi, J. 2016, "Circumstellar debris and pollution at white dwarf stars," *New Astronomy Reviews* 71, 9. arXiv:1604.03092
 - Gentile Fusillo, N. P., et al. 2021, "A catalogue of white dwarfs in *Gaia* EDR3," *MNRAS* 508, 3877. arXiv:2106.07669
 - Griffith, R. L., et al. 2015, "The Ĝ Infrared Search for Extraterrestrial Civilizations with Large Energy Supplies. III.," *ApJS* 217, 25.
-- Kardashev, N. S. 1964, "Transmission of Information by Extraterrestrial Civilizations," *Soviet Astronomy* 8, 217. [verify exact page]
+- Kardashev, N. S. 1964, "Transmission of Information by Extraterrestrial Civilizations," *Soviet Astronomy* 8, 217–221. (ADS 1964SvA.....8..217K)
 - Landauer, R. 1961, "Irreversibility and Heat Generation in the Computing Process," *IBM J. Res. Dev.* 5, 183. doi:10.1147/rd.53.0183
 - Sandberg, A., Armstrong, S., & Ćirković, M. M. 2017, "That is not dead which can eternal lie: the aestivation hypothesis for resolving Fermi's paradox," *JBIS* / arXiv:1705.03394
 - Sandberg, A., Drexler, E., & Ord, T. 2018, "Dissolving the Fermi Paradox," arXiv:1806.02404
@@ -256,4 +256,11 @@ In none of these branches does success depend on detecting anything intelligent.
 - Wright, J. T., et al. 2016, "… IV. The Signatures and Information Content of Transiting Megastructures," *ApJ* 816, 17. arXiv:1510.04606
 - Zuckerman, B. 2022, "Infrared and optical detectability of Dyson spheres at white dwarf stars," *MNRAS* 514, 227. arXiv:2204.09627
 
-**Standard mission/instrument references to add:** *Gaia* mission (Gaia Collaboration 2016; EDR3 2021); WISE (Wright, E. L., et al. 2010, *AJ* 140, 1868); NEOWISE (Mainzer et al. 2011); TESS (Ricker et al. 2015, *JATIS* 1, 014003); JWST/MIRI (Rieke et al. 2015). *[mission refs to be confirmed before final registration]*
+**Mission and instrument papers** (verified):
+
+- Gaia Collaboration (Prusti, T., et al.) 2016, "The Gaia mission," *A&A* 595, A1. doi:10.1051/0004-6361/201629272
+- Gaia Collaboration (Brown, A. G. A., et al.) 2021, "Gaia Early Data Release 3: Summary of the contents and survey properties," *A&A* 649, A1. doi:10.1051/0004-6361/202039657
+- Mainzer, A., et al. 2011, "Preliminary Results from NEOWISE: An Enhancement to the Wide-field Infrared Survey Explorer for Solar System Science," *ApJ* 731, 53.
+- Rieke, G. H., et al. 2015, "The Mid-Infrared Instrument for the James Webb Space Telescope, I: Introduction," *PASP* 127, 584. doi:10.1086/682252
+- Ricker, G. R., et al. 2015, "Transiting Exoplanet Survey Satellite (TESS)," *JATIS* 1, 014003.
+- Wright, E. L., et al. 2010, "The Wide-field Infrared Survey Explorer (WISE): Mission Description and Initial On-orbit Performance," *AJ* 140, 1868.
