@@ -108,27 +108,82 @@ Many white dwarfs show photospheric metal pollution from ongoing debris accretio
 
 ---
 
-## 5. Natural-explanation battery (the core of the method)
+## 5. The natural-explanation battery and the anomaly score
 
-An anomaly-residual search is only as strong as the alternatives we attempt *first*. We register the following non-exhaustive battery; each candidate anomaly must survive rejection by **every** applicable test to enter the residual, and each threshold is fixed at registration.
+An anomaly-residual search is only as strong as the alternatives we attempt *first*. The battery below is the set of natural hypotheses we fit to each object; the **anomaly score is the badness-of-fit of the best natural model** — how poorly the data are explained once nature has been given its best shot. "Anomalous" means "even the best natural explanation fits badly," never "looks unusual to us."
+
+### 5.1 Frozen-procedures principle: register the rule, not the number
+
+We commit to a principle that governs every threshold in this section:
+
+> **The *procedure* that computes each cutoff is frozen here; the *numeric value* it yields is computed at analysis time from external or whole-sample data, reported, and may not be altered after inspecting individual candidates.**
+
+This reconciles two things that look opposed: pre-registration (so we cannot tune toward a result) and not prematurely hard-coding numbers before we have seen any data. We freeze meta-parameters and recipes (e.g. the false-discovery setting, the margin used to define a natural regime, the calibration method); the data then determine the actual flux/score/temperature cutoffs. The only move pre-registration forbids — and the one this principle blocks — is choosing or sliding a cutoff so that a *particular object* falls inside or outside it. Every cutoff must be a deterministic function of (a frozen rule) applied to (external or bulk-sample data, not the individual candidates).
+
+### 5.2 The registered battery of natural alternatives
+
+Each candidate anomaly must survive rejection by **every** applicable test to enter the residual.
 
 For **Channel A (IR excess):**
-1. Natural circumstellar **debris disk** (300–1000 K dust) — tested by SED temperature and shape.
-2. **Unresolved cool companion** (late-M / brown-dwarf / second WD) — tested by SED, color, and where possible astrometry/RV.
+1. Natural circumstellar **debris disk** — tested by SED temperature and shape. The natural-disk temperature region is **not** a hard-coded "300–1000 K"; per §5.1 it is derived from the observed temperature distribution of *known* white-dwarf debris disks (external data) plus a registered margin.
+2. **Unresolved cool companion** (late-M / brown-dwarf / second WD) — tested against an empirical M/L/T-dwarf SED library, plus color and (where possible) astrometry/RV.
 3. **Background/foreground cold-dust (cirrus) contamination** — tested by local far-IR background, beam-confusion checks, angular-resolution cross-checks.
 4. **Photometric/calibration artifacts and blends** — tested by survey quality flags, epoch consistency (NEOWISE), PSF/contamination flags.
 5. **CMB / instrumental confusion at the cold limit** — assessed as a sensitivity boundary, not a detection.
 
 For **Channel B (light curves):**
-6. **Spherical/ringed planet or eclipsing-binary** geometries — tested by fitting natural models, including the ringed-planet ambiguity noted by Arnold (2005).
+6. **Spherical/ringed planet or eclipsing-binary** geometries — tested by fitting natural occulter models (Mandel–Agol transit; EB), including the ringed-planet ambiguity noted by Arnold (2005).
 7. **Stellar/instrumental variability, pulsation, systematics** — tested against TESS systematics and known WD variability classes.
-8. **Transiting debris / disintegrating planetesimals** (a known WD phenomenon) — tested by recurrence, evolution, accompanying pollution.
+8. **Transiting debris / disintegrating planetesimals** (a known WD phenomenon that produces *genuinely asymmetric, variable* transits) — tested by recurrence, evolution, accompanying pollution, and an explicit dust-tail template.
 
 For **Channel C (clean inner zone):**
 9. **Natural dynamical clearing** (sublimation radius, Poynting–Robertson drag, resonances, recent disruption) — tested against disk-evolution models.
 10. **Selection/sensitivity effects** mimicking cleanliness — tested by injection-recovery.
 
-**Stopping rule and residual definition.** "Unexplained" means "survives the registered battery at the registered thresholds," nothing more. We pre-commit to: (a) a fixed battery (amendments require a dated, public amendment); (b) an explicit **anomaly/residual score** per object quantifying how much signal survives each test; (c) reporting the *full ranked residual catalogue*, not only top candidates; and (d) the standing interpretation that the residual is a list of objects warranting conventional astrophysical follow-up — never, in this document or its outputs, a claim of detected intelligence. This guards against the god-of-the-gaps failure mode in which "unexplained" silently becomes "the current limit of our models."
+### 5.3 Channel A — the calibrated IR-excess score (primary channel)
+
+For each white dwarf we fit a nested set of models to the assembled SED:
+- **H₀** — bare WD photosphere. Teff/log g from [Gentile Fusillo et al. 2021]; synthetic photometry from a DA/DB atmosphere grid (Koester / Bergeron). In the WISE bands the photosphere lies on the Rayleigh–Jeans tail, so its predicted flux is stiff and low-uncertainty.
+- **H_disk**, **H_comp** — the natural add-ons of §5.2 items 1–2 (flat opaque dust disk, after Jura 2003; empirical companion SED).
+- **H_anom** — photosphere + a *free-temperature* blackbody excess (temperature *T*_x and solid angle Ω both free, *T*_x allowed from a few K through and beyond the disk regime). This agnostic component can fit any excess shape, including a cold one outside every natural regime.
+
+**Two-stage statistic.**
+1. *Excess present?* `Δχ²(H₀ → H_anom)` must exceed the flagging threshold (no excess ⇒ no anomaly).
+2. *Can nature explain it?* The score is `A = χ²(best of {H_disk, H_comp}) − χ²(H_anom)` — i.e. how much better the agnostic excess fits than the best **natural** model. If a natural disk or companion fits as well as the free blackbody, `A ≈ 0` (natural, not anomalous). If the data demand an excess whose temperature/shape sits *outside* the natural regimes, the natural models fit far worse → large `A`. Reported alongside `A`: the best-fit *T*_x and its credible interval, and whether that interval falls outside the union of natural regimes (a large `A` whose *T*_x lands *inside* the disk regime is just a good disk detection, not an anomaly).
+
+**Censored likelihood (the subtlety that matters most).** The cold regime appears only in W3/W4, where most white dwarfs are undetected. All fits treat WISE non-detections as proper **upper limits** via a censored likelihood, never as zeros or missing data. Mishandling this is the easiest way to manufacture or erase a cold excess, and it is why the cold band is detectability-limited (§4.A): there, the honest product is largely an upper limit, not a detection.
+
+**Calibration — the empirical null (primary).** Rather than trusting textbook χ² p-values (which assume the error bars and noise model are exactly right — they are not), we let the population define "normal": since ~all ~10⁵ objects are natural, the distribution of `A` across the whole sample is approximately its null distribution, automatically absorbing real-world error-bar imperfections. We flag objects in the extreme tail beyond that empirical null. *(Rationale: this search deliberately probes under-examined regimes from a new angle; inheriting a predefined notion of "normal" would smuggle others' assumptions back in. A handful of genuine signals cannot bias the curve when ~10⁵ ordinary objects define it.)* Theoretical χ² significance is retained only as a cross-check. Independently, **injection–recovery** of synthetic excesses (natural and anomalous, across *T*_x, Ω) into real photometry sets the completeness function `C(T_x, Ω)` and confirms the empirical-null thresholds; it runs on synthetic signals only, so thresholds are never tuned on real outliers.
+
+**Multiple testing.** With ~10⁵ trials we control false flags via **Benjamini–Hochberg FDR** on the per-object natural-inexplicability p-values at a frozen setting *q* (the frozen *number* per §5.1; the resulting score cutoff is computed from the data). Consistent with our completeness-favoring choice, *q* is set permissively to yield a finite candidate list we vet by hand, and a separate strict high-significance subset is also reported.
+
+### 5.4 Channel B — light-curve morphology (secondary, extensible)
+
+In principle Channel B mirrors Channel A: detect events (BLS/TLS on TESS), fit the natural occulter set (§5.2 items 6–8, including the dust-tail template), and score the residual against a flexible phenomenological model, with registered morphology flags (ingress/egress asymmetry, secondary structure, depth vs. implied radius). **But** white dwarfs are faint (G ≈ 15–20) and TESS is photon-starved on them, so light-curve coverage is non-uniform and often poor. We therefore register Channel B as a **secondary, candidate-generating channel with manual/physical vetting — not** a calibrated channel from which a population upper limit is claimed; promising such a limit would assert a precision the current data do not support.
+
+**Extensibility clause.** This framework anticipates better time-domain data becoming available later — e.g. ZTF, ground-based white-dwarf transit surveys, or targeted follow-up that Channel-A candidates may themselves motivate. Upgrading Channel B to a calibrated channel, or adding *any* new data source, is done via a **dated, public amendment that pre-registers the new analysis before that data is examined**, per §5.1 and §8. The project may thus grow opportunistically (including chance discoveries) without ever analyzing new data outside a locked plan.
+
+### 5.5 Channel C — clean inner zone (corroborating only)
+
+"Accreting but no detectable inner dust" is common and has known natural explanations (optically-thin or gas-only disks, recently-fully-accreted events — an open natural puzzle in its own right). Channel C is therefore registered as an **ordinal corroborating flag with no standalone detection threshold**; it elevates an object only when it coincides with a Channel-A or -B survivor on the same target.
+
+### 5.6 Combining channels, residual definition, and stopping rule
+
+The channels are heterogeneous and many objects lack data in some of them, so we **do not** define a single mandatory weighted scalar (the place where arbitrary, tunable weights would creep in). We register instead:
+- **Primary residual and upper limit:** Channel A alone (calibrated, FDR-controlled).
+- **Secondary candidate list:** Channel B survivors (for follow-up).
+- **Corroboration:** Channel C flags, only when coincident with A/B.
+- A combined rank may be reported as a clearly-defined *secondary* product (e.g. multi-channel coincidences first); the registered primary analysis keeps channels separate.
+
+**Stopping rule and residual definition.** "Unexplained" means "survives the registered battery at the procedure-frozen thresholds (§5.1)," nothing more. We pre-commit to: (a) a fixed battery and fixed threshold-setting procedures (changes require a dated, public amendment); (b) the explicit per-object anomaly score above; (c) reporting the *full ranked residual catalogue*, not only top candidates; and (d) the standing interpretation that the residual is a list of objects warranting conventional astrophysical follow-up — never, in this document or its outputs, a claim of detected intelligence. This guards against the god-of-the-gaps failure mode in which "unexplained" silently becomes "the current limit of our models."
+
+### 5.7 From anomaly score to the §2/RQ4 upper limit
+
+A clean null in Channel A yields, as a function of the injected anomaly properties, the standard zero-detection Poisson bound
+
+`f_max(T_x, Ω) ≈ 3.0 / (N_eff · C(T_x, Ω))`  (95% one-sided; 0 events → 3.0),
+
+where `N_eff` is the searched sample size and `C(T_x, Ω)` the injection-recovery completeness (§5.3). This is the headline result for the expected null: *"fewer than f_max of white dwarfs host a persistent cold IR-excess of temperature T_x and covering fraction Ω."*
 
 ---
 
@@ -144,7 +199,7 @@ For **Channel C (clean inner zone):**
 8. Derive the prevalence upper limit (RQ4) as a function of signal properties, given sample size and recovered sensitivity.
 9. JWST/MIRI follow-up reserved for surviving high-residual candidates; **not** part of the registered statistical sample.
 
-**Discipline against post-hoc reasoning:** thresholds, the battery, and the scoring rule are fixed in this document before step 2. Sensitivity (step 4) uses injected synthetic signals so detection thresholds are not tuned to real outliers. Any deviation is recorded as a dated amendment with rationale; the public git history provides an independent timeline.
+**Discipline against post-hoc reasoning:** the battery, the scoring rule, and the threshold-*setting procedures* (§5.1) are fixed in this document before step 2; the numeric thresholds they yield are computed at analysis time from external or whole-sample data and may not be altered after inspecting individual candidates. Sensitivity (step 4) uses injected synthetic signals so detection thresholds are not tuned to real outliers. Any deviation, and any added data source (§5.4), is recorded as a dated public amendment with rationale; the public git history provides an independent timeline.
 
 ---
 
