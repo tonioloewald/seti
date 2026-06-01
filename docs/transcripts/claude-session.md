@@ -3058,3 +3058,36 @@ And the discipline held: those χ>5/χ>10 counts are **descriptive only** — th
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Pushed (`eb6ae08`). **Milestone reached: the Channel-A detection pipeline runs end-to-end on real data** — frozen sample → AllWISE → Bergeron-photosphere prediction → IR-excess significance — and it's surfaced a genuine candidate population. Every layer is reproducible and bulk-free in git.
+
+This is a natural place to take stock, since we've built a lot and the conversation is long.
+
+## Where we stand (§6)
+✅ 1. Sample · ✅ 2a/2b. Optical + AllWISE · ✅ 3. IR-excess (Stage 1)
+⬜ **Empirical-null calibration** (§5.3) — turn raw χ into calibrated flags (λ, QQ-plot); the registered "what is anomalous"
+⬜ **Natural-explanation battery** — fit 300–1000 K disk / companion to the W3/W4 excesses → most resolve as disks; the *residual* is the candidate
+⬜ Injection-recovery (completeness, threshold) · upper-limit layer (forced photometry) · NEOWISE time-variability · residual catalogue + `f_max`
+
+## One integrity housekeeping item
+Building the pipeline, I've made implementation choices that elaborate §5.3 but aren't spelled out in it — anchoring the photosphere on Gaia G, the exact excess statistic, DA-grid-only for now, log g clipped to the grid. These are *pre-data* decisions (consistent with the registered method, made before any threshold is set), but in the spirit of the whole project they should be **logged transparently** — I'd add a short methods/implementation note (or `AMENDMENTS.md` entries) so the record stays complete. Worth doing.
+
+## Your call on pace
+We can keep rolling — I'd do the **empirical-null calibration** next (it's the heart of §5.3 and the gate before the battery). But I've been driving hard autonomously, so: do you want me to **continue building** (and roughly how far — to a first calibrated Channel-A residual? all the way to a draft `f_max`?), or **pause here** so you (and the experts) can review the pipeline so far? And shall I log those implementation decisions now?
+
+### 🧑 Tonio
+
+Keep rolling. This is very exciting. And of course let’s log our choices explicitly.
+
+### 🤖 Claude
+
+Love the enthusiasm — let's keep going. First, logging our choices (this matters for the integrity chain), then straight into the empirical-null calibration.
+
+
+_[tools: Write]_
+
+
+_[tools: Edit]_

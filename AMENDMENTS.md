@@ -13,7 +13,7 @@ Each entry states:
 
 | Date | Type | Section(s) | Change | Rationale |
 |------|------|-----------|--------|-----------|
-| — | — | — | _No amendments yet — the registered plan is current._ | — |
+| 2026-06-01 | pre-data | §3, §5.3 | Channel-A detection-pipeline implementation decisions (sample freeze; optical baseline from the pinned catalogue; AllWISE via Gaia precomputed cross-match; DA-grid photosphere; Gaia-G-anchored excess statistic; log g/Teff grid bounds). | Concrete elaborations of the registered method — see [`pipeline/IMPLEMENTATION_LOG.md`](pipeline/IMPLEMENTATION_LOG.md). Procedures fixed independent of findings; detection thresholds still come from the empirical null + injection-recovery (§5.3). |
 
 ---
 
