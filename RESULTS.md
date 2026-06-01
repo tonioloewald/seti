@@ -82,6 +82,31 @@ In plain terms: **fewer than ~0.01–0.1% of (predominantly solar-neighborhood) 
 dwarfs host an unexplained cold (50–300 K) infrared excess**, with the colder regime
 currently beyond WISE's reach.
 
+## Channel A — time-variability (NEOWISE)
+
+The §1.1 highest-value signature is a *fluctuating* excess — something a static disk
+cannot fake. We pulled NEOWISE-R multi-epoch W1/W2 light curves for the IR-excess
+candidate set (**80,379 clean epochs for 807 WDs**, via a bulk IRSA-TAP spatial
+cross-match) and computed, per source, the reduced χ² (amplitude) and the **Stetson J**
+index (correlated W1/W2 variability — the "structured" proxy), both empirical-null
+calibrated. The NEOWISE per-epoch errors are well-calibrated (χ²_red null centred at 1.00).
+
+Of **540** WDs with ≥10 epochs, **17** show significant correlated variability:
+
+- **14 are natural** — debris-disk variability (a known phenomenon; §5.2 item 1) or
+  brown-dwarf "weather." Several show striking ~0.4–1.3 mag events over the decade
+  (`figures/variability_examples.png`) — useful variable-disk candidates in their own right.
+- **3** were flagged only because the *static* battery hadn't classified their excess
+  (single-band or hot fit); their light curves are marginal (few epochs / large errors) or
+  consistent with bright-source systematics — candidates for further scrutiny, most likely
+  natural, **not** compelling anomalies.
+
+So the variability layer **works** (it cleanly recovers real disk variability) and finds
+**no compelling anomalous fluctuation** — a null for the highest-value signal, with a
+variable-disk byproduct. *Scope caveat:* this v1 searched only the IR-excess population; a
+full-sample variability search (to catch pure transients with no static excess) is a
+future extension.
+
 ## Caveats (this is a v1)
 
 - **Nominal, uniform WISE depths** for `f_max`; position-dependent depths would refine it.

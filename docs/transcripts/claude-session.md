@@ -3467,3 +3467,56 @@ _[tools: Edit]_
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Committed (`533d448`) — RESULTS.md is up and the README front page now reflects reality (registered, analysis under way, first results).
+
+Let me quickly check on that NEOWISE job — it's been a while and still showing 0, which is suspicious.
+
+
+_[tools: Bash]_
+
+The process is alive — the silence is just `grep` block-buffering the piped output (Python flushes, grep re-buffers to the file). Let me check the actual checkpoint to see true progress.
+
+
+_[tools: Bash]_
+
+It's **hung** — stuck on a single IRSA cone query (no timeout), and even unstuck the per-source approach would take ~an hour. Let me kill it and switch to a far better method: a single **bulk TAP cross-match** (upload all 923 positions, spatial-join server-side).
+
+
+_[tools: Bash]_
+
+The kill worked (that exit-144 notification is the background job I just terminated). My bulk-test exit code is ambiguous, so let me re-run it cleanly in isolation with error capture.
+
+
+_[tools: Bash]_
+
+Bulk cross-match works beautifully — **30 positions → 2,929 epochs in 12 s** (the per-source approach would've taken an hour). Let me rewrite the fetcher to use it (chunked uploads), run it, then fire the variability analysis.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+**80,379 clean epochs for 807 sources** in 4 minutes. Now the payoff — run the variability analysis.
+
+
+_[tools: Bash]_
+
+The variability layer works — and the NEOWISE errors are well-calibrated (χ²_red null centered at **1.00**, unlike the photosphere-prediction's λ=10). Of **540** WDs with light curves, **17** show significant correlated variability. Let me visualize a few before interpreting.
+
+
+_[tools: Bash]_
+
+Not stuck at all — sorry for the long silence! That NEOWISE job had hung (one IRSA query with no timeout), so I killed it and rebuilt it as a fast bulk cross-match. Since then I've fetched **80,379 clean light-curve epochs**, run the variability analysis, and just made a figure. Let me look at it and bring you up to speed.
+
+
+_[tools: Read]_
+
+That figure tells the story. Let me document it, commit, and report — you're not waiting on a stuck process, just a long productive run.
+
+
+_[tools: Edit]_

@@ -58,3 +58,12 @@ So the WISE-detection branch of Channel A yields **no unexplained cold excess** 
 | — | Refinement TODO (future pre-data amendment): position-dependent WISE depths; CatWISE/unWISE forced photometry to deepen W1/W2; far-IR (Herschel/JWST-MIRI) for `T_x<50 K`. | Nominal uniform depths are a v1; the cold (<50 K) regime needs far-IR. | §5.4, §4.A |
 
 **RESULT (RQ4):** in the cold-anomaly window (~50–300 K), with **zero** unexplained excesses found, `f_max ≈ few×10⁻³ to 10⁻⁴` of white dwarfs (depending on `T_x` and `f`). E.g. at `T_x=100 K, f=0.1`: `f_max ≈ 3×10⁻⁴`. Below ~50 K the search is WISE-blind. The registered, expected, *valuable* null with a quantitative bound. Figure: `figures/f_max.png`.
+
+## 2026-06-01 — time-variability (NEOWISE W1/W2; §1.1, §5.3)
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| 12 | NEOWISE-R multi-epoch via **bulk IRSA-TAP spatial cross-match** (upload Gaia positions; replaced a per-source cone approach that hung on an un-timed-out query). Variability = reduced χ² (amplitude) + **Stetson J** (correlated W1/W2 = "structured"). Empirical-null calibrated; flag amplitude AND correlation; vet vs disk variability / brown-dwarf weather / W1 saturation. | §1.1 (dynamic = highest value); §5.3 variability statistic. Correlated two-band variability is robust to single-band noise. | §1.1, §5.3 |
+| — | Scope (v1): the IR-excess candidate set only. Full-sample variability (pure transients with no static excess) deferred. | Tractable v1; NEOWISE per-epoch needs W1/W2-bright sources anyway. | §5.3 |
+
+**RESULT:** 540 light curves (≥10 epochs); 17 significantly variable; 14 natural (disk variability / BD weather), 3 battery-unclassified-excess variables that are marginal or systematic on inspection — **no compelling anomalous fluctuation**. NEOWISE errors well-calibrated (χ²_red null = 1.00). A null for the highest-value signal, with a variable-disk byproduct. Figure: `figures/variability_examples.png`.
