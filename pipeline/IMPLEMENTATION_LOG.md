@@ -167,3 +167,26 @@ photosphere-model-independent. Since elimination ran on **cirrus + W3/W4 reliabi
 (photosphere-independent), all 3 He cold candidates remain eliminated. **The cold-excess
 null is robust to the atmosphere-model assumption** — no atmosphere choice can rescue a
 candidate.
+
+## 2026-06-01 — responses to external review (Gemini)
+
+An external critical review (Gemini; archived in `docs/transcripts/`) raised four
+substantive points. Responses, with the work that addresses each:
+
+| # | Review point | Response |
+|---|--------------|----------|
+| 1 | float64 silent `source_id` truncation | **Independently caught and fixed** (see the source_id-corruption entry above): string-native pipeline-wide, re-run verified identical. Confirms the diagnosis. |
+| 2 | TESS BEB resolution sound | Agreed — difference-image centroiding (decision #15) localised all 3 dips off-target (16–33″). |
+| 3 | DA grid applied to non-DA biases the fit / f_max | Two-part: (a) decision #19 shows the **cold null** is photosphere-independent (W3/W4 photosphere <0.6% of flux); (b) **decision #20** below shows the **f_max** limit is unchanged when known non-DA WDs are excluded. |
+| 4 | Variability restricted to static-excess set = selection bias | **Accepted as essential.** The NEOWISE variability sample is being **expanded to all W1-bright WDs (W1<15.5), excess or not** (`fetch/04_neowise.py` retargeted), so bare/transient variables are not missed. Result below once the re-run completes. |
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| 20 | `analysis/12_fmax_da_check.py`: recompute `f_max` on three samples — ALL, EXCLUDE-confirmed-non-DA, and confirmed-DA-only. | Quantify review point #3 for the limit, per the reviewer's "filter H0 to confirmed DA" suggestion. | §5.7 |
+| 21 | NEOWISE variability sample changed from the IR-excess set to a **brightness-limited** set (all AllWISE WDs with W1<15.5), the NEOWISE single-exposure detection floor. | Review point #4: requiring a static excess to trigger the variability check was a selection bias blind to transient/bare-WD variables. | §1.1, §5.3 |
+
+**RESULT (#3 / decision #20):** `f_max(T=100 K, f=0.1)` = **3.4×10⁻⁴** for ALL (N=295,406)
+and **3.4×10⁻⁴** for EXCLUDE-non-DA (N=290,809) — identical to 2 sig figs; the ~1.6%
+confirmed-non-DA WDs modelled as DA do not affect the limit. Confirmed-DA-only (N=16,525)
+gives 3.0×10⁻³, weaker *only* because N is ~18× smaller (same per-WD physics). **The
+registered full-sample f_max is robust to the DA-photosphere assumption.**

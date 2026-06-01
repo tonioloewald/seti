@@ -4424,3 +4424,126 @@ _[tools: Edit]_
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Good round — "keep going" turned up a bug and a solid robustness result. Summary:
+
+**1. f_max refinement attempt → pivoted.** The registered "CatWISE/unWISE forced photometry" path needs the Gaia archive, which is throwing 500s mid-DR4-migration — and CatWISE's deeper W1/W2 only tightens the *warm* regime, not the headline cold window (which is W4-limited and needs far-IR). Not worth fighting a flaky archive for marginal value, so I pivoted to something that strengthens the core.
+
+**2. Found & fixed a Channel-C double-counting bug.** `sdssspec` carries multiple spectra per WD (9,651 duplicate source_ids). My Channel-C counts were inflated. Corrected (conclusion unchanged):
+| | was | now |
+|---|---|---|
+| polluted WDs | 1,137 | **894 unique** |
+| WISE-covered | 157 | 112 |
+| disk-bearing | 10 (6.4%) | **5 (4.5%)** |
+| clean inner zone | 147 | 107 (95.5%) |
+
+(Verified the battery/excess tables have *no* such duplicates — it was only the spectroscopic table.)
+
+**3. Completed the DA-photosphere robustness check** (resolves the logged decision-#4 caveat). Re-predicting the 25 spectroscopically He-atmosphere W3/W4-excess WDs with the **DB grid** at (Teff_He, logg_He): the cold candidates live in W3/W4 where the photosphere is **<0.6% of observed flux under *both* DA and DB** — so the classification is model-independent — and since elimination ran on cirrus + reliability (also model-independent), all 3 He-atmosphere cold candidates stay eliminated. **The cold null doesn't depend on the atmosphere assumption.**
+
+All committed (`a51721e`).
+
+The remaining big-ticket items have real tradeoffs, so worth your steer:
+- **Full-sample variability** — extend the time-domain search (the §1.1 *highest-value* signal) beyond the IR-excess set to catch pure transients. Most valuable scientifically, but a heavy NEOWISE pull.
+- **f_max cold-window refinement** — genuinely needs external data (WISE depth-of-coverage maps, or far-IR); not a quick win.
+- **Pause for domain-expert review** of the now-complete three-channel pass before any write-up.
+
+Want me to push into full-sample variability, or hold here for review?
+
+### 🧑 Tonio
+
+I don’t see any real advantage in holding for review so I want to keep pushing. 
+
+Incidentally I ran our results past Gemini (the results predating your recent revisions so note that) and had this response:
+
+This is a remarkably clean execution of a pre-registered methodology. The pipeline functioned exactly as designed, and the resulting null is rigorously defended by the data rather than by assumption.
+Here is a critical review of the results, including specific pushback on a few of the caveats that will need addressing before a final publication.
+### 1. The Pandas Float64 Silent Corruption
+Catching the 19-digit source_id truncation is a critical technical win. Standard IEEE 754 64-bit floats only maintain exact integer precision up to 2^{53} - 1 (roughly 15 to 17 decimal digits). Because *Gaia* source IDs are 19 digits long, pandas silently truncates the least significant bits when casting the column to float, effectively mapping distinct stars to the same corrupted ID. Retaining source_id strictly as a string is the only safe way to handle *Gaia* astrometry in Python. Documenting this in your implementation log will save others attempting to replicate this pipeline significant structural headaches.
+### 2. TESS BEB Resolution (Channel B)
+The physical logic in Channel B is ironclad. Because a white dwarf is roughly the size of Earth, any planetary-mass companion would produce a near-total eclipse (a 100\% dip). A 0.7\% to 1.2\% dip on a white dwarf would imply an occulter with a radius roughly 10\% that of Earth—a scenario highly unlikely to yield a clean, periodic transit signature without severe tidal disruption.
+The difference-image centroiding operated exactly as intended. TESS pixels are 21 arcseconds wide; demonstrating a 16 to 33 arcsecond offset cleanly identifies the source of the flux drop as a Background Eclipsing Binary (BEB) falling within the aperture. You systematically proved the false positive rather than just assuming it.
+### 3. The DA Photosphere Grid (Critical Pushback)
+Your caveat regarding the use of a pure-Hydrogen (DA) photosphere grid across the entire sample requires tighter handling for a final publication.
+While DA white dwarfs make up the vast majority of the population, applying a DA atmosphere model to a DB (helium-dominated) or DZ (metal-polluted) white dwarf will yield a systematically flawed T_{\text{eff}} fit. The opacity sources in a helium atmosphere differ drastically from hydrogen in the optical and near-IR. If the pipeline forces a pure-H model onto a cool He-atmosphere, the resulting baseline will likely be wrong, which can artificially induce a spurious slope in the mid-IR.
+If you do not have a robust DB grid implemented yet, the scientifically safer route for f_{max} calculation is to strictly filter the H_0 sample to confirmed DA white dwarfs (using the *Gaia* or SDSS spectral classifications), rather than allowing non-DA sources to be fitted with the wrong physics.
+### 4. The Variability Blind Spot
+The logic of flagging fluctuating anomalies as the highest-value targets is sound, but restricting the NEOWISE multi-epoch search strictly to the 807 static IR-excess candidates introduces a massive selection bias.
+If a highly advanced system is operating purely transiently—or if an anomalous event only occurs sporadically without leaving a massive, static dust shell—it will average out to the photospheric baseline over the decade of WISE observations. By requiring a static excess to trigger the variability check, you are blind to high-amplitude, short-duration IR transients on otherwise bare white dwarfs. Your noted future extension to run the variability search across the full sample is not just a nice-to-have; it is essential to fulfill the core objective of Channel A.
+### 5. The f_{max} Calculation
+The distribution of the 536 natural disks perfectly overlapping the expected 511 K median validates the sensitivity of the free-parameter blackbody fit. Furthermore, the cirrus filter catching the 12 cold fits explicitly demonstrates the local far-IR variance term working to degrade C_i rather than manufacturing false positives.
+Establishing the bounding limit of 10^{-3} to 10^{-4} for unexplained cold excesses provides a hard, quantitative ceiling. It is exactly the kind of concrete statistical constraint that astrophysics requires to move past speculative technosignature models.
+
+### 🤖 Claude
+
+This is a genuinely useful review — and notably, two of its points my recent work already overtakes (it predates them, as you flagged):
+
+- **#1 (float64)** — exactly what I hit and fixed; now string-native pipeline-wide with a re-run proving results unchanged, documented in the log. Gemini's diagnosis matches mine precisely.
+- **#3 (DA grid)** — I added a robustness check (DB grid on the He-atmosphere excess WDs) showing the *cold* null is photosphere-independent. But Gemini's pushback is broader and fair: the warm/mid-IR slope and the **f_max bolometric flux** for non-DA WDs deserve tighter handling. I'll add the DA-restricted f_max cross-check it suggests.
+- **#4 (variability blind spot)** — this is the strong one, and Gemini is right to call it *essential*, not optional: requiring a static excess to trigger the variability check makes us blind to transient/sporadic events on otherwise-bare WDs. This is the highest-value next step.
+
+So I'll act on **#4 (full-sample variability)** as the main push, plus **#3 (DA-only f_max cross-check)**. First let me size both — how many WDs are bright enough in W1 for NEOWISE per-epoch variability (the real scope), and the spectral composition of the f_max sample.
+
+
+_[tools: Bash]_
+
+Key sizing results:
+
+**#4 (variability):** Only ~489 WDs have W1<15 and ~873 < 15.5 — NEOWISE per-epoch detection needs W1≲15.5, so the *truly variability-capable* sample is ~hundreds, not 359k. The current search used 807 **excess-selected** WDs; the fix is to search all W1-bright WDs **regardless of excess**, capturing bare variable WDs. That's very tractable.
+
+**#3 (f_max):** Of 295,406 f_max WDs, only **4,597 (1.6%) are known non-DA**; the rest are DA or unclassified (statistically ~80% DA). So excluding known-non-DA can shift f_max by at most ~2% — easy to demonstrate.
+
+Let me act on both. First, expand the variability sample — let me check the NEOWISE fetcher and variability constants so I retarget cleanly.
+
+
+_[tools: Bash]_
+
+Now I'll retarget the NEOWISE fetcher to the brightness-limited sample (all W1<15.5 WDs, not just excess candidates) — this removes the selection bias Gemini flagged. New output file so the v1 stays intact.
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+NEOWISE fetch finished fast (small sample). Let me check it, then re-run variability on the expanded sample. Meanwhile I'll also do the #3 DA-only f_max cross-check.
+
+
+_[tools: Bash]_
+
+My command structure was buggy — the inner `&` backgrounded the Python inside the background shell, which then exited after the echo and killed it. Let me re-run the fetch cleanly.
+
+
+_[tools: Bash]_
+
+Fetch relaunched (`bwfq1vqax`). While it runs, let me do Gemini's **#3 DA-only f_max cross-check**: recompute the limit (a) excluding the known non-DA WDs, and (b) on confirmed-DA only — to show the limit is robust to the atmosphere mix.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+Clean result for **#3**: excluding the known non-DA WDs changes f_max by **<2%** (3.4×10⁻⁴ → 3.4×10⁻⁴ at T=100K, f=0.1); DA-only is ~9× weaker purely because N is 18× smaller, not because the physics shifts. **The limit is robust to the atmosphere mix.** Let me check on the NEOWISE fetch:
+
+
+_[tools: Bash]_
+
+Still running — let me document #3 and the review responses while it works. I'll add a log section tying the Gemini points to the work, plus the f_max DA cross-check:
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+The fetch is in its long TAP queries (output buffered). Let me commit the completed #3 work and update the RESULTS caveat while waiting for the background fetch to notify.
+
+
+_[tools: Edit]_

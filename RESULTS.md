@@ -193,7 +193,11 @@ characterised polluted-WD / clean-inner-zone catalogue
   W1/W2 by only ~0.06 mag, and in W3/W4 — where the cold candidates are defined — the
   photosphere is <0.6% of the observed flux under *both* DA and DB. With elimination driven by
   cirrus/reliability (photosphere-independent), all 3 He-atmosphere cold candidates remain
-  resolved. The cold null does not depend on the atmosphere assumption.
+  resolved. The cold null does not depend on the atmosphere assumption. For the **f_max**
+  limit specifically (`11`/`12`): excluding the spectroscopically-confirmed non-DA WDs
+  (~1.6% of the sample) leaves `f_max` unchanged (3.4×10⁻⁴ at T=100 K, f=0.1, vs 3.4×10⁻⁴
+  for the full sample); a confirmed-DA-only limit is ~9× weaker *only* because N is ~18×
+  smaller. The limit is robust to the DA assumption.
 - **Solar-neighborhood selection bias** and possible local-environment effects on the
   natural baseline (stated in §3) apply to the interpretation of `f_max`.
 - The cirrus ceiling, natural-temperature boundaries, and trial-factor are pre-data

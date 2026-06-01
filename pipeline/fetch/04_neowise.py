@@ -23,7 +23,8 @@ BAT = os.path.join(ROOT, "data", "derived", "battery_w34.parquet")
 AW = os.path.join(ROOT, "data", "raw", "allwise", "allwise_xmatch.parquet")
 MAN = os.path.join(ROOT, "data", "manifests", "wd_sample.csv.gz")
 OUTDIR = os.path.join(ROOT, "data", "raw", "neowise")
-OUT = os.path.join(OUTDIR, "neowise_excess_epochs.parquet")
+OUT = os.path.join(OUTDIR, "neowise_bright_epochs.parquet")
+W1_MAX = 15.5            # NEOWISE single-exposure detection floor (W1 Vega mag)
 RADIUS_DEG = 5 / 3600.0
 CHUNK = 250
 TAP = "https://irsa.ipac.caltech.edu/TAP"
@@ -36,11 +37,15 @@ ADQL = ("SELECT u.source_id, w.mjd, w.w1mpro, w.w1sigmpro, w.w2mpro, w.w2sigmpro
 
 def main():
     os.makedirs(OUTDIR, exist_ok=True)
-    bat = pd.read_parquet(BAT)[["source_id"]]; bat["source_id"] = bat["source_id"].astype(str)
     aw = pd.read_parquet(AW)[["source_id", "w1mpro"]].rename(columns={"w1mpro": "aw_w1"})
     aw["source_id"] = aw["source_id"].astype(str)
+    aw["aw_w1"] = pd.to_numeric(aw["aw_w1"], errors="coerce")
     man = pd.read_csv(MAN, dtype={"source_id": str})[["source_id", "ra_deg", "dec_deg"]]
-    tgt = bat.merge(man, on="source_id").merge(aw, on="source_id")
+    # Brightness-limited variability sample: ALL AllWISE WDs bright enough for NEOWISE
+    # single-exposure detection (W1 < W1_MAX), NOT restricted to IR-excess candidates —
+    # so variable/transient BARE WDs (no static excess) are not missed. This supersedes
+    # the v1 excess-only sample, which was a selection bias (per external review).
+    tgt = aw[aw["aw_w1"] < W1_MAX].merge(man, on="source_id")
     print(f"targets: {len(tgt):,}", flush=True)
     svc = pyvo.dal.TAPService(TAP)
 
