@@ -2791,3 +2791,136 @@ _[tools: Edit]_
 
 
 _[tools: Bash]_
+
+**Step 1 is done** (`c29db40`) — the registered sample is frozen: **359,073 white dwarfs**, byte-reproducible, with the source catalogue's SHA-256 pinned and the whole recipe committed. The raw 568 MB stays out of git; only the 12 MB manifest + checksums go in. That manifest is now the immutable join key for every cross-match to come.
+
+## Where we are on the §6 roadmap
+- ✅ **1. Freeze sample & manifest** — done.
+- ⬜ **2. Cross-match → build SEDs** ← next (Gaia optical + WISE/NEOWISE IR)
+- ⬜ 3. SED fits (photosphere vs natural alternatives) → IR-excess significance
+- ⬜ 4. Injection–recovery → completeness `C(T_x,Ω)`
+- ⬜ 5. TESS light-curve vetting (Channel B) · 6. Channel-C clean-zone · 7. scoring → residual catalogue · 8. upper limit
+
+## To start step 2, I need the analysis env
+The cross-match + SED work genuinely needs the scientific stack (astroquery/astropy/pandas/pyarrow), so this is the moment for that one-time install. Please run:
+
+```
+! sudo apt install -y python3-pip python3-venv
+```
+
+Then I'll build the gitignored `.venv` from `requirements.in` and commit the resulting `requirements.lock` (the reproducible pin).
+
+## How step 2 will stay deterministic
+The clean trick: the **Gaia archive hosts precomputed, `source_id`-keyed cross-match tables** (`gaiaedr3.allwise_best_neighbour`, the 2MASS one, etc.) — so I upload our frozen 359k `source_id` list and do an exact server-side join, no fuzzy positional matching. That gives us authoritative Gaia optical photometry + the AllWISE designations; then NEOWISE multi-epoch (W1/W2, for variability) comes from IRSA by position. Every query text gets committed, every product checksummed, bulk stays gitignored.
+
+Run the install whenever you're ready and I'll build the env and kick off the cross-match. We're genuinely doing the science now. 🔭
+
+### 🧑 Tonio
+
+The install should be done.
+
+### 🤖 Claude
+
+Let me verify pip/venv landed and build the environment.
+
+
+_[tools: Bash]_
+
+pip 26 and venv both working, `.venv` gitignored. Now install the analysis stack (this pulls a few hundred MB of wheels — numpy/scipy/astropy/astroquery/lightkurve and deps).
+
+
+_[tools: Bash]_
+
+Installed cleanly — **astropy 7.2.0, astroquery 0.4.11, numpy 2.4.6, scipy 1.17.1, pandas 2.3.3, pyarrow 24.0, lightkurve 2.6.0**. Let me freeze the lock, smoke-test the imports, and commit the reproducible environment record.
+
+
+_[tools: Bash]_
+
+Environment locked and committed (`b0518e0`) — fully reproducible now. (The Gaia "DR4 evolution" notice is just informational.)
+
+Now the key feasibility check for step 2 before any large pull: confirm the **Gaia-archive WISE cross-match** works anonymously and returns what we need. Let me probe the cross-match tables on a handful of our source IDs.
+
+
+_[tools: Bash]_
+
+Schemas confirmed — join on `allwise_oid`, and we get W1–W4 (`w1mpro`…`w4mpro`) + errors + the quality flags we need (`cc_flags`, `ph_qual`, `ext_flag`, `var_flag`) that feed the natural-explanation battery. Let me validate the actual join on our probe IDs.
+
+
+_[tools: Bash]_
+
+The cross-match works and tells us something important: **2000 WDs → 159 AllWISE matches (8%)**, in ~3 s. That low rate is *expected and fine* — white dwarfs are intrinsically faint in the IR, so the ~8% that AllWISE detects are precisely the objects where an excess is *measurable* (a disk or companion brightens them), while the other 92% become **upper limits** (exactly the censored-likelihood regime of §5.3). And note the `ph_qual='U'` on W3/W4 — AllWISE is already telling us the cold bands are upper limits, just as the methodology assumed.
+
+Let me write the full, resumable cross-match fetcher and run it across all 359k.
+
+
+_[tools: Write]_
+
+Now run the full cross-match across all 359k (resumable, ~70 chunks). I'll run it in the background so it can take its time against the Gaia archive.
+
+
+_[tools: Bash]_
+
+The full cross-match is now running in the background over all 359k (ID `bb9cf2uxk`, ~70 chunks, resumable if the archive hiccups). I'll commit the AllWISE step — fetcher + provenance + `SOURCES.md` log — once it lands.
+
+While it runs, here's the **one real data-design decision** this surfaces, worth your eye:
+
+**AllWISE gives us *detections*, not upper limits.** The ~8% it returns are the IR-excess-*measurable* objects (Channel A's actual candidates). But the §5.3 censored likelihood and the `f_max` upper limit need **upper limits for the non-detected ~92%** — and especially in the cold W3/W4 bands, which is the whole point. AllWISE's catalogue doesn't carry those, so we need a deliberate strategy:
+
+- **W1/W2 (warm + the variability bands):** use **CatWISE2020 / unWISE forced photometry** — it has per-position fluxes (or tight limits) for essentially every source, deeper than AllWISE. This also becomes the baseline for the NEOWISE time-variability work.
+- **W3/W4 (cold — the prime, least-constrained regime):** there is *no* deep forced-photometry catalogue here; the only constraint is the **AllWISE depth at each position**, modulated by the local background. So cold-excess upper limits come from modelling that depth (which dovetails with the per-object cirrus/background term already in §5.3).
+
+That's consistent with what the registration already says — it's just the concrete data plan for the censoring. My proposed path: **AllWISE detections (running) → CatWISE2020/unWISE for W1/W2 limits → AllWISE-depth model for W3/W4 limits.** 
+
+Want me to proceed that way, or do you (or the experts, as a pre-data amendment) want a different upper-limit treatment for the cold band? Either way I'll have the AllWISE detections committed shortly — flagging this now because it's the hinge between "found some warm excesses" and "placed a real cold-band limit."
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bb9cf2uxk</task-id>
+<tool-use-id>toolu_01VFVQ9FFG2MX88LFi5vZamJ</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/bb9cf2uxk.output</output-file>
+<status>failed</status>
+<summary>Background command "Run full AllWISE cross-match over 359k sample (background)" failed with exit code 1</summary>
+</task-notification>
+
+### 🤖 Claude
+
+The cross-match failed — let me see why.
+
+
+_[tools: Bash]_
+
+The queries worked — it only choked on astropy's parquet writer mishandling the string columns (`cc_flags`, `ph_qual`, …). Easy fix: write via pandas/pyarrow instead. Let me patch the I/O.
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Patched. Re-running (foreground this time, resumable) — the queries already work, so it should sail through the ~70 chunks.
+
+
+_[tools: Bash]_
+
+**16,924 AllWISE matches** across the full sample in 3.5 min, checksummed (`732a8c97…`). Let me verify the product and the per-band detection breakdown, then commit.
+
+
+_[tools: Bash]_
+
+The per-band breakdown is a real result, and exactly what the methodology predicted:
+
+| Band | Detections | Meaning |
+|---|---|---|
+| W1 (3.4 µm) | 16,897 | almost all matches — anchors the photosphere's Rayleigh–Jeans tail |
+| W2 (4.6 µm) | 9,081 | warm continuum |
+| **W3 (12 µm)** | **650** | warm-dust regime — debris-disk / excess candidates |
+| **W4 (22 µm)** | **339** | the coldest WISE band — the warm-excess candidate set |
+
+So we now have the genuine **Channel-A detection working set**: ~17k WDs with W1/W2 photometry, and the few hundred W3/W4 detections that are the actual IR-excess candidates (mostly debris disks at 300–1000 K — Zuckerman's regime — which the natural-explanation battery will sort). And it confirms §4.A's honesty: the *cold* regime is below W4, invisible here, awaiting the upper-limit layer. Let me log and commit.
+
+
+_[tools: Edit]_

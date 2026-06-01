@@ -54,4 +54,5 @@ that fetcher is first run (a pre-data amendment if it post-dates registration).*
 | Date (UTC) | Source | Pinned ref | SHA-256 (source) | Product |
 |---|---|---|---|---|
 | 2026-06-01 | Parent catalogue `maincat.dat.gz` (568 MB) | VizieR `J/MNRAS/508/3877` | `f7c134e8…de12757b` | `data/manifests/wd_sample.csv.gz` — **359,073** rows at `P_WD > 0.75` (of 1,280,266). Fetcher: `pipeline/fetch/01_parent_catalogue.py`. Full provenance + checksums: `data/manifests/wd_sample.provenance.json`, `data/manifests/SHA256SUMS`. |
+| 2026-06-01 | **AllWISE** via Gaia cross-match | `gaiaedr3.allwise_best_neighbour` → `gaiadr1.allwise_original_valid` (EDR3, static) | `732a8c97…cc3888934` | `data/raw/allwise/allwise_xmatch.parquet` (gitignored) — **16,924** matches (4.7%); detections W1 16,897 / W2 9,081 / W3 650 / W4 339. Fetcher: `pipeline/fetch/02_allwise_xmatch.py`; provenance: `data/manifests/allwise_xmatch.provenance.json`. |
 

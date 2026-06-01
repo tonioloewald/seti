@@ -1,0 +1,12 @@
+{
+  "step": "2b AllWISE cross-match",
+  "join": "gaiaedr3.allwise_best_neighbour -> gaiadr1.allwise_original_valid (allwise_oid)",
+  "accessed_utc": "2026-06-01T07:03:59+00:00",
+  "n_source_ids": 359073,
+  "n_matched": 16924,
+  "match_rate": 0.0471,
+  "chunk_size": 5000,
+  "product": "data/raw/allwise/allwise_xmatch.parquet (gitignored)",
+  "sha256": "732a8c976f801dfdc739dcb57773844750b4fdd8a80a42edfe93143cc3888934",
+  "query": "SELECT bn.source_id, bn.angular_distance, w.designation, w.ra, w.dec,\n       w.w1mpro, w.w1mpro_error, w.w2mpro, w.w2mpro_error,\n       w.w3mpro, w.w3mpro_error, w.w4mpro, w.w4mpro_error,\n       w.cc_flags, w.ph_qual, w.ext_flag, w.var_flag,\n       w.w1mjd_mean, w.w2mjd_mean, w.w3mjd_mean, w.w4mjd_mean\nFROM gaiaedr3.allwise_best_neighbour AS bn\nJOIN gaiadr1.allwise_original_valid AS w ON bn.allwise_oid = w.allwise_oid\nWHERE bn.source_id IN ({ids})"
+}
