@@ -3220,3 +3220,68 @@ That's a clean, fully-explained result for Channel A's detection branch. Let me 
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Pushed (`1b3f7a8`). **This is a real milestone — the first complete Channel-A result, and it's a clean, *explained* null.** Here's the whole arc on real data:
+
+```
+359,073 white dwarfs (frozen sample)
+   → 16,924 with AllWISE photometry
+      → 923 with a W3/W4 (cooler-band) excess
+         → 705 fit a blackbody
+            → 536 natural disks + companions   (median 511 K — textbook WD debris disks ✓ validation)
+            → 104 "cold" (<300 K) fits
+                 −  7  fail contamination flags
+                 − 85  fail W3/W4 reliability (marginal detections)
+                 − 12  ALL in high-cirrus fields (E(B-V) 0.30–1.22)
+              =   0  survive
+```
+
+The discipline paid off exactly as designed: **every single candidate was explained away by a concrete natural cause** — not hand-waved, *explained* (a disk, a marginal detection, or Galactic cirrus). That's the "try to explain them away and see what's left" methodology working, and what's left is *nothing*. A null reached by explanation, not assertion.
+
+And it confirms §4.A's honesty in advance: WISE simply can't see genuinely cold dust, so its detections are warm disks and its cold "excesses" are cirrus. **The search isn't "dead" — the detection branch was never where the cold-anomaly sensitivity lived.**
+
+## Where the real constraint comes from — next phase
+The headline `f_max` and the actual cold-anomaly sensitivity come from the **upper-limit / forced-photometry layer** (which you'd already greenlit):
+- **CatWISE2020 / unWISE** forced photometry (W1/W2) for *all* 359k — fluxes/limits for the non-detected majority;
+- **AllWISE depth model** for W3/W4 upper limits;
+- → **injection–recovery** → per-object completeness `C_i(T_x,Ω)` → **`f_max`**.
+
+That's the next major build. It's substantial data engineering, and we're at a clean, satisfying milestone — so: **keep rolling into the upper-limit layer**, or pause here to let you (and the experts) review the whole Channel-A pipeline first? Either is a good moment; your call.
+
+### 🧑 Tonio
+
+Since everything is on the record let’s just push on. The experts can second guess our null result at their leisure.
+
+### 🤖 Claude
+
+On the record and pushing on — that's the right spirit for a registered null. Building the **upper-limit layer** now: the per-object sensitivity to a cold excess and the headline `f_max`. I'll use the survey-depth / injection-recovery approach (a WD constrains an excess of given temperature and luminosity if such an excess would have exceeded the WISE depth at its position).
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+The `f_max` table is computed — but before I present it I need to apply one crucial honesty correction to the *framing*, because the anomaly limit only applies where a cold excess is both WISE-detectable **and** distinguishable from a natural disk. Let me fix the figure to show the three regimes correctly.
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Let me verify the figure renders cleanly before sending it.
+
+
+_[tools: Read]_
+
+That's a clean, honest headline figure. Let me log the step, commit, and show it to you.
+
+
+_[tools: Edit]_

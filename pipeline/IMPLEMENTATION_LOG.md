@@ -48,3 +48,13 @@ and injection-recovery (next steps), per §5.3.*
 The 104 cold-fit (T_x<300 K) candidates resolve completely: **7** fail cc_flags/ext; **85** fail W3/W4 reliability (marginal/low-S/N detections); the remaining **12** are **all in high-cirrus fields** (E(B-V) 0.30–1.22 — every one well above any plausible ceiling, so the conclusion is threshold-independent). **Zero survive.**
 
 So the WISE-detection branch of Channel A yields **no unexplained cold excess** — every candidate has a natural cause — while correctly recovering ~536 warm debris disks/companions (median T_x ≈ 511 K). This is the *expected* null (§4.A: WISE cannot detect genuinely cold excess), reached by explanation rather than assertion. The real cold-anomaly sensitivity and `f_max` come from the upper-limit / forced-photometry layer (next).
+
+## 2026-06-01 — upper limit `f_max(T_x, f)` (§5.7, RQ4)
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| 11 | `f_max` via **survey-depth injection-recovery**: a WD constrains an excess of temperature `T_x` and bolometric-luminosity fraction `f` if that excess's flux density exceeds the **nominal AllWISE 5σ depth** (W1 16.9 / W2 16.0 / W3 11.5 / W4 8.0 mag) in some band. `C_i`=that boolean; `f_max = 3.0/ΣC_i` (zero unexplained detections). Apparent bolometric flux from the Bergeron BC anchored on observed G (distance-independent). | §5.7 zero-detection bound; uses the population (all 295,406 WDs with a photosphere), not just AllWISE detections. | §5.7 |
+| — | **Three-regime anomaly interpretation:** `T_x<~50 K` WISE-blind (unconstrained); **~50–300 K cold-anomaly window** = a cold excess is WISE-detectable AND distinguishable from a warm disk → the registered RQ4 constraint; `>300 K` excesses are natural disks (not an anomaly limit). | A warm "anomaly" is indistinguishable from a debris disk; a sub-50 K excess is below W4. Honest scope. | §4.A, §5.7 |
+| — | Refinement TODO (future pre-data amendment): position-dependent WISE depths; CatWISE/unWISE forced photometry to deepen W1/W2; far-IR (Herschel/JWST-MIRI) for `T_x<50 K`. | Nominal uniform depths are a v1; the cold (<50 K) regime needs far-IR. | §5.4, §4.A |
+
+**RESULT (RQ4):** in the cold-anomaly window (~50–300 K), with **zero** unexplained excesses found, `f_max ≈ few×10⁻³ to 10⁻⁴` of white dwarfs (depending on `T_x` and `f`). E.g. at `T_x=100 K, f=0.1`: `f_max ≈ 3×10⁻⁴`. Below ~50 K the search is WISE-blind. The registered, expected, *valuable* null with a quantitative bound. Figure: `figures/f_max.png`.
