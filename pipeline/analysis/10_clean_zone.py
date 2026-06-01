@@ -40,10 +40,14 @@ def s(df, col="source_id"):
 def main():
     spec = s(pd.read_parquet(SPEC))
     man = pd.read_csv(MAN, dtype={"source_id": str})[["source_id"]]
-    # polluted = class contains 'Z' and is a WD class (starts with D); in our sample
+    # polluted = class contains 'Z' and is a WD class (starts with D); in our sample.
+    # sdssspec carries MULTIPLE spectra per WD (duplicate source_ids), so collapse to one
+    # row per source_id: a WD is polluted if ANY of its spectra shows metal (Z) lines.
     spec["polluted"] = spec["spec_class"].fillna("").str.contains("Z") & \
         spec["spec_class"].fillna("").str.startswith("D")
-    pol = spec[spec["polluted"]].merge(man, on="source_id", how="inner").copy()
+    pol = (spec[spec["polluted"]].sort_values("spec_class")
+           .drop_duplicates("source_id", keep="first")
+           .merge(man, on="source_id", how="inner").copy())
     print(f"metal-polluted WDs (Z-class, in P_WD>0.75 sample): {len(pol):,}")
     print("  by class:", dict(pol["spec_class"].value_counts()))
 
@@ -75,9 +79,9 @@ def main():
           f"({100*nDisk/max(nW,1):.1f}% of WISE-covered)")
     print(f"  CLEAN inner zone (polluted, WISE-covered, no excess): {nClean:,} "
           f"({100*nClean/max(nW,1):.1f}%)")
-    print("  -> only a few percent of polluted WDs show an IR-detected dust disk (our")
-    print("     WISE-covered polluted subset is bright/nearby-biased, so ~6% vs the")
-    print("     literature few-% is expected); a CLEAN inner zone is the natural norm.")
+    print("  -> only a few percent of polluted WDs show an IR-detected dust disk")
+    print("     (literature-consistent for the bright/nearby WISE-covered subset);")
+    print("     a CLEAN inner zone is the natural norm.")
     print("  Natural tests (§5.2 items 10–11): clean zone = expected/common (gas-only,")
     print("     optically-thin, fully-accreted); many non-detections are sensitivity-limited.")
 

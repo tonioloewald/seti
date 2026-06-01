@@ -4298,3 +4298,101 @@ Add the SOURCES.md provenance row for the new fetched table:
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Both done, in order, and committed (`51c4194`). The full pass is now complete.
+
+## Channel B — closed (difference-image centroid vetting)
+The mandatory §5.2 item-9 test: in- vs out-of-transit difference imaging on the SPOC pixel files, locating the centroid of each flux dip. **All three finalists are off-target** — 0.76 / 0.76 / 1.56 px (16 / 16 / 33″) from the white dwarf, each toward the field. They're **confirmed background/blended eclipsing binaries**, not transits of the WDs. Channel B is a clean, fully-vetted null.
+
+## Channel C — done (accretion clean-zone)
+Pulled the SDSS spectral-class table from the *same pinned catalogue* (no new survey) → **1,137 metal-polluted (accreting) WDs**. Of the 157 with AllWISE coverage, **10 (6.4%) are disk-bearing, 147 (93.6%) have a clean inner zone** — clean is the natural norm, literature-consistent. (Caught my own error here: a raw W1/W2 χ cut gave a spurious 18.5%; the calibrated W3/W4 battery — the one Channel A proved trustworthy — gives the honest 6.4%.) As registered (§5.6), a clean zone only counts if it coincides with an A/B survivor — and with **0 A and 0 B survivors, it elevates nothing.** Corroborating-only, exactly as the registration anticipated.
+
+## Where this leaves the project
+
+**All three registered channels now have a complete first pass — three clean nulls**, each reached by *explanation* rather than assertion:
+- **A**: no unexplained IR excess (every cold candidate → cirrus/reliability); `f_max ≈ 10⁻³–10⁻⁴` in the 50–300 K window; variability null.
+- **B**: no transit-of-a-WD; loud signals are known variables, transit-shaped ones are off-target EBs.
+- **C**: clean inner zones are common/natural; no coincident anomaly.
+
+Plus a hardened, string-native, re-run-verified pipeline and full provenance. The remaining work is all **pre-data amendments** (§8): `f_max` refinements (CatWISE/unWISE, far-IR for <50 K), Channel B to fainter mags, full-sample variability, and — importantly — **domain-expert review** before any write-up.
+
+Natural next step would be the **`f_max` / forced-photometry refinement** (it deepens the one quantitative limit the search produces), or pausing here for expert review. Which way do you want to go?
+
+### 🧑 Tonio
+
+Keep going.
+
+### 🤖 Claude
+
+On it — the natural next step is tightening **f_max**, the one quantitative limit the search produces. The most rigorous self-contained improvement (no risky new fetch) is replacing the *nominal uniform* WISE depths with **position-dependent depths** — WISE sensitivity varies strongly with ecliptic latitude (coverage deepens toward the poles), and I can calibrate depth(β) empirically from the AllWISE detections already in hand, then apply it per-source. Let me read the current upper-limit script.
+
+
+_[tools: Read]_
+
+The natural next step is the **f_max / forced-photometry refinement** flagged in RESULTS. Let me think about which version is both rigorous and tractable — and check the one prerequisite (whether Gaia provides a precomputed CatWISE cross-match, the way it did for AllWISE).
+
+
+_[tools: Bash]_
+
+`external.catwise2020` is available at the Gaia archive (CatWISE2020 — ~1 mag deeper W1/W2 than AllWISE), but there's **no precomputed Gaia↔CatWISE cross-match** (unlike AllWISE), so it needs a positional match. Two things matter for the registered "CatWISE/unWISE forced photometry" refinement: deeper W1/W2 photometry (a deeper *excess search*) and the deeper W1/W2 *depth* for f_max. Crucially, I should derive the depth from real data, not hardcode a remembered constant. Let me feasibility-test the cross-match on a sample first.
+
+
+_[tools: Bash]_
+
+The Gaia archive is throwing 500s (it's mid-migration to DR4) and CatWISE only helps the *warm* regime anyway — not the headline cold window. Rather than fight a flaky archive for marginal value, let me pivot to a **self-contained refinement that strengthens the core result**: testing the Channel-A null against the **DA (pure-H) photosphere assumption** (logged TODO, decision #4). ~20% of WDs are helium-atmosphere; using DA colors for them is a systematic. I now have spectral types (from the Channel-C fetch) *and* the Bergeron DB grid in hand. Let me first check the cheap diagnostic: do any of the W3/W4-excess or cold candidates have He-atmosphere spectral types at all?
+
+
+_[tools: Bash]_
+
+There *are* He-atmosphere WDs among the candidates: of the cold candidates, 4 are He-types (DQ/DC) that were modeled with the DA grid. But notice the key structural point — the cold candidates were all eliminated by **cirrus and W3/W4 detection reliability**, both of which are *independent of the assumed photosphere*. Still, let me make that rigorous rather than hand-wave it: recompute the He-atmosphere predictions with the DB grid and quantify the systematic.
+
+(Also flagged: the battery has duplicate rows for some source_ids — I'll check that too.) Let me look at how the DA grid/prediction is built so I mirror it for DB:
+
+
+_[tools: Read]_
+
+I have the grid pattern. To do the He check rigorously I should use the catalogue's *helium* parameters (Teff_He/logg_He), not the H ones. Let me get their byte ranges:
+
+
+_[tools: Bash]_
+
+`Teff_He` (1095–1103), `logg_He` (1114–1121). Before the DB recompute, let me check that duplicate-rows issue I noticed (it could mean an upstream AllWISE many-to-one match inflating counts) — and confirm the key physical point that W3/W4 photosphere is negligible:
+
+
+_[tools: Bash]_
+
+No duplicates in the battery — clean (923 unique, 104 cold). The earlier 111 came from **`sdssspec` having multiple spectra per WD** (duplicate source_ids). That's worth checking, because Channel C also merges on `sdssspec` — if I didn't dedup, the polluted/clean counts I just reported could be double-counted. Let me verify.
+
+
+_[tools: Bash]_
+
+**Real bug — and I'm glad I checked before moving on.** `sdssspec` has 9,651 duplicate rows (WDs with multiple SDSS spectra), so Channel C's "1,137 polluted" actually **double-counts** — it's **894 unique** polluted WDs. The clean/disk fractions I just committed are inflated by duplicates. Let me fix the dedup in `10_clean_zone.py` (a WD is polluted if *any* of its spectra shows metals) and re-run.
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Corrected: **894 unique polluted WDs**, 112 WISE-covered, **5 disk-bearing (4.5%) / 107 clean (95.5%)** — even closer to the literature few-percent, and the corroborating-null conclusion is unchanged. The printed "~6%" line is now stale. Let me fix it and update the docs with corrected numbers.
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_

@@ -163,20 +163,21 @@ coincides with a Channel-A or -B survivor**.
 
 We identify the polluted WDs deterministically from the *same pinned* Gentile Fusillo 2021
 catalogue — its `sdssspec.dat` table of SDSS visual spectral classifications — taking every
-WD class containing **Z** (Ca H&K metal lines): **1,137** polluted WDs in our P_WD>0.75
-sample (mostly DZ, plus DAZ/DBZ/DBAZ/…). Of these, **157** have AllWISE coverage, so inner
-dust *could* be seen. Using the calibrated, photosphere-independent disk detection (the
-Channel-A W3/W4 battery — deliberately **not** a raw W1/W2 cut, which Channel A showed is
-inflation-dominated), **10 (6.4%) are disk-bearing and 147 (93.6%) have a clean inner
-zone.** Only a few percent showing a disk — with a clean zone the norm — is the expected,
-literature-consistent picture (our WISE-covered polluted subset is bright/nearby-biased, so
-~6% vs the literature few-% is unsurprising). The clean state is natural (gas-only or
+WD class containing **Z** (Ca H&K metal lines): **894** unique polluted WDs in our P_WD>0.75
+sample (mostly DZ, plus DAZ/DBZ/DBAZ/…; the table carries multiple spectra per WD, so it is
+deduplicated to one row per source — a WD counts as polluted if *any* of its spectra shows
+metals). Of these, **112** have AllWISE coverage, so inner dust *could* be seen. Using the
+calibrated, photosphere-independent disk detection (the Channel-A W3/W4 battery — deliberately
+**not** a raw W1/W2 cut, which Channel A showed is inflation-dominated), **5 (4.5%) are
+disk-bearing and 107 (95.5%) have a clean inner zone.** Only a few percent showing a disk —
+with a clean zone the norm — is the expected, literature-consistent picture. The clean state
+is natural (gas-only or
 optically-thin disks, recently-fully-accreted events; §5.2 item 10), and many non-detections
 are simply sensitivity-limited (item 11).
 
 **Coincidence (the only elevation rule):** with **0 Channel-A residual survivors** and
-**0 Channel-B on-target survivors**, the clean-zone set intersects the A∪B survivors in
-**0 objects**. Channel C therefore contributes **no elevated anomaly** — exactly what its
+**0 Channel-B on-target survivors**, the clean-zone set (107 WDs) intersects the A∪B
+survivors in **0 objects**. Channel C therefore contributes **no elevated anomaly** — exactly what its
 corroborating-only registration anticipates — while leaving a useful byproduct: a
 characterised polluted-WD / clean-inner-zone catalogue
 (`data/derived/channel_c_clean_zone.parquet`).
