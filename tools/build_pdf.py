@@ -33,6 +33,10 @@ th { background: #f0f0f0; }
 ul, ol { margin: 0.2em 0 0.6em 1.2em; padding: 0; }
 li { margin: 0.15em 0; }
 h2, h3 { page-break-after: avoid; }
+figure { margin: 1.1em auto; text-align: center; page-break-inside: avoid; }
+figure img { max-width: 100%; height: auto; border: 1px solid #ddd; }
+figcaption { font-size: 9pt; color: #333; text-align: left; margin-top: 0.45em;
+             line-height: 1.35; }
 """
 
 
@@ -45,7 +49,8 @@ def main():
             f"<style>{CSS}</style></head><body>{body}</body></html>")
     open(base + ".html", "w", encoding="utf-8").write(html)
     from weasyprint import HTML
-    HTML(string=html).write_pdf(base + ".pdf")
+    base_url = os.path.dirname(os.path.abspath(src_path))   # so ../figures/* resolves
+    HTML(string=html, base_url=base_url).write_pdf(base + ".pdf")
     print(f"wrote {base}.pdf ({os.path.getsize(base+'.pdf')//1024} KB) and {base}.html")
 
 

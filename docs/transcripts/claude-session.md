@@ -5209,3 +5209,115 @@ PDF generated (72 KB). Let me verify it rendered correctly (Unicode, layout) bef
 
 
 _[tools: Read]_
+
+The PDF rendered cleanly — proper academic layout, centered title, justified body, page numbers, and all the Unicode (≈, 10⁻³, the subscripts) displays correctly. Let me commit the build tooling and the artifacts, then send it to you:
+
+
+_[tools: Bash]_
+
+
+_[tools: SendUserFile]_
+
+Delivered — the PDF is in your hands, and you can regenerate it anytime with `python3 tools/build_pdf.py paper/draft.md` (the script and a rendered copy are now in the repo at `paper/draft.pdf`).
+
+## How the PDF works (and alternatives)
+
+I built a small reusable tool (`tools/build_pdf.py`): markdown → styled HTML → PDF via `python-markdown` + `weasyprint` (pure-Python, full Unicode — which matters now that the math is Greek letters and superscripts). If you ever want to run it on your own machine: `pip install markdown weasyprint`, then the command above.
+
+Other easy routes if you prefer: open `paper/draft.html` (also in the repo) in any browser and **Print → Save as PDF**; or use a markdown editor (Typora, VS Code's "Markdown PDF" extension, Obsidian). All handle the Unicode fine. For the *journal* submission later, the PDF comes from MNRAS LaTeX instead — but this one is perfect for expert review.
+
+## OSF: what to do
+
+The key is that OSF has **two separate things**, and they serve different roles:
+
+| | **The Registration** (osf.io/6yh7r) | **The Project** (the working component) |
+|---|---|---|
+| What it is | Immutable, timestamped snapshot of the **plan** | Mutable workspace for files, outputs, links |
+| Goes here | The pre-registration only | Results, paper, transcripts, code links |
+
+**So, concretely:**
+
+1. **Don't add results or the paper to the Registration.** Its entire value is being the frozen, untouched plan. Adding outputs to it muddies that. Leave it as-is.
+
+2. **File your amendments as Registration *Updates*.** OSF lets you publish updates to a registration (new immutable versions, original preserved). The entries in `AMENDMENTS.md` — the pre-data elaborations and the *planned* unWISE amendment — belong there, so the "this decision came before that data" ordering is authoritative on OSF, not just in git. This is the one OSF action I'd actually prioritize. (If the update UI is unclear, your git history + `AMENDMENTS.md` are already a tamper-evident record; the OSF update just makes it official.)
+
+3. **Link the GitHub repo to the OSF Project** (OSF Settings → Add-ons → GitHub). This surfaces *everything* — code, `RESULTS.md`, the paper, the figures, the full transcripts — from OSF **without duplicating files**, so the repo stays your single living source of truth. Much better than manually re-uploading documents that will keep changing.
+
+4. **Optionally, upload frozen snapshots at milestones.** OSF is built for permanent archival, so at *submission* it's worth uploading a frozen `draft.pdf` plus a tagged release zip as a permanent record. Right now, pre-submission, linking the repo is enough — no need to upload more documents.
+
+**For the expert review itself, you don't need OSF at all** — just send reviewers the PDF I delivered (or the repo link). OSF is about the permanent provenance record; the review is a separate, private step.
+
+So the short answer: **don't pile documents into the registration; file the amendments as Updates, link the GitHub repo to the project, and save a frozen PDF snapshot on OSF when you submit.**
+
+### 🧑 Tonio
+
+Before we do all that, can we inline the figures?
+
+### 🤖 Claude
+
+Good call — reviewers should *see* the figures, not just filenames. Let me inline all five with proper captions and fix the build so image paths resolve in the PDF. First, let me see the current figure references in the draft:
+
+
+_[tools: Bash]_
+
+I'll inline all five figures, numbered by order of appearance (QQ-plot → f_max → transit candidates → centroid → variability). First, update the build tool so relative image paths resolve and figures are styled:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now let me read the sections where figures go, to place them precisely:
+
+
+_[tools: Read]_
+
+Now the insertions. **Figure 1** (QQ-plot) at the end of §3.5:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+**Figure 2** (f_max) after the §4.2 upper-limit paragraph:
+
+
+_[tools: Edit]_
+
+**Figures 3 & 4** (transit candidates + centroid) at the end of §4.3:
+
+
+_[tools: Edit]_
+
+**Figure 5** (variability) at the end of §4.4, and update its reference:
+
+
+_[tools: Edit]_
+
+Now remove the now-redundant trailing "Figures" summary, since they're all inline:
+
+
+_[tools: Bash]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now regenerate the PDF and verify the figures embedded correctly:
+
+
+_[tools: Bash]_
+
+PDF is now 1.5 MB (figures embedded), 13 pages, 5 figures. Let me spot-check that a figure page rendered correctly:
+
+
+_[tools: Read]_
+
+Page 7 ends §4.2 and the figure floated to the next page (standard for un-splittable figures). Let me confirm Figure 2 actually rendered on page 8:
+
+
+_[tools: Read]_

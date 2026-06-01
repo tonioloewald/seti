@@ -22,6 +22,10 @@ th { background: #f0f0f0; }
 ul, ol { margin: 0.2em 0 0.6em 1.2em; padding: 0; }
 li { margin: 0.15em 0; }
 h2, h3 { page-break-after: avoid; }
+figure { margin: 1.1em auto; text-align: center; page-break-inside: avoid; }
+figure img { max-width: 100%; height: auto; border: 1px solid #ddd; }
+figcaption { font-size: 9pt; color: #333; text-align: left; margin-top: 0.45em;
+             line-height: 1.35; }
 </style></head><body><h1>An Anomaly-Residual Search for Unexplained Thermal and Photometric Signatures Around White Dwarfs</h1>
 <p><strong>Tonio Loewald</strong>¹ <em>(corresponding; human author of record)</em></p>
 <p>¹ Independent researcher. Contact: tloewald [at] gmail.com</p>
@@ -194,6 +198,16 @@ rate, and the staged look-elsewhere effect (Gross &amp; Vitells 2010) is carried
 detection bar (cf. the 7.1σ Kepler threshold; Jenkins et al. 2002). The channels are
 kept <em>separate</em>: we deliberately avoid a single tunable weighted scalar in which arbitrary
 weights could creep in.</p>
+<figure>
+  <img src="../figures/qq_excess.png" alt="QQ-plot of the excess empirical null">
+  <figcaption><b>Figure 1.</b> Quantile–quantile plot of the per-band infrared-excess
+  significance against the Gaussian null. The heavy departure from the unit-slope line is the
+  genomic-control inflation (λ ≈ 10.6 in W1): the true scatter of the photospheric prediction
+  is roughly three times wider than the formal photometric errors imply. This is what makes
+  the empirical-null calibration a structural necessity rather than a stylistic preference —
+  formal errors would manufacture thousands of false flags.</figcaption>
+</figure>
+
 <h3>3.6 Upper limit</h3>
 <p>With zero unexplained excesses, we compute the registered zero-detection bound
 f_max(T_x, f) = 3.0 / Σ_i C_i(T_x, f) (95% one-sided), where C_i is unity if
@@ -219,7 +233,7 @@ fields</strong> (SFD E(B-V) 0.30–1.22, every one well above any plausible ceil
 conclusion is threshold-independent). <strong>Zero survive.</strong> Channel A&rsquo;s static-excess branch
 finds <strong>no unexplained infrared excess</strong> at any temperature, while correctly recovering the
 known debris-disk population — a null reached by <em>explanation</em>, not assertion.</p>
-<p>The resulting upper limit (Figure 1) has three regimes. Below ~50 K the search is
+<p>The resulting upper limit (Figure 2) has three regimes. Below ~50 K the search is
 WISE-blind (the reddest band is 22 µm). In the <strong>50–300 K cold-anomaly window</strong>, where a cold
 excess is both WISE-detectable and distinguishable from a warm disk, with zero unexplained
 excesses we obtain f_max ≈ few×10⁻³ to 10⁻⁴; e.g. at
@@ -228,6 +242,16 @@ excess is classified as a natural disk, so the tight numbers there
 are a generic IR-excess limit, not an anomaly limit. In plain terms: <strong>fewer than one in a
 thousand to one in ten thousand (predominantly solar-neighbourhood) white dwarfs host an
 unexplained cold (50–300 K) infrared excess</strong>, with the colder regime beyond WISE&rsquo;s reach.</p>
+<figure>
+  <img src="../figures/f_max.png" alt="Cold-excess upper limit f_max">
+  <figcaption><b>Figure 2.</b> The cold-excess upper limit f_max(T_x, f) computed over all
+  295,406 white dwarfs with a usable photosphere, as a function of excess temperature T_x for
+  several bolometric-luminosity fractions f. Three regimes are shaded: WISE-blind (≲50 K, the
+  reddest band is 22 µm); the 50–300 K cold-anomaly window where the registered constraint
+  applies (f_max ≈ 10⁻³–10⁻⁴); and the >300 K natural-disk regime, where any excess is a
+  debris disk and the tight numbers are a generic IR-excess limit, not an anomaly limit.</figcaption>
+</figure>
+
 <h3>4.3 Channel B — no transit of a white dwarf</h3>
 <p>Of the 157 bright (G &lt; 14) WDs, 136 have usable TESS light curves. The strongest periodic
 signals are <strong>stellar variability, not transits</strong>: of the top nine by BLS signal-to-noise,
@@ -239,6 +263,24 @@ cannot be a transit <em>of the WD</em>. The mandatory difference-image centroid 
 all three flux-dip centroids are offset from the white dwarf by <strong>0.76–1.56 px (16–33″)</strong>,
 toward field neighbours — they are <strong>background/blended eclipsing binaries</strong>. Channel B is a
 clean, fully-vetted null.</p>
+<figure>
+  <img src="../figures/transit_candidates.png" alt="Phase-folded TESS transit candidates">
+  <figcaption><b>Figure 3.</b> Phase-folded TESS light curves of the nine highest-S/N BLS
+  signals among the bright white dwarfs. Six are smooth sinusoidal modulations (stellar
+  variability — ellipsoidal/reflection/pulsation — most already catalogued); the three with a
+  flat baseline and a brief dip are the transit-shaped candidates carried to centroid vetting
+  (Figure 4).</figcaption>
+</figure>
+
+<figure>
+  <img src="../figures/centroid_vet.png" alt="Difference-image centroid vetting">
+  <figcaption><b>Figure 4.</b> Difference imaging (out-of-transit minus in-transit) for the
+  three transit-shaped candidates. White star: the white dwarf; red cross: the flux-dip
+  centroid; cyan circles: Gaia neighbours. In every case the dip centroid is offset from the
+  white dwarf (0.76–1.56 px; 16–33″) toward a field source — confirming background/blended
+  eclipsing binaries, not transits of the white dwarf.</figcaption>
+</figure>
+
 <h3>4.4 Channel A — variability, including the bare-WD population</h3>
 <p>The initial variability search (540 WDs with ≥ 10 epochs) flagged 17 variables, all
 natural (disk variability or brown-dwarf weather). Because that search required a static
@@ -252,7 +294,16 @@ IR-excess systems (unresolved companions or variable dust disks, including GD 56
 residual</strong>, all low-significance (Stetson J ≤ 1.9), isolated, and without IR excess —
 consistent with the empirical-null statistical tail and instrumental systematics (some are
 ROSAT X-ray WDs, hence likely magnetic/accreting). <strong>No anomalous fluctuating bare WD.</strong>
-Removing the selection bias leaves the highest-value-signal null intact (Figure 2).</p>
+Removing the selection bias leaves the highest-value-signal null intact (Figure 5).</p>
+<figure>
+  <img src="../figures/variability_bright.png" alt="NEOWISE light curves of flagged variables">
+  <figcaption><b>Figure 5.</b> NEOWISE W1 light curves of the strongest flagged variables
+  from the bare-WD-inclusive search (grey points: single exposures; red: ~180-day visit
+  medians). The loud variables are cataclysmic variables and the known variable-dust-disk
+  white dwarf GD 56; the marginal residual (lower right) is flat and noisy. All are natural —
+  no anomalous fluctuating bare white dwarf survives.</figcaption>
+</figure>
+
 <h3>4.5 Channel C — no coincident anomaly</h3>
 <p>We identify <strong>894 unique</strong> metal-polluted (Z-class) WDs in the sample. Of the 112 with
 AllWISE coverage, <strong>5 (4.5%) are disk-bearing and 107 (95.5%) have a clean inner zone</strong> —
@@ -369,11 +420,4 @@ DA-atmosphere assumption, and a variability selection bias) are addressed in §4
 <li>Storey, J. D. 2002, <em>J. R. Stat. Soc. B</em>, 64, 479 — q-value / false-discovery control.</li>
 <li>Vanderburg, A., et al. 2020, <em>Nature</em>, 585, 363 — a giant planet transiting WD 1856+534.</li>
 <li>Wright, E. L., et al. 2010, <em>AJ</em>, 140, 1868 — Wide-field Infrared Survey Explorer (WISE).</li>
-</ul>
-<hr />
-<p><em>Figures.</em> <strong>Figure 1</strong> — cold-excess upper limit f_max(T_x, f) with the three
-regimes (<code>figures/f_max.png</code>). <strong>Figure 2</strong> — NEOWISE W1 light curves of the strongest
-flagged variables from the bare-WD-inclusive search, all natural
-(<code>figures/variability_bright.png</code>). Supporting figures: QQ-plot of the excess empirical null
-(<code>figures/qq_excess.png</code>), folded transit candidates (<code>figures/transit_candidates.png</code>), and
-difference-image centroid vetting (<code>figures/centroid_vet.png</code>).</p></body></html>
+</ul></body></html>

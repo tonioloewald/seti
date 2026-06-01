@@ -202,6 +202,16 @@ detection bar (cf. the 7.1σ Kepler threshold; Jenkins et al. 2002). The channel
 kept *separate*: we deliberately avoid a single tunable weighted scalar in which arbitrary
 weights could creep in.
 
+<figure>
+  <img src="../figures/qq_excess.png" alt="QQ-plot of the excess empirical null">
+  <figcaption><b>Figure 1.</b> Quantile–quantile plot of the per-band infrared-excess
+  significance against the Gaussian null. The heavy departure from the unit-slope line is the
+  genomic-control inflation (λ ≈ 10.6 in W1): the true scatter of the photospheric prediction
+  is roughly three times wider than the formal photometric errors imply. This is what makes
+  the empirical-null calibration a structural necessity rather than a stylistic preference —
+  formal errors would manufacture thousands of false flags.</figcaption>
+</figure>
+
 ### 3.6 Upper limit
 
 With zero unexplained excesses, we compute the registered zero-detection bound
@@ -234,7 +244,7 @@ conclusion is threshold-independent). **Zero survive.** Channel A's static-exces
 finds **no unexplained infrared excess** at any temperature, while correctly recovering the
 known debris-disk population — a null reached by *explanation*, not assertion.
 
-The resulting upper limit (Figure 1) has three regimes. Below ~50 K the search is
+The resulting upper limit (Figure 2) has three regimes. Below ~50 K the search is
 WISE-blind (the reddest band is 22 µm). In the **50–300 K cold-anomaly window**, where a cold
 excess is both WISE-detectable and distinguishable from a warm disk, with zero unexplained
 excesses we obtain f_max ≈ few×10⁻³ to 10⁻⁴; e.g. at
@@ -243,6 +253,16 @@ excess is classified as a natural disk, so the tight numbers there
 are a generic IR-excess limit, not an anomaly limit. In plain terms: **fewer than one in a
 thousand to one in ten thousand (predominantly solar-neighbourhood) white dwarfs host an
 unexplained cold (50–300 K) infrared excess**, with the colder regime beyond WISE's reach.
+
+<figure>
+  <img src="../figures/f_max.png" alt="Cold-excess upper limit f_max">
+  <figcaption><b>Figure 2.</b> The cold-excess upper limit f_max(T_x, f) computed over all
+  295,406 white dwarfs with a usable photosphere, as a function of excess temperature T_x for
+  several bolometric-luminosity fractions f. Three regimes are shaded: WISE-blind (≲50 K, the
+  reddest band is 22 µm); the 50–300 K cold-anomaly window where the registered constraint
+  applies (f_max ≈ 10⁻³–10⁻⁴); and the >300 K natural-disk regime, where any excess is a
+  debris disk and the tight numbers are a generic IR-excess limit, not an anomaly limit.</figcaption>
+</figure>
 
 ### 4.3 Channel B — no transit of a white dwarf
 
@@ -256,6 +276,24 @@ cannot be a transit *of the WD*. The mandatory difference-image centroid test co
 all three flux-dip centroids are offset from the white dwarf by **0.76–1.56 px (16–33″)**,
 toward field neighbours — they are **background/blended eclipsing binaries**. Channel B is a
 clean, fully-vetted null.
+
+<figure>
+  <img src="../figures/transit_candidates.png" alt="Phase-folded TESS transit candidates">
+  <figcaption><b>Figure 3.</b> Phase-folded TESS light curves of the nine highest-S/N BLS
+  signals among the bright white dwarfs. Six are smooth sinusoidal modulations (stellar
+  variability — ellipsoidal/reflection/pulsation — most already catalogued); the three with a
+  flat baseline and a brief dip are the transit-shaped candidates carried to centroid vetting
+  (Figure 4).</figcaption>
+</figure>
+
+<figure>
+  <img src="../figures/centroid_vet.png" alt="Difference-image centroid vetting">
+  <figcaption><b>Figure 4.</b> Difference imaging (out-of-transit minus in-transit) for the
+  three transit-shaped candidates. White star: the white dwarf; red cross: the flux-dip
+  centroid; cyan circles: Gaia neighbours. In every case the dip centroid is offset from the
+  white dwarf (0.76–1.56 px; 16–33″) toward a field source — confirming background/blended
+  eclipsing binaries, not transits of the white dwarf.</figcaption>
+</figure>
 
 ### 4.4 Channel A — variability, including the bare-WD population
 
@@ -271,7 +309,16 @@ IR-excess systems (unresolved companions or variable dust disks, including GD 56
 residual**, all low-significance (Stetson J ≤ 1.9), isolated, and without IR excess —
 consistent with the empirical-null statistical tail and instrumental systematics (some are
 ROSAT X-ray WDs, hence likely magnetic/accreting). **No anomalous fluctuating bare WD.**
-Removing the selection bias leaves the highest-value-signal null intact (Figure 2).
+Removing the selection bias leaves the highest-value-signal null intact (Figure 5).
+
+<figure>
+  <img src="../figures/variability_bright.png" alt="NEOWISE light curves of flagged variables">
+  <figcaption><b>Figure 5.</b> NEOWISE W1 light curves of the strongest flagged variables
+  from the bare-WD-inclusive search (grey points: single exposures; red: ~180-day visit
+  medians). The loud variables are cataclysmic variables and the known variable-dust-disk
+  white dwarf GD 56; the marginal residual (lower right) is flat and noisy. All are natural —
+  no anomalous fluctuating bare white dwarf survives.</figcaption>
+</figure>
 
 ### 4.5 Channel C — no coincident anomaly
 
@@ -408,12 +455,3 @@ DA-atmosphere assumption, and a variability selection bias) are addressed in §4
 - Storey, J. D. 2002, *J. R. Stat. Soc. B*, 64, 479 — q-value / false-discovery control.
 - Vanderburg, A., et al. 2020, *Nature*, 585, 363 — a giant planet transiting WD 1856+534.
 - Wright, E. L., et al. 2010, *AJ*, 140, 1868 — Wide-field Infrared Survey Explorer (WISE).
-
----
-
-*Figures.* **Figure 1** — cold-excess upper limit f_max(T_x, f) with the three
-regimes (`figures/f_max.png`). **Figure 2** — NEOWISE W1 light curves of the strongest
-flagged variables from the bare-WD-inclusive search, all natural
-(`figures/variability_bright.png`). Supporting figures: QQ-plot of the excess empirical null
-(`figures/qq_excess.png`), folded transit candidates (`figures/transit_candidates.png`), and
-difference-image centroid vetting (`figures/centroid_vet.png`).
