@@ -7,8 +7,17 @@ amendment that pre-registers the new analysis before that data is examined"). It
 
 **Status:** frozen and committed to the public repository **before any CatWISE2020/unWISE
 photometry of the sample is examined.** The git commit that adds this file is the timestamped
-freeze; the authoritative order-of-decisions record is the commit history (the OSF registration
-is linked to this repository). It remains **confirmatory**.
+freeze; the authoritative order-of-decisions record is the commit history. It remains
+**confirmatory**.
+
+**Registration provenance.**
+- **Parent registration (v1):** OSF [osf.io/6yh7r](https://osf.io/6yh7r) · DOI
+  **10.17605/OSF.IO/6YH7R** (accepted, live). This document amends/extends that plan.
+- **This (v2) registration:** filed as a **separate OSF registration from the same project**
+  (OSF's native registration-Update flow is unavailable for the v1 Open-Ended Registration).
+  DOI: **_[to be added once minted]_**.
+- **Frozen at git commit `f510757`** — the exact, immutable v2 plan; the OSF v2 registration is
+  created *before* the deeper data are fetched, preserving confirmatory status.
 
 **No-peeking declaration.** The only prior contact with CatWISE was a *connectivity probe*
 (a `gaiadr3`/`external.catwise2020` upload query during v1) that returned a server error and

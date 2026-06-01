@@ -5569,3 +5569,8 @@ _[tools: Read]_
 
 
 _[tools: Edit]_
+
+Now the critical step — **commit this as the freeze**, which timestamps the v2 plan in the git history *before* any deeper data is touched:
+
+
+_[tools: Bash]_
