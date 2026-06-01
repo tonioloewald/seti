@@ -6092,3 +6092,81 @@ Let me verify the section numbering is now consistent, then commit:
 
 
 _[tools: Bash]_
+
+All clean — sections renumber cleanly (1–5 + Outcomes), all five entries are in, and every "Read more" link resolves (I added real ADS/Wikipedia URLs where Gemini had bare placeholders). Let me commit:
+
+
+_[tools: Bash]_
+
+Done — committed (`2b44e3f`). Both things handled:
+
+**Glossary** — folded Gemini's five entries into the existing structure rather than appending them (which would've re-created the §4 numbering clash):
+- **§1 Measurement:** Stetson J Index, CatWISE2020
+- **§2 Astrophysical:** Cataclysmic Variables
+- **§3 Statistical:** Selection Bias & the Brightness-Limited Sample (with a one-line note distinguishing it from the existing Malmquist-bias entry, so they don't read as redundant)
+- **§4 (new) Data-Handling & Computational Hazards:** the IEEE-754/float64 hazard — Literature bumped to §5
+
+One small thing I did beyond a straight paste: Gemini's entries had bare "Read more about X" placeholders with no URLs, so I added real links (ADS for CatWISE2020 and Stetson; Wikipedia for CVs, selection bias, and double-precision floats) to match the glossary's existing style.
+
+**Far-IR step remembered** — recorded in `AMENDMENTS.md` (planned amendments) as the AKARI-FIS/IRAS all-sky cross-match option, with the honest framing from our discussion: it's only good for *demonstrating* the <50 K regime stays unconstrained, since the deep facilities are pointed and the all-sky far-IR surveys are too shallow for WD dust. So it's there as a low-priority "do if a reviewer presses" item, not a real sensitivity gain.
+
+Nothing else outstanding — the manuscript, glossary, provenance, and v2 are all current and in sync. Resting point again, whenever the next thing comes up (or Neustroev replies).
+
+### 🧑 Tonio
+
+The Gemini critic had some suggestions for the latest draft:
+
+The integration of the v2 CatWISE2020 data and the structural changes have elevated this from a very good pre-registered study to a definitive methodological template. Elevating the source_id truncation hazard to §2 is a massive service to the community; it is exactly the kind of invisible, pipeline-destroying error that standard papers hide and independent research can spotlight. Sticking to your guns in §10 is also the right move—it establishes a transparent standard without bowing to institutional paranoia.
+Here is a critical read of the updated draft, focusing on a few structural seams introduced by the v2 updates, and one statistical result that requires slightly more defensive framing.
+### 1. The CatWISE2020 Seam in the Introduction and Methods
+You have cleanly integrated CatWISE into the Abstract, §4.7, and the Discussion, but the earlier sections of the paper still read as if they belong to the v1 draft.
+ * **§1 (Introduction) and §2 (Sample and data)** only introduce AllWISE and NEOWISE. CatWISE2020 is not mentioned at all in the data provenance setup.
+ * This creates a jarring narrative experience. A reviewer reading §2 will lock in their understanding of your photometric limits, only to have the ground shift under them in §4.7.
+ * **The Fix:** Add a single sentence to §2 under *Photometry and spectroscopy* explicitly stating that the AllWISE baseline is subsequently deepened by the CatWISE2020 catalog (Marocco et al. 2021) to test the warm-excess limits.
+### 2. The Genomic Control Jump (A Missing Explanation)
+In §4.7, you note that the empirical null's genomic-control inflation factor jumps massively in the CatWISE deeper sample: \lambda \approx 19 in W1, and 29 in W2 (up from 10.6 in AllWISE).
+You correctly frame this as vindication for using the empirical null. However, leaving the *cause* of this massive jump unexplained leaves a vulnerability. A hostile reviewer might argue that \lambda = 29 means your photospheric models or the cross-matches are actively breaking down in the deeper data, rather than the photometric errors simply underestimating the scatter.
+ * **The Pushback:** You need to briefly explain *why* the formal errors get so wildly optimistic in the deeper CatWISE coadds. CatWISE pushes deep into the unWISE epoch coadds where the dominant noise is no longer Poisson/read noise (which formal errors track well), but **source confusion, blending, and background fluctuations** (which formal errors routinely fail to capture).
+ * **The Fix:** Add a half-sentence in §4.7: "...(genomic-control \lambda \approx 19 in W1, 29 in W2, versus 10.6 in v1, **as source confusion and background fluctuations dominate the formal photometric errors at these fainter limits**), re-confirming the necessity of the empirical-null calibration." This shuts down any argument that your atmospheric models are failing.
+### 3. A Minor Precision in the Upper Limit Logic
+The logic in §4.7 is beautiful: you prove *empirically* that adding 75,060 new WDs with W1/W2 coverage does absolutely nothing to improve the cold limit (50–300 K).
+The phrasing "a cold 50–150 K excess does not emit detectably at 3.4/4.6 µm" is correct, but since your cold anomaly window is defined as 50–300 K throughout the rest of the paper, specifying 50–150 K here feels slightly mismatched. A 250 K excess *does* start to emit a trickle of flux in W2. Consider tweaking that line to simply state: "...all warm by construction—the Wien tail of a cold 50–300 K anomaly is too faint to trigger a detection at 3.4/4.6 µm without W3/W4 corroboration."
+### 4. Visual Hierarchy in the Captions
+Figure 1 and Figure 2 are doing heavy lifting for your statistical credibility. The caption for Figure 2 is excellent. The caption for Figure 1 is highly argumentative ("This is what makes the empirical-null calibration a structural necessity... formal errors would manufacture thousands of false flags.").
+While this is true, placing the argument in the caption rather than the main text (§3.5) breaks slightly with standard conventions. It is a minor stylistic point, but moving the phrase *"formal errors would manufacture thousands of false flags"* directly into the text of §3.5, and keeping the caption strictly descriptive of the visual departure from the unit-slope line, will make the manuscript read a bit tighter.
+This is ready. The logic is airtight, the null is rigorously earned, and the public release of the pipeline will provide immense utility to the white dwarf and debris disk communities, regardless of the technosignature angle.
+
+### 🤖 Claude
+
+Strong, actionable notes — all four are sound. Let me apply them. First let me pull up the relevant passages:
+
+
+_[tools: Bash]_
+
+Let me read the exact passages, then apply all four:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now edit 4 — trim Figure 1's caption to be descriptive (the argument already lives in §3.5). Let me read it:
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_

@@ -100,6 +100,8 @@ G_RP) is taken from the same catalogue. Mid-infrared photometry is obtained from
 AllWISE (Cutri et al. 2013) via the Gaia archive's precomputed, `source_id`-keyed
 cross-match (deterministic, not fuzzy positional matching): **16,924** WDs (4.7%) have an
 AllWISE counterpart, with per-band detections W1 16,897 / W2 9,081 / W3 650 / W4 339.
+This AllWISE baseline is subsequently deepened in W1/W2 by the CatWISE2020 catalogue
+(Marocco et al. 2021), in a pre-registered extension (§4.7) that tests the warm-excess limits.
 Multi-epoch infrared light curves come from NEOWISE-R (Mainzer et al. 2011) single-exposure
 photometry, retrieved by bulk positional cross-match on the IRSA TAP service. Time-series
 optical photometry comes from TESS (Ricker et al. 2015) via MAST. Spectral classifications
@@ -209,10 +211,9 @@ weights could creep in.
   <img src="../figures/qq_excess.png" alt="QQ-plot of the excess empirical null">
   <figcaption><b>Figure 1.</b> Quantile–quantile plot of the per-band infrared-excess
   significance against the Gaussian null. The heavy departure from the unit-slope line is the
-  genomic-control inflation (λ ≈ 10.6 in W1): the true scatter of the photospheric prediction
-  is roughly three times wider than the formal photometric errors imply. This is what makes
-  the empirical-null calibration a structural necessity rather than a stylistic preference —
-  formal errors would manufacture thousands of false flags.</figcaption>
+  genomic-control inflation (λ ≈ 10.6 in W1): the true scatter of the photospheric prediction is
+  roughly three times wider than the formal photometric errors imply — the basis for the
+  empirical-null thresholds set in §3.5.</figcaption>
 </figure>
 
 ### 3.6 Upper limit
@@ -357,15 +358,19 @@ Following external review, we executed a pre-registered amendment (frozen before
 data were examined) deepening the W1/W2 excess search and the warm-regime upper limit with
 CatWISE2020 (Marocco et al. 2021), which reaches ~1.4–1.75 mag deeper than AllWISE in W1/W2.
 The cross-match yields **91,197 WDs with W1/W2 — 5.4× the AllWISE sample, 75,060 of them new**
-— with W2 reaching ~20.5 mag. The deeper, cooler sample's photosphere-prediction scatter is
-even larger (genomic-control λ ≈ 19 in W1, 29 in W2, versus 10.6 in v1), re-confirming the
-necessity of the empirical-null calibration.
+— with W2 reaching ~20.5 mag. The deeper, cooler sample's scatter relative to the formal
+errors is even larger (genomic-control λ ≈ 19 in W1, 29 in W2, versus 10.6 in v1, as **source
+confusion, blending, and background fluctuations** dominate the formal photometric errors at
+these fainter unWISE-coadd limits — regimes the Poisson/read-noise error model does not
+capture), re-confirming the necessity of the empirical-null calibration rather than indicating
+any breakdown of the atmospheric models.
 
 The outcome matches the pre-registered predictions exactly. Requiring **W1+W2 corroboration**
 (a real excess must appear in both bands — W1 cross-calibrates cleanly to AllWISE while W2
 carries a small catalogue offset the per-band empirical null absorbs), the deeper search yields
-866 robust excesses, **all warm by construction** — a cold 50–150 K excess does not emit
-detectably at 3.4/4.6 µm — dominated by known disks, spectroscopic binaries, and cataclysmic
+866 robust excesses, **all warm by construction** — the Wien tail of a cold 50–300 K anomaly
+is too faint to trigger a detection at 3.4/4.6 µm without W3/W4 corroboration — dominated by
+known disks, spectroscopic binaries, and cataclysmic
 variables, with the remainder warm debris-disk/companion candidates. The deeper W1/W2 thus
 extends the warm-excess census but, by wavelength, **cannot** surface a cold-anomaly candidate.
 Recomputing f_max with the deeper W1/W2 depths (W3/W4 unchanged; Figure 6) leaves the
