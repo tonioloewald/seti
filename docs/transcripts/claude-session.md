@@ -3342,3 +3342,88 @@ The NEOWISE pull is running in the background (`b7u5ndwvb`, ~900 light curves). 
 
 
 _[tools: Write]_
+
+
+_[tools: Bash]_
+
+Pushed (`81bf4c6`). The time-variability layer is building:
+
+- **NEOWISE fetch running in the background** (`b7u5ndwvb`) — pulling ~900 multi-epoch W1/W2 light curves for the IR-excess set, with the proper-motion/background trap guarded. ~30–45 min.
+- **Variability analysis ready to fire** the moment the data lands: per-source **reduced χ²** (amplitude) + **Stetson J** (correlated W1/W2 variability — the proxy for the *structured* signal §1.1 prizes), both empirical-null calibrated, flagging amplitude **and** correlation, then vetting any flag against natural variability (disk variability, brown-dwarf weather, saturation).
+
+This is the search for the one thing a static debris disk *can't* fake: a fluctuating excess. I'll run the analysis and report the moment the NEOWISE pull finishes — I'll be notified on completion.
+
+Good timing for the glossary work on your end. When the light curves are in, we'll see whether anything in our IR-excess population is *moving* — and, as ever, try to explain away whatever does.
+
+### 🧑 Tonio
+
+Let’s make sure this chat log is updated in the repo. I wasn’t able to amend the glossary (I’m remote and GitHub’s editor won’t let me paste). 
+
+Here’s the additional glossary information if you can add it:
+
+Here is a breakdown of the three detection channels, followed by a clear guide to interpreting the project's potential outcomes. This is structured to serve as a direct, accessible reference for the project Wiki.
+## The Detection Channels
+To understand what we are searching for, it helps to know how we actually look at these stars. We do not take "pictures" of white dwarfs; we measure their light. An anomaly is a discrepancy between the light we expect to see and the light we actually measure.
+### Channel A: The Spectral Energy Distribution (SED)
+**The Concept:** A Spectral Energy Distribution (SED) is a graph that plots how much energy a star emits across different colors (wavelengths) of light. Because white dwarfs are dead stars with no internal fusion, they cool down predictably. Their SED is a simple, smooth curve that drops off steeply in the infrared.
+**The Signal:** We are looking for an "infrared excess"—a bulge in the infrared part of the spectrum. This happens when something orbiting the star absorbs the star's optical light, heats up, and re-radiates that energy as heat.
+**The Anomaly:** * **What is natural:** A warm debris disk (the shredded remains of an asteroid) or a brown dwarf companion.
+ * **What is anomalous:** An infrared excess with a temperature or shape that does not match standard rocky dust or known companions. The highest-value anomaly here is *dynamic*—an infrared excess that dramatically fluctuates over a decade of observations, suggesting active work rather than a passive, settling dust cloud.
+### Channel B: Transit Light-Curve Morphology
+**The Concept:** A light curve is a graph of a star’s brightness over time. If an object passes between the telescope and the star (a transit), the star's brightness temporarily dips.
+**The Signal:** Because white dwarfs are roughly the size of Earth, an orbiting object can block a massive fraction of their light, creating deep, highly visible transits.
+**The Anomaly:**
+ * **What is natural:** A spherical, intact planet produces a symmetric, U-shaped dip. Disintegrating asteroids (like those seen in the system WD 1145+017) leave long, messy dust tails, creating jagged, asymmetric dips.
+ * **What is anomalous:** A transit shape that is deeply asymmetric, flat-bottomed, perfectly square, or utterly irregular in a way that *cannot* be modeled by natural physics (spheres, rings, or disintegrating dust tails).
+### Channel C: The Accretion-State / Inner-Zone Cleanliness
+**The Concept:** White dwarfs have incredibly strong gravity. Any heavy elements (metals) in their atmosphere should rapidly sink below the surface. If we see metals in a white dwarf's spectrum (a "polluted" white dwarf), it means the star is *actively* eating rocky material right now.
+**The Signal:** We look at stars that are actively polluted. Usually, this pollution is fed by a visible debris disk sitting right next to the star.
+**The Anomaly:** * **What is natural:** A polluted star surrounded by a dusty, messy feeding disk.
+ * **What is anomalous:** A star that is heavily polluted, yet its immediate inner zone is completely clean and empty. If we can rule out natural clearing mechanisms, a perpetually clean inner zone despite active accretion implies a maintained, non-natural departure from standard debris physics.
+## Possible Outcomes & Interpretation
+This project deliberately uncouples the *search for anomalies* from the *claim of finding intelligence*. The discipline of the search is recognizing exactly what the data does and does not allow us to say.
+### Outcome 1: The Null Result (Expected)
+**What it looks like:** Every candidate flagged by the pipeline is successfully explained away. The anomalous light curves turn out to be background eclipsing binaries or telescope artifacts. The infrared excesses turn out to be natural dust disks, brown dwarfs, or background interstellar cirrus clouds. The final catalog of unexplained anomalies is zero.
+**What it means:** This is a successful, quantifiable scientific result. It allows us to mathematically set an upper limit on prevalence: *“Fewer than X% of white dwarfs in the local stellar neighborhood host unexplained, macro-scale anomalies.”* It tightens our understanding of what exists in the universe.
+**What it DOES NOT mean:**
+ * It does not mean "we are alone."
+ * It does not mean advanced civilizations don't exist. It simply means that if they do exist, they do not build massive, thermodynamic-altering megastructures around white dwarfs that happen to be visible in our current legacy infrared and transit data.
+### Outcome 2: A Surviving Residual (The "Anomaly")
+**What it looks like:** One or more white dwarfs exhibit a signal (e.g., a massive, fluctuating cold infrared excess, or a highly structured transit shape) that survives the entire gauntlet of natural explanations. It cannot be explained by dust, companions, telescope errors, or background noise.
+**What it means:** We have discovered **previously unknown, unmodeled astrophysics**. It means our current understanding of how stellar remnants, debris disks, or low-mass companions behave is incomplete. We publish the anomaly catalog and hand it to the astrophysical community so that larger telescopes (like JWST) can point at these specific stars to figure out what new physical mechanism is at play.
+**What it DOES NOT mean:**
+ * It absolutely does **not** mean "we found an alien megastructure."
+ * To declare a surviving anomaly to be a "technosignature" is a failure of scientific rigor. "Unexplained by current models" simply means the models have a gap. The highest-probability explanation for any surviving anomaly is *always* new natural physics, and the project strictly enforces this boundary.
+
+### 🤖 Claude
+
+On both. Let me check for an existing glossary, then add your text and refresh the transcript.
+
+
+_[tools: Bash]_
+
+Creating `GLOSSARY.md` with your text (cleanly formatted as markdown), preserving your wording.
+
+
+_[tools: Write]_
+
+Let me find the existing glossary in `docs/` — my exact-name check missed it.
+
+
+_[tools: Bash]_
+
+Found it — `docs/glossary.md` (a "Techniques & Literature" glossary Gemini produced). Your channels + outcomes content is *complementary* to it, so I'll merge it in there rather than create a duplicate. Let me read the full existing file to place it cleanly, and I'll drop the root `GLOSSARY.md` I just made.
+
+
+_[tools: Read]_
+
+Right call — I'll merge your content into `docs/glossary.md` (not a duplicate) and drop the root file. Adding **The Detection Channels** as a conceptual lead-in and **Possible Outcomes & Interpretation** as the closing section, keeping the existing Techniques & Literature in between.
+
+
+_[tools: Bash]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_

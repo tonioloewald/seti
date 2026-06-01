@@ -1,6 +1,40 @@
 > I provided Gemini with a copy of the paper in its form as of June 1, 2026 and it produced this for me.
 
-# Project Glossary: Techniques & Literature
+# Project Glossary
+
+## The Detection Channels
+
+To understand what we are searching for, it helps to know how we actually look at these stars. We do not take "pictures" of white dwarfs; we measure their light. An anomaly is a discrepancy between the light we expect to see and the light we actually measure.
+
+### Channel A: The Spectral Energy Distribution (SED)
+
+**The concept:** A Spectral Energy Distribution (SED) is a graph that plots how much energy a star emits across different colors (wavelengths) of light. Because white dwarfs are dead stars with no internal fusion, they cool down predictably. Their SED is a simple, smooth curve that drops off steeply in the infrared.
+
+**The signal:** We are looking for an "infrared excess" — a bulge in the infrared part of the spectrum. This happens when something orbiting the star absorbs the star's optical light, heats up, and re-radiates that energy as heat.
+
+**The anomaly:**
+- *What is natural:* A warm debris disk (the shredded remains of an asteroid) or a brown dwarf companion.
+- *What is anomalous:* An infrared excess with a temperature or shape that does not match standard rocky dust or known companions. The highest-value anomaly here is **dynamic** — an infrared excess that dramatically fluctuates over a decade of observations, suggesting active work rather than a passive, settling dust cloud.
+
+### Channel B: Transit Light-Curve Morphology
+
+**The concept:** A light curve is a graph of a star's brightness over time. If an object passes between the telescope and the star (a transit), the star's brightness temporarily dips.
+
+**The signal:** Because white dwarfs are roughly the size of Earth, an orbiting object can block a massive fraction of their light, creating deep, highly visible transits.
+
+**The anomaly:**
+- *What is natural:* A spherical, intact planet produces a symmetric, U-shaped dip. Disintegrating asteroids (like those seen in the system WD 1145+017) leave long, messy dust tails, creating jagged, asymmetric dips.
+- *What is anomalous:* A transit shape that is deeply asymmetric, flat-bottomed, perfectly square, or utterly irregular in a way that *cannot* be modeled by natural physics (spheres, rings, or disintegrating dust tails).
+
+### Channel C: The Accretion-State / Inner-Zone Cleanliness
+
+**The concept:** White dwarfs have incredibly strong gravity. Any heavy elements (metals) in their atmosphere should rapidly sink below the surface. If we see metals in a white dwarf's spectrum (a "polluted" white dwarf), it means the star is *actively* eating rocky material right now.
+
+**The signal:** We look at stars that are actively polluted. Usually, this pollution is fed by a visible debris disk sitting right next to the star.
+
+**The anomaly:**
+- *What is natural:* A polluted star surrounded by a dusty, messy feeding disk.
+- *What is anomalous:* A star that is heavily polluted, yet its immediate inner zone is completely clean and empty. If we can rule out natural clearing mechanisms, a perpetually clean inner zone despite active accretion implies a maintained, non-natural departure from standard debris physics.
 
 ## 1. Measurement & Observational Techniques
 
@@ -106,4 +140,30 @@ A visual diagnostic tool. It plots your actual observed data distribution agains
 [Link to Paper (arXiv)](https://arxiv.org/abs/2009.07282)
 * **Agol (2011)** · *Transit Surveys for Earths in the Habitable Zones of White Dwarfs*
 **Thrust:** Calculates that because white dwarfs are so small, planets orbiting in their (very tight) habitable zones would create deep, easily detectable transits with periods of mere hours.
-[Link to Paper (arXiv)]()
+[Link to Paper (arXiv)](https://arxiv.org/abs/1103.2791)
+
+---
+
+## Possible Outcomes & Interpretation
+
+This project deliberately uncouples the *search for anomalies* from the *claim of finding intelligence*. The discipline of the search is recognizing exactly what the data does and does not allow us to say.
+
+### Outcome 1: The Null Result (Expected)
+
+**What it looks like:** Every candidate flagged by the pipeline is successfully explained away. The anomalous light curves turn out to be background eclipsing binaries or telescope artifacts. The infrared excesses turn out to be natural dust disks, brown dwarfs, or background interstellar cirrus clouds. The final catalog of unexplained anomalies is zero.
+
+**What it means:** This is a successful, quantifiable scientific result. It allows us to mathematically set an upper limit on prevalence: *"Fewer than X% of white dwarfs in the local stellar neighborhood host unexplained, macro-scale anomalies."* It tightens our understanding of what exists in the universe.
+
+**What it DOES NOT mean:**
+- It does not mean "we are alone."
+- It does not mean advanced civilizations don't exist. It simply means that if they do exist, they do not build massive, thermodynamic-altering megastructures around white dwarfs that happen to be visible in our current legacy infrared and transit data.
+
+### Outcome 2: A Surviving Residual (The "Anomaly")
+
+**What it looks like:** One or more white dwarfs exhibit a signal (e.g., a massive, fluctuating cold infrared excess, or a highly structured transit shape) that survives the entire gauntlet of natural explanations. It cannot be explained by dust, companions, telescope errors, or background noise.
+
+**What it means:** We have discovered **previously unknown, unmodeled astrophysics**. It means our current understanding of how stellar remnants, debris disks, or low-mass companions behave is incomplete. We publish the anomaly catalog and hand it to the astrophysical community so that larger telescopes (like JWST) can point at these specific stars to figure out what new physical mechanism is at play.
+
+**What it DOES NOT mean:**
+- It absolutely does **not** mean "we found an alien megastructure."
+- To declare a surviving anomaly to be a "technosignature" is a failure of scientific rigor. "Unexplained by current models" simply means the models have a gap. The highest-probability explanation for any surviving anomaly is *always* new natural physics, and the project strictly enforces this boundary.
