@@ -2,14 +2,14 @@
 
 *Pre-registration. A mechanism-agnostic technosignature search — motivated by, but not presupposing, long-lived intelligence.*
 
-**Status:** Final draft — pending OSF registration. This document is to be timestamped and frozen *before* any project-specific analysis of the target data is performed. Subsequent analysis code and data products will be developed in this public repository, with commit history that post-dates registration.
+**Status:** Registered on OSF, 2026-06-01 ([osf.io/6yh7r](https://osf.io/6yh7r)). The plan was frozen and timestamped *before* any project-specific analysis of the target data; analysis code and data products are developed in this public repository, with commit history that post-dates registration. Post-registration changes are dated pre-data amendments (§8).
 
 **Date drafted:** 2026-05-31
 **Investigator:** Tonio Loewald (sole investigator)
 **Drafting assistance:** Google Gemini and Anthropic Claude (tools, not authors; see Statement of Provenance and Acknowledgments)
 **Working repository:** https://github.com/tonioloewald/seti (public)
 **License:** code Apache-2.0; documents and data products CC-BY-4.0
-**OSF registration DOI:** (to be assigned)
+**OSF registration:** [osf.io/6yh7r](https://osf.io/6yh7r) · DOI [10.17605/OSF.IO/6YH7R](https://doi.org/10.17605/OSF.IO/6YH7R) · registered 2026-06-01 (git tag `registered-1.0`)
 
 ---
 

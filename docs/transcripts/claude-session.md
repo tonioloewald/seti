@@ -2574,3 +2574,73 @@ Yes, save it into REGISTRATION.md
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Saved — `005ef88`. The narrative now lives at the top of [`REGISTRATION.md`](https://github.com/tonioloewald/seti/blob/main/REGISTRATION.md#narrative-summary-osf-registration-field), so the text you paste into the OSF field is also archived in-repo.
+
+You're fully ready to register. The narrative summary is set, the document is sealed, the provenance stand is staked, and the whole genesis is on the record.
+
+When you've registered: send me the **DOI** and I'll fill it into the `preregistration.md` header and `REGISTRATION.md` status, tag **`registered-1.0`** on the matching commit, and push — and from there everything (your read-through, the expert reviews, the Stage-2 trial-factor) flows in as dated pre-data amendments.
+
+Go plant it. 🚩
+
+### 🧑 Tonio
+
+It says it's archiving and provides this link https://osf.io/6yh7r -- you wanted some identification numnber, where do I find it?
+
+### 🤖 Claude
+
+That link already contains the identifier you need — and the DOI is derived directly from it. Let me confirm the exact DOI from OSF's API.
+
+
+_[tools: Bash]_
+
+The API call came back empty — almost certainly because the registration is still **archiving** (the API and DOI don't go live until that finishes, usually a few minutes to an hour). But you don't need to wait to know the number — let me confirm what's reachable and give you the answer regardless.
+
+
+_[tools: Bash]_
+
+Here's where to find it — you actually already have it:
+
+**The identifier in your URL *is* the persistent ID.** `osf.io/6yh7r` → the OSF GUID is **`6yh7r`**. OSF registration DOIs are minted in a fixed pattern from that GUID:
+
+> **DOI: `10.17605/OSF.IO/6YH7R`**  (i.e. `10.17605/OSF.IO/` + the GUID, uppercased)
+
+I just checked: your registration **page is live** (`osf.io/6yh7r` returns 200), but the **DOI isn't findable yet** (the API still 404s) — that's the **"archiving"** step finishing. Give it a few minutes to ~an hour; the DOI will then display on the registration's overview page (near the title / in the citation metadata) and resolve at doi.org. The number above is correct regardless — archiving just makes it *active*.
+
+## Before I tag, one honesty check
+I want `registered-1.0` to mark the *exact* commit matching the document you uploaded to OSF. So:
+
+- **Did you generate the PDF from the current latest document?** If yes, just reply **"latest"** and I'll tag commit `005ef88` as `registered-1.0`.
+- If you exported it earlier (before the last few changes — e.g. the maximal-honesty provenance edit, or the Gemini-review tightenings), tell me roughly when, and I'll tag the commit that actually matches what's registered.
+
+Once you confirm, I'll: tag the registered commit, then add a **separate** post-registration commit inserting the DOI into the header and `REGISTRATION.md` (correctly dated *after* the OSF timestamp — which itself nicely demonstrates the ordering). What did you upload?
+
+### 🧑 Tonio
+
+I believe I did and in any event I also submitted the md file,
+
+### 🤖 Claude
+
+"Latest" + the `.md` file itself — that's exactly what we want, and it pins the registered version unambiguously to the current `preregistration.md` (commit `005ef88`). Tagging that now, then adding the DOI as a post-registration commit.
+
+
+_[tools: Bash]_
+
+The tag command errored — I accidentally passed the commit hash twice ("too many arguments"). And noted: you also uploaded `REGISTRATION.md`. Good news — at commit `005ef88` **both** files are in the exact state you submitted (the narrative was already in `REGISTRATION.md` there, and it still reads "not yet registered," which honestly captures the pre-registration moment). So `005ef88` remains the correct tag target for everything you uploaded. Let me retag correctly.
+
+
+_[tools: Bash]_
+
+Tag is live: **`registered-1.0` → commit `005ef88`**, pushed. Now the post-registration commit — inserting the DOI and flipping status to registered (this commit lands *after* the OSF timestamp, which is exactly right).
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
