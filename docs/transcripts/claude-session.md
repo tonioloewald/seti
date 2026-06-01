@@ -2510,3 +2510,67 @@ Let me link the new doc from the README, then commit.
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Done — `b2a3214`. [`REGISTRATION.md`](https://github.com/tonioloewald/seti/blob/main/REGISTRATION.md) now records the *why* alongside the *what*: the unmoderated route, the register-early/amend-in-the-open timing, the provenance stand and its accepted trade, and the two immutable records. The stale "reviewed before registration" line is reconciled, and the README indexes everything.
+
+That's the project genuinely complete and self-documenting. Final state:
+
+| | |
+|---|---|
+| Methodology | ✅ sealed (incl. the staged trial-factor rule) |
+| Framing / assumptions | ✅ with honest detectability bounds |
+| Provenance | ✅ the maximal-honesty stand, accountability-firewalled |
+| Transcripts | ✅ Claude + both Gemini sessions, auto-updating |
+| Registration record | ✅ `REGISTRATION.md` |
+| Repo | ✅ public, branch-protected, self-documenting |
+
+## Your move: register
+
+1. Open `preregistration.html` → print to PDF.
+2. OSF → new project → **Open-Ended Registration** → attach the PDF (and/or link the repo) → **public, no embargo** → register → mint DOI.
+3. Hand me the **DOI** and I'll: drop it into the `preregistration.md` header + `REGISTRATION.md` status, **tag `registered-1.0`** on the commit matching what you uploaded, and push. Chain closed.
+
+Then your read-through, the ANU emeritus + astrophysicist reviews, and the Stage-2 trial-factor refinement all flow in as dated **pre-data amendments** — confirmatory, because no data gets touched until the plan is frozen.
+
+It's been a genuine pleasure building this with you — from a loose brief to a sealed, twice-adversarially-reviewed, radically transparent pre-registration that yields real science even on the expected null. Go plant the flag. 🚩
+
+### 🧑 Tonio
+
+It's asking me for a narrative summary of what is contained in this registration or how it differs from prior registrations. If this project contains documents for a preregistration, please note that here ... I've written: This project derives from my frustration with the fact that the Fermi Paradox and derivative ideas (e.g. Dark Forest) are given any attention whatsoever. The ideas implicit in things like the Fermi Paradox, Kardashev Scale, Dyson Sphere, etc. are all such ridiculous examples of people measuring intelligence using a human-shaped ruler--and in fact a 19th century euro-centric imperialist ruler, that is just irritates me constantly. Which led to the question of how and where might we credibly find an alien civilization that actually endured for billions of years?
+
+After extended discussions with Gemini led to an actionable idea for analyzing open source data on White Dwarfs that I do not think anyone else has tried, I started working on this making extensive use of Claude and Gemini to make up for deficiencies in my own knowledge and general rustiness.
+
+### 🤖 Claude
+
+Your draft is the *intellectual heart* of the thing — keep that energy, it's the most distinctive part. But the OSF field is asking for two things your draft doesn't yet cover: a summary of **what the registration actually contains** (the methodology), and **how it differs from prior work**. Here's a version that keeps your motivation and your critique intact, then adds those — ready to paste:
+
+---
+
+This project grows out of a frustration with how much credence the Fermi Paradox and its descendants — the Dark Forest, the Kardashev scale, the Dyson sphere — still command. These frameworks measure intelligence with a human-shaped ruler, and specifically the growth-and-conquest assumptions of 19th-century industrial expansionism, projecting a parochial set of values onto minds that, if they exist and have *endured*, may share none of them. Strip those assumptions away and a sharper question remains: how and where could we credibly detect a civilization that has actually persisted for billions of years?
+
+That reframing motivates the search registered here. Rather than assume what an enduring intelligence would *build* (a Dyson sphere, maximal energy use, thermodynamic efficiency), we make no assumptions about its mechanism or psychology and instead look for the only thing it must produce to be detectable at all: an **anomaly** — a departure from the well-modeled natural behaviour of a system — that resists every natural explanation we can throw at it. The target is white dwarfs (among the few platforms stable on billion-year timescales, and exceptionally well-modelled, so anomalies stand out cleanly), cross-matching open survey data (Gaia, WISE/NEOWISE, TESS, with JWST/MIRI for follow-up). The pipeline is an "anomaly-residual" search: flag candidate infrared-excess, time-variability, and transit anomalies, attempt to explain each away with a pre-registered battery of natural hypotheses, and report the residual. The statistics are borrowed from large-scale simultaneous inference in genomics and epidemiology (empirical-null calibration, false-discovery control) and from astronomy's own detection conventions (the look-elsewhere effect; the Kepler 7.1σ threshold). We expect — and would be content with — a null result: it yields a quantitative upper limit, and the residual catalogue of unexplained objects is valuable as new natural astrophysics regardless of any technosignature interpretation.
+
+**How this differs from prior work.** Existing technosignature searches assume a mechanism: Zuckerman (2022) searched white dwarfs for Dyson-sphere infrared excess, but only in the *warm* (~300–1000 K) regime that overlaps natural debris disks; Project Hephaistos and the Ĝ/G-HAT survey similarly presuppose partial Dyson spheres. This registration instead (a) is mechanism-agnostic, defining its target as an unexplained departure from the natural model rather than an assumed construct; (b) extends into the colder and *time-varying* regimes those searches leave unprobed; and (c) freezes its statistical procedures before any data is analysed. To my knowledge no one has approached white-dwarf data this way.
+
+The idea took shape through extended discussion with Google Gemini, and was developed with heavy use of both Gemini and Anthropic Claude to compensate for gaps and rustiness in my own knowledge. In keeping with that, the complete development transcripts are published with the project, and the AI systems' substantive role is documented in the registration's Statement of Provenance.
+
+---
+
+A few notes so you can tune it:
+- I **kept your critique and your voice**, just sharpened the "imperialist ruler" line so it reads as a substantive (and defensible) intellectual position rather than only a personal gripe — it's actually a real, citable argument. If you want *more* of the original heat ("irritates me constantly"), put it back; authentic voice plays fine in an OSF narrative and suits this project's whole ethos.
+- The **"How this differs"** paragraph is the part the field explicitly asks for, mirroring §1.5 of the document.
+- I kept the **AI-genesis paragraph** — consistent with the provenance stand, and good to have right in the registration metadata.
+
+Want me to also **save this narrative into the repo** (e.g. into `REGISTRATION.md`) once you've settled the wording, so it's archived with everything else?
+
+### 🧑 Tonio
+
+Yes, save it into REGISTRATION.md
+
+### 🤖 Claude
+
+
+_[tools: Edit]_
