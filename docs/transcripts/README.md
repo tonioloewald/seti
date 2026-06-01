@@ -8,6 +8,7 @@ Per the **Statement of Provenance and Acknowledgments** in [`../../preregistrati
 |------|--------|-------|
 | [`claude-session.md`](claude-session.md) | Anthropic Claude (Claude Code) | Auto-exported from the local session log by [`../../tools/export_transcript.py`](../../tools/export_transcript.py). |
 | [`gemini-session.md`](gemini-session.md) | Google Gemini | Captured manually — pasted by the investigator (Gemini has no transcript API). |
+| [`gemini-review-session.md`](gemini-review-session.md) | Google Gemini (max / extended thinking) | Later critical review of the near-final draft and the provenance statement. |
 
 ## Redaction and fidelity
 
@@ -23,4 +24,7 @@ Human prompts and AI prose are otherwise preserved verbatim.
 
 Gemini provides no export API and its share pages are JavaScript-rendered, so its transcripts cannot be captured automatically. They are added here manually from the investigator's copy.
 
-A copy of the shared session is archived here as [`gemini-session.md`](gemini-session.md) (pasted by the investigator). The original share link — which may change or expire, so the archived copy is the durable record — was: <https://gemini.google.com/share/7b970cdc72af>
+Copies of the shared sessions are archived here, pasted by the investigator. Share links may change or expire, so the archived copies are the durable record.
+
+- [`gemini-session.md`](gemini-session.md) — original design and statistical review. Share link: <https://gemini.google.com/share/7b970cdc72af>
+- [`gemini-review-session.md`](gemini-review-session.md) — later max/extended-thinking critical review. Share link: <https://gemini.google.com/share/6df7577a83a2>
