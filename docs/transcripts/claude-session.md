@@ -4396,3 +4396,31 @@ _[tools: Edit]_
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Channel C corrected (`072d13d`). Now let me finish the **DB/He photosphere robustness check** — the self-contained task I pivoted to. The core argument: the cold candidates live in W3/W4 where the photosphere is on the deep Rayleigh-Jeans tail (negligible), so the DA-vs-DB choice barely moves the excess; and the elimination (cirrus/reliability) is photosphere-independent. Let me make that quantitative.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+Clean, quantitative result: in W3/W4 (where the cold candidates live) the predicted photosphere is **0.6% / 0.02%** of the observed flux under *both* DA and DB — negligible either way — so the cold classification is photosphere-model-independent, and all 3 He-atmosphere cold candidates remain eliminated by the (model-independent) cirrus/reliability filters. The DA assumption is robust. Let me record it and update the corresponding caveat.
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+
+_[tools: Bash]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_

@@ -187,7 +187,13 @@ characterised polluted-WD / clean-inner-zone catalogue
 - **Nominal, uniform WISE depths** for `f_max`; position-dependent depths would refine it.
 - **AllWISE detections only** for the excess search; the non-detected majority enters the
   limit through survey depth, not forced photometry. **CatWISE/unWISE** would deepen W1/W2.
-- **DA (pure-H) photosphere grid**; DB/He WDs use the same grid for now.
+- **DA (pure-H) photosphere grid** is used for all WDs, but the null is **robustness-checked**
+  against it (`pipeline/analysis/11_db_robustness.py`): re-predicting the 25 spectroscopically
+  He-atmosphere W3/W4-excess WDs with the **DB grid** at (Teff_He, logg_He) shifts predicted
+  W1/W2 by only ~0.06 mag, and in W3/W4 — where the cold candidates are defined — the
+  photosphere is <0.6% of the observed flux under *both* DA and DB. With elimination driven by
+  cirrus/reliability (photosphere-independent), all 3 He-atmosphere cold candidates remain
+  resolved. The cold null does not depend on the atmosphere assumption.
 - **Solar-neighborhood selection bias** and possible local-environment effects on the
   natural baseline (stated in §3) apply to the interpretation of `f_max`.
 - The cirrus ceiling, natural-temperature boundaries, and trial-factor are pre-data

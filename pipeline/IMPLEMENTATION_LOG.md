@@ -152,3 +152,18 @@ Channel C elevates nothing, exactly as its corroborating-only registration antic
 leaves a characterised polluted-WD / clean-zone catalogue as a byproduct
 (`data/derived/channel_c_clean_zone.parquet`). **All three registered channels now complete
 — three clean nulls.**
+
+## 2026-06-01 — robustness: DA-photosphere assumption (decision #4 follow-up)
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| 19 | Robustness-check the Channel-A null against the DA (pure-H) photosphere used for all WDs (`analysis/11_db_robustness.py`): re-predict the spectroscopically He-atmosphere W3/W4-excess WDs with the **DB grid** at the catalogue's (Teff_He, logg_He). | ~20% of WDs are He-atmosphere; decision #4 flagged the DA-for-all approximation as a TODO. | §5.3 |
+
+**RESULT:** of the 923 W3/W4-excess WDs, 25 are spectroscopically He-atmosphere (3 of them
+cold candidates). DA→DB shifts predicted W1/W2 by a median ~0.06 mag; crucially, in **W3/W4**
+(where cold candidates are defined) the predicted photosphere is **<0.6% of the observed
+flux under both DA and DB**, so the excess and the cold classification are essentially
+photosphere-model-independent. Since elimination ran on **cirrus + W3/W4 reliability**
+(photosphere-independent), all 3 He cold candidates remain eliminated. **The cold-excess
+null is robust to the atmosphere-model assumption** — no atmosphere choice can rescue a
+candidate.
