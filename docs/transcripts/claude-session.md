@@ -3091,3 +3091,32 @@ _[tools: Write]_
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Logged (`6c3b376`). Now the **empirical-null calibration** (§5.3) — the registered machinery that turns raw χ into calibrated anomaly flags, with the genomic-control λ and a QQ-plot diagnostic.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+The QQ diagnostic ran — and it just taught us something important that I want to be straight about, because it's the registered design catching a sequencing mistake of mine.
+
+
+_[tools: Read]_
+
+That QQ-plot is worth a thousand words — let me send it to you, because it both shows a real result *and* caught me getting ahead of the registered order.
+
+
+_[tools: SendUserFile]_
+
+Now let me correct the framing in the code and log the recognition, then commit.
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_

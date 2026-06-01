@@ -32,3 +32,10 @@ not selections made to produce a desired result. They are **pre-data amendments*
 
 *Detection thresholds are NOT set here — they come from the empirical-null calibration
 and injection-recovery (next steps), per §5.3.*
+
+## 2026-06-01 — sequencing correction (the registered design caught an out-of-order step)
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| 8 | The **empirical null is applied to the post-battery natural-model residual `A`**, not to the raw excess χ. `pipeline/analysis/02_empirical_null.py` is retained as a **diagnostic** only. | §5.3 defines `A` = badness-of-fit of the *best natural model*; the empirical null's "bulk = null" assumption only holds after the natural-explanation battery. The diagnostic confirmed this directly: for W3/W4 the *detected* population is entirely excess sources (no bare WD is detectable there), so its bulk is debris disks, not the photospheric null (σ₀ collapsed to ~0.3). The correct order is **excess → battery → A → empirical null → flag**. | §5.3 |
+| — | Valid finding retained from the diagnostic: the **photosphere-prediction scatter is ~3σ (λ≈10 in W1/W2)** — the textbook errors badly underestimate real scatter, so empirical calibration is essential (it inflates the threshold ~3×, preventing thousands of false flags). | The genomic-control inflation factor doing its job. | §5.3 |
