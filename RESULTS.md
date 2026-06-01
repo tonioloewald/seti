@@ -123,18 +123,25 @@ high-proper-motion star).
 
 **Three** signals are genuinely transit-shaped (duty cycle ≤ 0.02, not sinusoidal, no
 SIMBAD entry): Gaia `2660358032257156736` (P=0.258 d), `6348672845649310464` (P=4.088 d),
-`5274517467840296832` (P=5.394 d). But all three are **shallow (0.7–1.2%)** — and a planet
+`5274517467840296832` (P=5.394 d). All three are **shallow (0.7–1.2%)** — and a planet
 transiting a white dwarf (an Earth-sized star) would produce a *deep or total* eclipse, so
-a ~1% dip **cannot be a transit of the WD itself**. Each has a faint Gaia neighbour
-(ΔG ≈ 3.9–4.9; 1–3% of the WD flux) whose light, under a deep eclipse, quantitatively
-matches the observed shallow depth — pointing to a **blended/background eclipsing binary**
-in TESS's 21″ pixels. Confirming that requires the registered difference-image **centroid
-(BEB) test** (§5.2 item 9), which is the next step and **not yet run**. Figure:
-`figures/transit_candidates.png`.
+a ~1% dip **cannot be a transit of the WD itself**. Each also has a faint Gaia neighbour
+(ΔG ≈ 3.9–4.9; 1–3% of the WD flux) whose light, under a deep eclipse, matches the observed
+shallow depth — pointing to a **blended/background eclipsing binary** in TESS's 21″ pixels.
 
-**Channel B v1: no transit-of-a-WD anomaly** — the loud signals are (mostly known)
-stellar variables, and the three transit-shaped residuals are too shallow to be WD
-transits and consistent with blended binaries pending centroid vetting.
+We then ran the registered difference-image **centroid (BEB) test** (§5.2 item 9): build
+the mean pixel image in- vs out-of-transit, and locate the flux-weighted centroid of the
+difference. **All three centroids are off the white dwarf** — offsets of **0.76–1.56 px
+(16–33″)**, each toward the field/neighbour, not the WD. So the dips do not originate on
+the white dwarfs: they are **confirmed background/blended eclipsing binaries**, exactly the
+natural false-positive this test exists to catch. Figures: `figures/transit_candidates.png`,
+`figures/centroid_vet.png`.
+
+**Channel B: a clean, fully-vetted null — no transit-of-a-WD anomaly.** The loud signals
+are (mostly already-catalogued) stellar variables, and every transit-shaped residual is an
+off-target eclipsing binary by difference-image centroiding. As registered, Channel B is a
+secondary, candidate-generating channel limited to the bright (G<14) subset; a full search
+to fainter magnitudes and across all sectors is a future extension.
 
 > **Integrity note (logged in full in `pipeline/IMPLEMENTATION_LOG.md`).** A routine
 > "do all candidates trace back to the parent sample?" check caught a bug: 19-digit Gaia

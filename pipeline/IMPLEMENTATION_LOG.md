@@ -124,6 +124,14 @@ shaped (duty ≤0.02, low sin-R², no SIMBAD entry): Gaia `2660358032257156736` 
 `6348672845649310464` (P=4.088 d), `5274517467840296832` (P=5.394 d). All three are
 **shallow (0.7–1.2%)** — far too shallow for a planet transiting the WD itself — and each
 has a faint Gaia neighbour (ΔG≈3.9–4.9, 1–3% flux) whose flux, under a deep eclipse,
-matches the observed depth. Leading natural explanation: **blended/background eclipsing
-binaries**, to be confirmed by the mandatory difference-image centroid step (§5.2 item 9,
-**not yet run**). **No transit-of-a-WD anomaly.** Figures: `figures/transit_candidates.png`.
+matches the observed depth.
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| 15 | **Difference-image centroid (BEB) vetting** (`09_centroid_vet.py`): download the SPOC target-pixel file, form the mean in-transit and out-of-transit images, and locate the flux-weighted centroid of the (out−in) difference. Centroid on the WD ⇒ on-target; offset ⇒ background/blended eclipsing binary. | The mandatory §5.2 item-9 test; the only way to tell an on-target transit from a blend in TESS's 21″ pixels. | §5.2 item 9 |
+
+**RESULT — centroid vetting:** all three transit-shaped finalists are **OFF-TARGET** — the
+dip centroid is offset from the white dwarf by **0.76 / 0.76 / 1.56 px (16 / 16 / 33″)**,
+in each case toward the field/neighbour. They are **confirmed background/blended eclipsing
+binaries**, not transits of the WDs. **Channel B closes as a clean, fully-vetted null — no
+transit-of-a-WD anomaly.** Figures: `figures/transit_candidates.png`, `figures/centroid_vet.png`.

@@ -4148,3 +4148,57 @@ Let me record the verification and commit:
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Done — and yes, it was cheap: because the 568 MB parent catalogue, the AllWISE cross-match, and the NEOWISE epochs were all still cached on disk, the re-run was pure compute (~2–3 minutes total), no re-downloading. That also made it a *clean* test — reusing the pinned archive pulls means any difference would be the string change alone, not archive drift.
+
+**Result: the string conversion is provably inert.**
+
+| Output | Check |
+|---|---|
+| optical_baseline | 359,073 rows — identical |
+| ir_excess | W1–W4 χ sums — identical |
+| battery | 426 disk / 110 companion / 104 cold / 65 hot — identical |
+| cold funnel | 12 reach cirrus → **0 survive** — identical |
+| f_max | identical |
+| variability | 17 flagged, same classes — identical |
+
+Every science column matched (compared order-independently), and `source_id` is now a **validated string** in every table — confirmed all IDs trace back to the parent sample. The committed manifest was left untouched (just read as string), so its pinned checksum stays valid.
+
+So the whole pipeline is now string-native and hardened against the float64 bug class, with a documented re-run proving it changed nothing but the ID representation. Committed (`f8e74a3`).
+
+Where to next — the **difference-image centroid (BEB) vetting** of the three transit-shaped finalists, or move on to **Channel C** (accretion clean-zone)?
+
+### 🧑 Tonio
+
+Let’s do both in order since the former is the completion of our current pass, no?
+
+### 🤖 Claude
+
+Right — the centroid vetting *is* the last step of the Channel-B pass; finishing it is what lets us actually close out those three finalists rather than leave them dangling. Let me do that, then Channel C.
+
+First, the registered test (§5.2 item 9): **difference imaging.** Compare the in-transit vs out-of-transit TESS pixel images — the centroid of the *difference* image shows where the flux dip physically originates. On the white dwarf → genuinely on-target; offset toward a neighbor → background eclipsing binary. Let me get the sectors and build the vetting.
+
+
+_[tools: Bash]_
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+**All three are OFF-TARGET.** The difference-image centroid of each flux dip sits 0.76–1.56 pixels (16–33″) away from the white dwarf — and those offsets match the neighbor separations from the earlier Gaia check. So the dips don't come from the WDs at all; they're **background/blended eclipsing binaries** in TESS's big pixels. That closes out Channel B cleanly. Let me look at the figure:
+
+
+_[tools: SendUserFile]_
+
+Now update the docs to reflect the completed vetting:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
