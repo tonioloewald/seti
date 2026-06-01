@@ -46,5 +46,5 @@ Two independent, public, timestamped records secure this work:
 ## Status
 
 - Pre-registration: **registered on OSF, 2026-06-01.**
-- OSF: <https://osf.io/6yh7r> · DOI **10.17605/OSF.IO/6YH7R** (becomes findable once OSF finishes archiving).
+- OSF: <https://osf.io/6yh7r> · DOI **10.17605/OSF.IO/6YH7R** — registration **accepted and live**; the public Git repository is linked from the OSF project, and post-registration amendments are tracked there (`AMENDMENTS.md`) with the authoritative timeline in the git history.
 - Registered-version git tag: **`registered-1.0` → commit `005ef88`** — the exact `preregistration.md` and `REGISTRATION.md` submitted to OSF. Everything after it is a dated pre-data amendment.

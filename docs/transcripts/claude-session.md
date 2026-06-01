@@ -5321,3 +5321,209 @@ Page 7 ends §4.2 and the figure floated to the next page (standard for un-split
 
 
 _[tools: Read]_
+
+Figure 2 rendered perfectly — full plot with the shaded regimes, legend, and a properly-styled caption beneath it. The inlining works. Let me commit and send you the updated PDF:
+
+
+_[tools: Bash]_
+
+
+_[tools: SendUserFile]_
+
+Done — figures are inlined and the updated PDF is on its way to you.
+
+**What changed:**
+- All **five figures embedded** at their points of discussion, each with a numbered caption:
+  - **Fig 1** (§3.5) — QQ-plot showing the λ ≈ 10.6 inflation that justifies the empirical null
+  - **Fig 2** (§4.2) — the f_max upper limit with the three shaded regimes
+  - **Fig 3** (§4.3) — folded TESS transit candidates
+  - **Fig 4** (§4.3) — difference-image centroiding (the BEB proof)
+  - **Fig 5** (§4.4) — NEOWISE variability light curves
+- Renumbered by order of appearance, in-text references updated, and the redundant trailing figure-list removed.
+- The build tool now resolves `../figures/*` paths and styles figures (centered, scaled to page width, captions kept with their figure so they never split across a page).
+
+The figures render in **both** the PDF *and* GitHub's web view (I used `<figure>` blocks for that portability). The PDF is now 13 pages, ~1.5 MB — fully self-contained for sending to reviewers.
+
+That's the manuscript review-ready with figures. Whenever you're set, the open threads are: (1) the **OSF housekeeping** we discussed (file amendments as Updates, link the GitHub repo), and (2) **pre-registering v2** (the unWISE/CatWISE deepening) before touching the deeper data. Just say which you'd like to tackle.
+
+### 🧑 Tonio
+
+OK we found a local astrophysicist whose interests directly overlap with the topics in our paper, so I'm approaching him (cold) as a first step (my sister-in-law is amazingly taciturn and my former college professor is retired). The guy I'm approaching is Vitaly Neustroev.
+
+### 🤖 Claude
+
+Smart move approaching someone whose work directly overlaps — that's exactly the kind of reviewer/collaborator who'd make this stronger (and could solve the arXiv-endorser and CRediT-firewall pieces at once). Before I help you draft the approach, let me confirm his actual research focus so the email references his work accurately (a cold email lands far better when it's specifically about *their* expertise):
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+He's an excellent target — and not a stretch at all. Confirmed: **Dr. Vitaly Neustroev, University of Oulu** (Space Physics & Astronomy), and his specialties line up almost point-for-point with your results:
+
+| His work | Your paper |
+|---|---|
+| Cataclysmic variables, accreting WDs | Variability channel is *dominated* by CVs (EF Eri, IW Eri, BW Scl…) |
+| **Eclipsing WD binaries** (Gaia + ZTF) | Channel B's false positives are background eclipsing binaries |
+| WD parameters (Teff, log g) from spectroscopy | Your photospheric modelling + the accretion-state channel |
+| Time-series analysis & **methodology development** | Empirical-null/Stetson-J variability, BLS, centroiding |
+
+That overlap is real and specific, which is exactly what makes a cold email work. He also explicitly lists *methodology development* among his interests — so the statistical architecture may genuinely interest him, not just the WD content.
+
+Here's a tight draft (~200 words — cold emails must be skimmable):
+
+---
+
+**Subject:** Pre-registered Gaia white-dwarf survey overlapping your CV / eclipsing-binary work
+
+Dear Dr Neustroev,
+
+I'm an independent researcher writing because a project I've just finished a first pass on overlaps closely with your work on accreting white dwarfs and eclipsing WD binaries, and I'd value your perspective.
+
+It's a **pre-registered**, mechanism-agnostic search for anomalous infrared/photometric signatures across the Gaia EDR3 white-dwarf catalogue (Gentile Fusillo et al. 2021): three channels — calibrated IR excess + NEOWISE variability, TESS transit morphology, and accretion state. The result is a clean, fully-explained null with a quantitative upper limit; the plan was registered on OSF *before* any data were examined, and the whole pipeline is public and reproducible.
+
+The connection to your expertise is direct: the variability channel recovers a population of CVs; the transit channel's false positives resolve to **background eclipsing binaries** via difference-image centroiding; and the accretion channel characterises polluted/accreting WDs and their inner-dust state. I validate throughout by recovering known objects (debris disks at ~511 K, WD 1856+534 b, GD 56).
+
+In the interest of full transparency: this was carried out as an openly-documented human–AI collaboration, with everything — including the working transcripts — public.
+
+Would you be willing to glance at the draft (13-pp PDF attached) and share your impressions, especially on the parts touching your field? No obligation at all, and if the overlap interests you I'd be glad to discuss collaboration.
+
+With thanks,
+Tonio Loewald
+[OSF link] · [GitHub link]
+
+---
+
+A few strategic notes:
+
+1. **Add one specific-paper hook** in the opening line — it's the single biggest lever on a cold email. E.g. referencing his ZTF eclipsing-WD-binary discoveries (A&A 2024) or his spectroscopic WD-parameter work. Pick whichever you genuinely connected with; it signals you actually read his stuff, not just his keywords.
+
+2. **The AI-transparency line is a judgment call — your call.** I included it because it's consistent with everything you've built and he'll see it on the repo within minutes anyway, so leading him to discover it himself would be worse. But be aware it *compounds* a pre-existing risk: technosignature work already draws reflexive skepticism from some astronomers, and "independent + AI-assisted" can pattern-match to crank territory in a busy person's inbox. Your firewall against that is exactly what the email foregrounds — **pre-registration, a null result, reproducibility, and a pipeline that recovers known objects**. That framing says "rigorous survey that happens to be motivated by a technosignature question," not "I found aliens." Keep the rigor up front and the AI line brief and matter-of-fact, as drafted.
+
+3. **Lead with the astrophysics, not the SETI.** The subject and first paragraph are about *his* domain (CVs, eclipsing binaries) — that's correct. The technosignature motivation is there but never the headline.
+
+4. **Give him an easy out and a bounded ask** — "glance and share impressions" is low-cost; it's done. Don't ask for co-authorship in email #1; the "discuss collaboration" line opens that door without pushing on it.
+
+5. **Downstream**, if he's receptive, he potentially solves three things — substantive review, an arXiv endorsement, and (as co-author under a CRediT split) the institutional-liability firewall for the provenance statement. But that's email #3+, not now.
+
+Want me to tailor the opening line to a specific Neustroev paper (I can pull the best-matching one), or tighten/adjust the draft further?
+
+### 🧑 Tonio
+
+No I already drafted the email with Gemini's help but I'm glad your reaction and suggestions are similar.
+
+### 🤖 Claude
+
+Sounds good — convergent feedback from two independent drafts is a decent signal the approach is sound. The ball's in his court now; cold outreach to a busy academic can take a while (or a nudge), so no rush on our end.
+
+Whenever you're ready to pick back up, the two open threads are still parked and in good shape:
+- **OSF housekeeping** — file the amendments as Updates, link the GitHub repo to the project (and a frozen PDF snapshot at submission time).
+- **v2 (unWISE/CatWISE deepening)** — starting with pre-registering that analysis before touching the deeper data.
+
+And if Neustroev bites and has questions or wants changes, I can turn those around quickly. Good luck with the send.
+
+### 🧑 Tonio
+
+I saw a list of tags in one of our documents, can you find it?
+
+### 🤖 Claude
+
+
+_[tools: Bash]_
+
+The only explicit tag-like list I found is the **"Key words"** line in the paper draft (`paper/draft.md`) — the standard astronomy-journal keyword tags. Here it is in full:
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+Found it — it's the **Key words** line in the manuscript (`paper/draft.md`, line 40), the standard MNRAS-style keyword tags:
+
+> **Key words:** white dwarfs — circumstellar matter — infrared: stars — methods: statistical — astrobiology — techniques: photometric
+
+That's the only explicit tag/keyword list in the documents (I searched all the markdown for `tags:` / `keywords:` / `key words:`).
+
+A couple of things worth knowing about these, since they function as the paper's discoverability tags:
+- They should be drawn from the **journal's controlled keyword list**, not free-form. The ones above are MNRAS-valid (MNRAS uses exactly this `category: term` style, e.g. *methods: statistical*, *techniques: photometric*, *infrared: stars*). If you target a different journal (AAS/AJ uses the Unified Astronomy Thesaurus instead), they'd need remapping.
+- `astrobiology` is a legitimate MNRAS keyword, so the technosignature motivation is representable — though some authors also add *circumstellar matter* / *white dwarfs* to lead with the astrophysics for discoverability.
+
+Did you mean this list, or were you thinking of something else (e.g., git tags like `registered-1.0`, or the memory/metadata `type` tags)? If it's this one and you'd like to adjust it — reorder, add terms like *binaries: eclipsing* or *brown dwarfs*, or remap to a specific journal's thesaurus — I can do that.
+
+### 🧑 Tonio
+
+I can't figure out how to add amendments as an update. That said, the repo is linked so amendments are there.
+
+### 🤖 Claude
+
+Honestly, you've already got the thing that matters — let me confirm that and then give you the OSF-specific bit accurately. Let me check the current state of OSF's update feature so I'm not guessing at the UI:
+
+
+_[tools: WebSearch]_
+
+Two-part answer: you're already fine, and here's where the button is hiding.
+
+**You're already covered.** The substantive requirement for amendments is that each plan change is *public, timestamped, and ordered relative to the data* — and your linked repo does exactly that. `AMENDMENTS.md` plus the git history is arguably a *stronger* tamper-evident record than an OSF field edit: every commit has a cryptographic hash and a push-protected timestamp. So if the native OSF update never happens, your integrity claim still holds completely. Don't let this block anything.
+
+**Where the OSF "Update" lives** (in case you were looking in the wrong spot): it's not on the project — it's on the **registration** itself. Two routes:
+- **My Registrations** → the **Submitted** tab → **Update** on your registration; or
+- Open the registration page → the **"Updates"** dropdown near the top → **Update**.
+
+That creates a draft update, asks you for a **justification** (required text box — you'd paste a one-line "see AMENDMENTS.md in the linked repository for the dated amendment log"), lets you edit the prepopulated response fields, and you submit it like the original. Steps are in [OSF's guide](https://help.osf.io/article/156-update-your-registration).
+
+**Why it might genuinely be missing for you:** the Update feature doesn't appear for every registration. Common reasons: it's an **Open-Ended Registration** (which has a single free-text response rather than structured fields, so the update UI is thinner or, for some older/embargoed ones, absent), the registration is **embargoed**, or it predates the feature. If there's simply no "Updates" dropdown, that's a known limitation, not something you're doing wrong.
+
+**Pragmatic move if the button won't show:** since the repo is linked, do nothing further — the amendments are discoverable from OSF via that link, and the git log is the authoritative order-of-decisions record. Optionally, drop one line in the **OSF project's description or wiki**: *"Post-registration amendments are tracked in `AMENDMENTS.md` in the linked repository, with the authoritative timeline in the git history."* That makes it explicit for anyone landing on the OSF page without making you fight the update form.
+
+So: try the registration-level "Updates" dropdown once; if it's there, a 2-minute justification-pointing-to-the-repo closes it out; if it's not, you've already satisfied the requirement and can move on to v2.
+
+### 🧑 Tonio
+
+Yeah I think adding the repo is sufficient. The update button does nothing. Oh and we seem to have been accepted!
+
+### 🤖 Claude
+
+On OSF: agreed — repo-link is sufficient, and a dead Update button on an Open-Ended Registration is a known limitation, not your fault. That thread's closed; the amendments are covered.
+
+And — that's genuinely great news, congratulations. I'm reading "accepted" as **Neustroev said yes** (to looking at it / collaborating)? If so, that's the best possible outcome from a cold approach, and it potentially unlocks all three of the things we flagged: substantive domain review, an arXiv endorsement, and — if it goes that way — the CRediT-firewall co-authorship.
+
+A couple of quick things so I can help you make the most of it:
+
+1. **What did he actually agree to?** Review-and-comment, a call, or open-to-collaborate? That shapes what's useful to send next. (No need to over-read a first friendly reply — "seem to" is the right amount of caution.)
+
+2. **He'll go straight for the parts in his wheelhouse**, which is good — those are also the parts most worth pressure-testing:
+   - the **CV identifications** in the variability channel (he'll know instantly whether EF Eri, IW Eri, etc. are correctly flagged and whether any "residual" is actually a known system);
+   - the **background-eclipsing-binary** vetting in Channel B (his ZTF/Gaia eclipsing-WD-binary expertise is exactly this);
+   - the **accreting-WD / clean-zone** treatment in Channel C.
+   If he pushes on any of those, I can turn around checks or revisions fast.
+
+3. **What I can prep now, on your word:** a short "reviewer orientation" note (where to look, the key claims, what feedback would help most), and/or a list of the anticipated expert questions with our answers ready (e.g., "why DA grid for all WDs," "how was the variability null calibrated," "are the CV flags cross-checked against known catalogues"). That makes his time cheap and signals you're easy to work with.
+
+Want me to draft that reviewer-orientation note / anticipated-Q&A, or hold until you hear what specifically he wants to dig into?
+
+### 🧑 Tonio
+
+No OSF accepted us
+
+### 🤖 Claude
+
+Ah — *OSF* accepted you. Even better, and my apologies for the misread. Congratulations — that's a real milestone.
+
+That means your pre-registration now has formal standing in the registry (not just an unmoderated self-deposit), which directly strengthens the paper's central integrity claim: "the plan was registered *before* any data were examined" is now backed by a curated, accepted registration — exactly the thing a skeptical reviewer (or Neustroev) would check first. It makes the whole "we're not doing post-hoc reasoning" stance bulletproof.
+
+One concrete thing worth a 30-second check — that acceptance didn't change the DOI/URL the manuscript and repo cite. Let me see what we reference:
+
+
+_[tools: Bash]_
+
+All your OSF references are consistent — `osf.io/6yh7r` and DOI `10.17605/OSF.IO/6YH7R` everywhere, and acceptance wouldn't change them (the GUID and DOI are minted at registration and stay stable through moderation). So nothing to fix there.
+
+One small thing is now *stale*, though: a couple of docs still say the DOI "becomes findable once OSF finishes archiving" — which is now done. Let me update that to reflect acceptance:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
