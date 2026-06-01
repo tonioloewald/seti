@@ -4725,3 +4725,46 @@ _[tools: Edit]_
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Done — committed (`8adc631`). **All four of Gemini's points are now addressed**, and the expanded variability search (its #4, the substantive one) confirms the null while validating itself.
+
+**Expanded variability result:** searching the previously-invisible bare-WD population (861 W1-bright WDs, 271k epochs) flagged 35 correlated-variables → **28 natural** (cataclysmic variables dominate the loud end; plus beam blends and IR-excess binaries/variable-disks — it cleanly recovers the textbook variable-disk WD **GD 56**) and **7 residual**, all low-J/isolated/no-excess — the empirical-null tail. **No anomalous fluctuating bare WD.** The selection bias is removed and the highest-value-signal null holds.
+
+Where the project stands now — a complete, defended pass:
+
+| Channel | Result | Reached by |
+|---|---|---|
+| **A** static excess | no unexplained IR excess; f_max ≈ 10⁻³–10⁻⁴ (50–300 K) | every cold candidate → cirrus/reliability |
+| **A** variability | no anomalous fluctuation (now incl. bare WDs) | CVs/blends/variable-disks explained |
+| **B** transits | no transit-of-a-WD | all dips → off-target EBs (centroiding) |
+| **C** clean-zone | no coincident anomaly | corroborating-only, 0 A/B survivors |
+
+Plus the things that outlast the null: validated machinery (536 disks, WD 1856, GD 56, CV recovery), a reusable WD-inspection pipeline, a quantitative f_max robust to the atmosphere mix, byproduct catalogues, and a hardened string-native codebase with the float64 and IRSA-upload gotchas documented.
+
+Honestly, the obvious high-value technical extensions are now exhausted — what remains genuinely needs *external* inputs:
+- **Cold-window f_max** improvement requires far-IR data (Herschel/JWST) — not a code change.
+- **Domain-expert review** before write-up — the one thing I keep flagging, and the natural next move now that the analysis is complete and internally + adversarially (Gemini) checked.
+
+I can keep pushing on a write-up draft (a methods + null + catalogue paper skeleton from the RESULTS/LOG), or we can call this analysis pass complete. Your call — but I think you've reached the publishable result you set out for.
+
+### 🧑 Tonio
+
+Can you write the draft paper and I’ll try to get some expert reviews done.
+
+### 🤖 Claude
+
+Absolutely — that's the right next step. Let me write a complete draft structured as a journal paper (methods + null + catalogue), accurate to everything in the pipeline. I'll put it in `paper/` as Markdown so reviewers can read and comment easily, and I can produce an MNRAS-LaTeX version later if you decide to submit.
+
+
+_[tools: Bash]_
+
+
+_[tools: Write]_
+
+Now let me add a short pointer in the paper directory and commit:
+
+
+_[tools: Write]_
