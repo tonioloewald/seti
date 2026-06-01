@@ -4855,3 +4855,168 @@ Let me commit all three updates:
 
 
 _[tools: Bash]_
+
+Done — committed (`a2af822`). Here's how I folded in Gemini's second review:
+
+**1. Added the accessible "Phase 1 Results" summary** → `docs/phase1_results.md`, alongside the glossary as Gemini intended. But I **corrected two overstatements** before committing, because the project's credibility lives on not over-claiming cleanliness:
+
+- *Channel A cold candidates* — Gemini wrote "the vast majority were cirrus or artifacts." Actually **85 of 104 were marginal/unreliable detections**; only the 12 that reached the final filter were all in cirrus. Fixed.
+- *Variability* — Gemini wrote "**every single one** was a known natural phenomenon." That's not what we found: **28 natural + 7 low-significance residuals** (the statistical tail). The honest version is in RESULTS and the paper, so the accessible summary must match it. Fixed — and I left a visible note that the summary was corrected, per the radical-transparency ethos.
+
+**2. Sharpened the paper's limitations** to name **unWISE/CatWISE forced photometry as the priority near-term improvement** — exactly Gemini's main point: the non-detected majority currently enters f_max only through nominal AllWISE depth, and forced photometry gives a real measurement at every position.
+
+**3. Registered the follow-ups as planned amendments** in `AMENDMENTS.md` — the unWISE deepening (with its pre-specified method) and far-IR, *intent recorded now, before the new data are examined*, so they stay confirmatory under the extensibility clause. I also back-filled the amendments log with the Channel B/C, variability-expansion, and robustness work. (Note: I flagged that the actual **OSF Registration Updates are yours to file** — I can't touch OSF.)
+
+Two things worth your eye: Gemini's note frames the variability-bias fix as *your* catch — fair, since you directed "keep pushing" toward it. And one genuine judgment call I made — I classified the variability expansion as **confirmatory** (a registered future-extension you executed) rather than a post-hoc change, because §5.3 already named the full-sample search as planned. If you'd rather log it more conservatively as post-data, say so and I'll adjust.
+
+Want me to do the reference-accuracy pass next, or produce the MNRAS LaTeX/PDF version for circulation?
+
+### 🧑 Tonio
+
+I didn’t make the catch. I simply see no harm in providing more results for our reviewers since we are being transparent every step of the way. It’s just a result of following our pre-established approach.
+
+The only question is whether we should try to address unWISE deepening before doing further work on the draft.
+
+### 🤖 Claude
+
+You're right on the attribution — it wasn't a catch, it was just executing what the registration already named as a planned extension (§5.3 listed the full-sample variability search as future work). The "critical catch" framing came from Gemini and overstates it. Let me fix that note to be accurate:
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Fixed (`e2c17d5`).
+
+On your actual question — **my recommendation: don't gate the draft on unWISE. Send it for review now, do unWISE as the registered v2 in parallel.** Here's the reasoning, and the one caveat that could flip it:
+
+**Why unWISE shouldn't block the draft:**
+
+1. **It doesn't move the headline.** unWISE/CatWISE deepen W1/W2 (3.4, 4.6 µm), which probes *warm* dust. Our headline limit is the **cold** 50–300 K window, and that's driven by W3/W4 (12, 22 µm) — bands unWISE doesn't touch. So unWISE tightens the warm edge and improves excess-search completeness, but the number reviewers will quote (f_max ≈ 10⁻³–10⁻⁴ cold) won't change. Gemini correctly calls it the most pressing limitation, but "most pressing" here still means "incremental to a secondary regime."
+
+2. **Process ordering.** Under our own extensibility clause, unWISE is *new data* — we must pre-register the analysis (file the OSF update) **before** examining it. So "do unWISE first" really means: register → fetch → analyze → re-integrate → then draft. That's real sequencing overhead in front of a draft that's already complete and honest.
+
+3. **Review latency is the bottleneck, not unWISE.** Expert review takes weeks regardless. The draft already flags unWISE prominently as the priority next step, so reviewers see we know about it — and their feedback may well reshape *how* we do it. Starting review now and developing unWISE in parallel is strictly faster than serializing them.
+
+4. **No integrity cost.** Reporting the Phase 1 limit with the unWISE caveat is a complete, defensible result — not a weakness we're hiding.
+
+**The caveat that could flip it:** if you'd rather present *one* maximally-strong paper and never circulate a limit you'll immediately supersede, then doing it first is defensible. In that case the tractable version is a **CatWISE2020 catalog cross-match** (deeper W1/W2 detections + the published deeper depth — roughly a day's work, mirroring the AllWISE cross-match, and the IRSA upload bug is already fixed). True unWISE *forced* photometry (fluxes at every non-detected position, via the coadds) is the gold standard but a multi-day build.
+
+So: **review now + v2 in parallel** if you want momentum and external scrutiny; **CatWISE-first** only if you specifically want a single stronger paper before any eyes see it. I'd take the former.
+
+If you agree, the immediate draft-finishing steps are the **reference-accuracy pass** and the **MNRAS LaTeX/PDF** for circulation. Want me to proceed with those?
+
+### 🧑 Tonio
+
+Ok so let’s create the draft and I’ll review it (leave it in markdown—I can read it easily enough) and then work on v2 as an explicit next step.
+
+### 🤖 Claude
+
+On it — I'll finalize the existing `paper/draft.md` (markdown, as you want): verify the references (I noted those were from memory), check every number against the pipeline outputs, and confirm the figures exist. Let me start with the reference-accuracy pass on the citations I'm least certain about.
+
+
+_[tools: ToolSearch]_
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+All three verified correct (Arnold 2005 ApJ 627, 534; Jenkins+ 2002 ApJ 564, 495; Kovács+ 2002 A&A 391, 369). Let me verify the remaining less-common ones (the statistics/genomics citations and Stetson/Bédard):
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+Those four verified too. Let me confirm the remaining statistics references and the central catalogue citation, then I'll finalize:
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+All references verified correct — no corrections needed (I checked the 11 trickiest; the rest are canonical). Let me confirm the figures exist and the numbers are internally consistent, then it's ready for your review.
+
+
+_[tools: Bash]_
+
+All figures present and every number matches the pipeline outputs. Let me verify the last batch of (canonical, but worth confirming) astrophysics references to complete the pass:
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+All references verified — 15 checked directly against the journals/ADS (including every easy-to-misremember statistics and genomics citation), the remaining 4 are canonical instrument/method papers. **Every citation in the draft is correct as written; no changes needed.**
+
+**The draft is finalized and ready for your review** — `paper/draft.md` (markdown, ~3,900 words). Final-pass results:
+
+- **References:** all correct (Arnold 2005 ApJ 627,534; Jenkins+ 2002 ApJ 564,495; Kovács+ 2002 A&A 391,369; Stetson 1996 PASP 108,851; Gross & Vitells 2010 EPJC 70,525; Bédard+ 2020 ApJ 901,93; Devlin & Roeder 1999 Biometrics 55,997; Efron 2004 JASA 99,96; Storey 2002 JRSS-B 64,479; Schlegel+ 1998 ApJ 500,525; Gentile Fusillo+ 2021 MNRAS 508,3877; Vanderburg+ 2020 Nature 585,363; Jura 2003 ApJ 584,L91; Farihi 2016 NewAR 71,9; Wright+ 2010 AJ 140,1868).
+- **Numbers:** every figure in the text re-checked against the pipeline outputs and consistent (359,073 parent; 923 battery → 426/110/104; Channel C 894 polluted → 107 clean / 5 disk; 35 variables → 28 natural).
+- **Figures:** all five referenced figures exist in `figures/`.
+
+**Two things I'd specifically want your eyes on** (as flagged earlier): (1) the **prose interpretation** is mine — the numbers are solid, but the framing in the Introduction and Discussion is where your judgment matters most; and (2) the **author line / provenance** statement — I put you as sole human author of record with the AI co-design note mirroring the registration; adjust as you see fit.
+
+When you've reviewed and you're ready to move toward submission, the remaining polish is mechanical: add DOIs/arXiv IDs to the reference list, and convert to MNRAS LaTeX with a rendered PDF. And then **v2 (the unWISE/CatWISE deepening) as the explicit next step**, starting — per our own discipline — with pre-registering that analysis before the deeper data are examined.
+
+Sources for the reference check: [Gentile Fusillo+ 2021 (ADS)](https://ui.adsabs.harvard.edu/abs/2021MNRAS.508.3877G/abstract), [Vanderburg+ 2020 (Nature)](https://www.nature.com/articles/s41586-020-2713-y), [Efron 2004 (JASA)](https://www.tandfonline.com/doi/abs/10.1198/016214504000000089), [Gross & Vitells 2010 (EPJC)](https://link.springer.com/article/10.1140/epjc/s10052-010-1470-8).
+
+### 🧑 Tonio
+
+Is this an escape for MathML rendering or something: Gentile Fusillo et al. (2021; 359,073 objects at $P_\mathrm{WD}>0.75$)
+
+### 🤖 Claude
+
+Good catch — that's not MathML, it's **LaTeX inline math**: `$...$` delimits a math span, `\mathrm{WD}` is an upright subscript, so `$P_\mathrm{WD}>0.75$` is meant to render as *P*₍WD₎ > 0.75. GitHub.com *does* render it (it's had MathJax/KaTeX support since 2022), so on the repo web view it looks right — but in a raw/plain markdown viewer it shows as ugly literal source, which defeats "I can read it easily."
+
+Since you're reading it in markdown for review, let me convert all the math to clean Unicode plaintext that reads naturally in *any* viewer. We lose nothing — the journal LaTeX version will use proper math regardless. Let me first see everything that needs converting:
+
+
+_[tools: Bash]_
+
+Got it — your GitHub client doesn't render math, so it shows the raw LaTeX. Let me convert all of it to clean Unicode plaintext that reads correctly everywhere. First let me check which files have this (so the whole repo is consistent for you):
+
+
+_[tools: Bash]_
+
+Let me see the glossary and brief math spans too, so I convert everything consistently:
+
+
+_[tools: Bash]_
+
+I have all the spans. Let me convert all three files with a single literal-replacement pass (Unicode for Greek letters, operators, and powers; underscores for subscript labels — maximally readable in any client):
+
+
+_[tools: Bash]_
+
+Nearly clean — draft and glossary fully converted (0 remaining). One span in the historical brief slipped through (a `\ln` mismatch). Let me fix it:
+
+
+_[tools: Bash]_

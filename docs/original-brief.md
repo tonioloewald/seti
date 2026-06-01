@@ -2,13 +2,13 @@
 
 ## 1. The Theoretical Framework: The Inverted Kardashev Scale
 
-Traditional SETI and the Kardashev scale assume that advanced civilizations inevitably maximize energy consumption. This framework proposes the opposite: survival in deep time dictates that mature civilizations optimize for thermodynamic efficiency by manipulating the denominator of the power equation ($P = \frac{E}{t}$).
+Traditional SETI and the Kardashev scale assume that advanced civilizations inevitably maximize energy consumption. This framework proposes the opposite: survival in deep time dictates that mature civilizations optimize for thermodynamic efficiency by manipulating the denominator of the power equation (P = E/t).
 
 * **The Landauer Limit:** Computation and state management require a minimum energy expenditure defined by Landauer's Principle: 
-$$E = k_B T \ln 2$$
+E = k_B T ln 2
 
 
- where $k_B$ is the Boltzmann constant and $T$ is the ambient temperature. To maximize computational capacity with a finite energy budget, a civilization must lower its operating temperature $T$ to the absolute minimum.
+ where k_B is the Boltzmann constant and T is the ambient temperature. To maximize computational capacity with a finite energy budget, a civilization must lower its operating temperature T to the absolute minimum.
 * **Time Dilation as Efficiency:** By slowing subjective clock speeds relative to the objective universe, an intelligence drastically reduces its rate of energy consumption and waste heat generation.
 * **The Search Target:** We are not looking for the most advanced civilizations—those have likely achieved thermal equilibrium with the Cosmic Microwave Background (CMB) at ~2.7 K and are invisible. We are looking for the "late adolescents"—civilizations that have migrated to deep-time environments but are still operating hot enough (e.g., 20 K to 50 K) to cast a thermal shadow against the background.
 

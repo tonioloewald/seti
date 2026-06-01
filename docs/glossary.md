@@ -86,7 +86,7 @@ An SED is a graph showing how much energy an object emits across different wavel
 ## 3. Statistical & Analytical Methods
 
 * **Bonferroni Correction & The Trial Factor**
-When you run 100,000 tests, a "1-in-10,000" statistical fluke is guaranteed to happen roughly 10 times. To avoid drowning in false positives, you apply a "trial factor" penalty. The Bonferroni correction is the most conservative version of this: if your desired false positive rate is $\alpha$, you require a significance of $\alpha / N$ (where $N$ is the number of tests).
+When you run 100,000 tests, a "1-in-10,000" statistical fluke is guaranteed to happen roughly 10 times. To avoid drowning in false positives, you apply a "trial factor" penalty. The Bonferroni correction is the most conservative version of this: if your desired false positive rate is α, you require a significance of α / N (where N is the number of tests).
 [Read more about the Bonferroni Correction](https://en.wikipedia.org/wiki/Bonferroni_correction)
 * **Censored Likelihood**
 A statistical technique for handling "non-detections." If a telescope looks for a signal but doesn't see one, that isn't a "zero"—it means the signal is *somewhere below* the telescope's sensitivity limit. Censored likelihood models these upper bounds mathematically instead of throwing the data away.
@@ -97,8 +97,8 @@ Standard statistics often assumes noise follows a perfect, theoretical bell curv
 * **False Discovery Rate (FDR) / Benjamini–Hochberg Procedure**
 A way to manage false positives in large datasets. Instead of strictly trying to prevent *any* false positives (which kills your ability to find faint signals), FDR controls the *proportion* of false positives among the subset of items you flag as interesting.
 [Read more about False Discovery Rate](https://en.wikipedia.org/wiki/False_discovery_rate)
-* **Genomic-Control Inflation Factor ($\lambda$)**
-A single diagnostic number borrowed from genetics. It measures how much the real, empirical noise in your dataset exceeds the theoretical ideal. If $\lambda \approx 1$, the theoretical math works perfectly. If $\lambda > 1$, your noise is inflated, and you must use the empirical null.
+* **Genomic-Control Inflation Factor (λ)**
+A single diagnostic number borrowed from genetics. It measures how much the real, empirical noise in your dataset exceeds the theoretical ideal. If λ ≈ 1, the theoretical math works perfectly. If λ > 1, your noise is inflated, and you must use the empirical null.
 [Read more about Genomic Control](https://en.wikipedia.org/wiki/Genomic_control)
 * **Look-Elsewhere Effect / Gross-Vitells Method**
 A physics term for the statistical penalty you pay when searching a large parameter space (like scanning for an anomaly across a wide range of temperatures). Gross-Vitells is a specific, computationally efficient mathematical method for calculating this penalty when tests are correlated, heavily used in particle physics (e.g., finding the Higgs Boson).
@@ -154,7 +154,7 @@ A visual diagnostic tool. It plots your actual observed data distribution agains
 **Thrust:** Argues that if you properly account for the massive uncertainty in the Drake Equation (using probability distributions instead of point estimates), the most likely mathematical outcome is that we are effectively alone, thus there is no "paradox."
 [Link to Paper (arXiv)](https://arxiv.org/abs/1806.02404)
 * **Jenkins, Caldwell & Borucki (2002)** · *Some Tests to Establish Confidence in Planets Discovered by Transit Photometry*
-**Thrust:** The paper establishing the $7.1\sigma$ detection threshold for the Kepler mission, calculated specifically so that random statistical noise wouldn't trigger more than 1 false alarm across 150,000 target stars.
+**Thrust:** The paper establishing the 7.1σ detection threshold for the Kepler mission, calculated specifically so that random statistical noise wouldn't trigger more than 1 false alarm across 150,000 target stars.
 [Link to Paper (ADS)](https://ui.adsabs.harvard.edu/abs/2002ApJ...564..495J/abstract)
 
 ### White Dwarf Astrophysics
