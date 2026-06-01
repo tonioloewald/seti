@@ -2723,3 +2723,68 @@ _[tools: Write]_
 
 
 _[tools: Write]_
+
+
+_[tools: Bash]_
+
+Framework committed (`09019fc`) — [`SOURCES.md`](https://github.com/tonioloewald/seti/blob/main/SOURCES.md) now documents the full determinism policy and every data source with its pinned release.
+
+## One thing I need from you (for the *analysis* stack only)
+This box has no `pip`, so to build the pinned scientific environment, run this once:
+
+```
+! sudo apt install -y python3-pip python3-venv
+```
+
+Then I'll build a gitignored `.venv` from `requirements.in` and commit the resulting `requirements.lock` (the exact pinned versions = the reproducible record). **Not urgent** — fetching the data doesn't need it.
+
+## What I'd do next (and can start now, no env needed)
+The foundational step — **§6 step 1, "freeze sample and manifest"** — using just `requests` + stdlib:
+
+1. **Deterministically download** the Gentile Fusillo EDR3 white-dwarf catalogue (pinned VizieR `J/MNRAS/508/3877`) into gitignored `data/raw/`, and **checksum it**.
+2. **Apply the registered §3 gate** (`P_WD > 0.75` + astrometric/photometric sanity recorded-not-cut) to produce the **frozen target list** — the exact `source_id`s + coordinates that define the sample.
+3. **Commit** that manifest (compressed, ~a few MB) + its `SHA256SUMS` to `data/manifests/`.
+
+That manifest is the linchpin: every later cross-match (WISE, NEOWISE, TESS) joins against it, so once it's frozen and checksummed, the whole sample is byte-reproducible.
+
+Two quick checks before I pull data:
+- **Go ahead on the parent-catalogue fetch + manifest now?** (It's the natural first move and it's now unblocked post-registration.)
+- The §3 reddening/latitude cut was left as "a moderate ceiling" — not yet a hard number. I'd **freeze the exact threshold as a documented pre-data amendment** when I build the manifest (no data is analysed in choosing it — it's a sky-region cut from external dust maps). Want me to propose that number when I get there, or leave the cut out of v1 and rely purely on the per-object cirrus handling (§5.3)?
+
+Want me to kick off step 1?
+
+### 🧑 Tonio
+
+Yes please do
+
+### 🤖 Claude
+
+On it. Let me find the exact catalogue files on CDS so the fetcher pins a real, stable URL.
+
+
+_[tools: Bash]_
+
+The main catalogue is `maincat.dat.gz` (pinned, static). Good news: the CDS fixed-width format means I can parse it with **stdlib only** (gzip + byte-slicing using the ReadMe's column ranges) — no astropy needed for step 1. Let me pull the column definitions and the file size.
+
+
+_[tools: Bash]_
+
+569 MB main catalogue, and I have the exact byte ranges I need: `source_id` (25–43), RA (95–109), Dec (120–134), parallax (145–154), `parallax_over_error` (163–172), and `Pwd` (184–191). That's everything to freeze the sample with stdlib alone. Let me write the deterministic fetcher.
+
+
+_[tools: Write]_
+
+Now run it — downloads the 569 MB catalogue, parses 1.3M rows, freezes the sample.
+
+
+_[tools: Bash]_
+
+Selected **359,073** at `P_WD > 0.75` — that matches the catalogue's published ~359,000 high-confidence count almost exactly, which is strong validation that the parse and gate are correct. Let me sanity-check the manifest and confirm the raw 568 MB file is gitignored before committing.
+
+
+_[tools: Bash]_
+
+All checks pass: **359,073 rows, 0 unparseable, every `P_WD > 0.75`, RA/Dec in range**, raw 568 MB correctly gitignored, manifest a tidy 12 MB. Let me log it in SOURCES.md and commit.
+
+
+_[tools: Edit]_

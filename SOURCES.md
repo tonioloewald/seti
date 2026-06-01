@@ -48,3 +48,10 @@ that fetcher is first run (a pre-data amendment if it post-dates registration).*
   query files, `SHA256SUMS`; `pipeline/` code; `pipeline/env/` lock; this file.
 - **Fetched on demand (gitignored):** everything in `data/raw/`, `data/cache/`,
   `data/derived/` — catalogues, cross-matched photometry, light curves, SEDs, scores.
+
+## Fetched-artifact log
+
+| Date (UTC) | Source | Pinned ref | SHA-256 (source) | Product |
+|---|---|---|---|---|
+| 2026-06-01 | Parent catalogue `maincat.dat.gz` (568 MB) | VizieR `J/MNRAS/508/3877` | `f7c134e8…de12757b` | `data/manifests/wd_sample.csv.gz` — **359,073** rows at `P_WD > 0.75` (of 1,280,266). Fetcher: `pipeline/fetch/01_parent_catalogue.py`. Full provenance + checksums: `data/manifests/wd_sample.provenance.json`, `data/manifests/SHA256SUMS`. |
+

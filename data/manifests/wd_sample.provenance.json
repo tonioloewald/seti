@@ -1,0 +1,26 @@
+{
+  "dataset": "Gentile Fusillo et al. 2021, MNRAS 508, 3877",
+  "vizier_id": "J/MNRAS/508/3877",
+  "source_urls": {
+    "readme": "https://cdsarc.cds.unistra.fr/ftp/J/MNRAS/508/3877/ReadMe",
+    "maincat": "https://cdsarc.cds.unistra.fr/ftp/J/MNRAS/508/3877/maincat.dat.gz"
+  },
+  "accessed_utc": "2026-06-01T06:38:00+00:00",
+  "registered_gate": "p_wd > 0.75",
+  "n_catalogue_rows": 1280266,
+  "n_selected": 359073,
+  "manifest_columns": [
+    "source_id",
+    "ra_deg",
+    "dec_deg",
+    "parallax",
+    "parallax_over_error",
+    "p_wd"
+  ],
+  "source_sha256": {
+    "maincat.dat.gz": "f7c134e83126e5883fbdebbba4c48c42d5e3dc29da741843b0c283c9de12757b",
+    "ReadMe": "470ceda80d72d9235c00a503fa4ff3b8736d67b11c1a8359063a5149b3863868"
+  },
+  "manifest_sha256": "9e3e707945e28fb4abecabf9b02aa70ac130fc9276d48d24a07a4a3ac32fec43",
+  "note": "Frozen target list for the registered search (tag registered-1.0). Gate 4 (>=1 informative IR constraint) and per-object reddening handling are applied downstream at cross-match; see SOURCES.md."
+}
