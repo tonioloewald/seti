@@ -4547,3 +4547,181 @@ The fetch is in its long TAP queries (output buffered). Let me commit the comple
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Committed (`9cacaf3`). Let me poll the fetch once more to make sure it's progressing (not hung like the original per-source version did):
+
+
+_[tools: Bash]_
+
+The fetch process is alive and running its TAP queries (output is buffered behind `tail`, so no interim lines, but it's progressing — ~873 WDs in 4 chunks). It's a harness-tracked background task, so I'll be notified the moment it finishes and will immediately re-run the variability analysis on the expanded sample.
+
+**Status on Gemini's review — 3 of 4 done, #4 in flight:**
+
+| # | Point | Status |
+|---|---|---|
+| 1 | float64 `source_id` truncation | ✅ Independently caught & fixed (string-native, re-run verified) |
+| 2 | TESS BEB resolution | ✅ Confirmed — centroiding put all 3 dips 16–33″ off-target |
+| 3 | DA grid bias on f_max | ✅ **Quantified**: excluding known non-DA leaves f_max unchanged (3.4×10⁻⁴ → 3.4×10⁻⁴); robust to the atmosphere mix |
+| 4 | Variability selection bias | 🔄 **Fetch running** — variability sample expanded from the 807 excess-selected WDs to *all* W1<15.5 WDs (bare WDs included) |
+
+All committed through `9cacaf3`, with each review response documented in the implementation log for the transparency record.
+
+The one substantive thing I'm watching for in #4: a **variable bare white dwarf** — one with no static IR excess but a fluctuating NEOWISE light curve. That's precisely the transient/sporadic signature §1.1 calls the highest-value outcome, and the v1 (excess-gated) search was structurally blind to it. If the expanded search surfaces one, it goes straight through the natural-variability vetting. I'll report the result as soon as the epochs land.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bwfq1vqax</task-id>
+<tool-use-id>toolu_01HgHRQPaTmzrN7u6kg18qJ7</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/bwfq1vqax.output</output-file>
+<status>completed</status>
+<summary>Background command "Re-run NEOWISE bright-sample fetch in background" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Bash]_
+
+The fetch failed silently — every TAP chunk errored (so `parts` was empty → "No objects to concatenate"). The excess version worked before, so something changed. Most likely the now-string `source_id` in the upload table. Let me reproduce one chunk with the error visible.
+
+
+_[tools: Bash]_
+
+IRSA returned a transient fault (`NOT_FOUND: Result does not exist`) — a server-side async-job hiccup, not a query error (the upload dtypes are fine; this exact method worked for the v1 807-WD pull). IRSA may be transiently flaky right now. Let me retry a small chunk, trying a synchronous query which is often more robust for small results:
+
+
+_[tools: Bash]_
+
+There's the real cause: **IRSA's TAP upload rejects unicode string columns** (`Unimplemented data type: unicodeChar`). The v1 worked because source_id was int64 then. The fix: upload source_id as **int64** (exact through VOTable `long` — the float-corruption risk is only in pandas casting, never in an int64 TAP round-trip), then stringify on return. Let me verify that round-trips exactly:
+
+
+_[tools: Bash]_
+
+Confirmed — int64 upload round-trips exactly (5,219 epochs, all IDs valid). The fix is a one-line cast in the fetcher. Let me apply it:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Re-running with the fix (`bknb1vbik`). Let me commit the fetcher fix while it runs — it's a reproducibility gotcha worth recording (string IDs are right for pandas, but IRSA TAP uploads need int64):
+
+
+_[tools: Bash]_
+
+Committed (`b995b63`). While the fetch runs, let me point the variability analysis at the new bright-sample file so it's ready:
+
+
+_[tools: Edit]_
+
+Fix is in and the fetch is re-running (`bknb1vbik`); I've already pointed `06_variability` at the new bright-sample file so it's ready to go the moment epochs land.
+
+**What happened (and why it matters for the record):** the string-`source_id` migration — correct for pandas — exposed that **IRSA's TAP upload can't ingest unicode string columns**. So the rule is nuanced and now documented: keep `source_id` a *string* everywhere in-process, but upload it to IRSA as *int64* (which round-trips exactly through VOTable — verified). Committed (`b995b63`).
+
+The fetch is a harness-tracked background task, so I'll be notified on completion and will immediately run the expanded variability search. This is the substantive part of Gemini's #4 — the first time the search can see a **variable bare white dwarf** (fluctuating light curve, no static excess), which is exactly the §1.1 highest-value signature the v1 was blind to. I'll report what it finds — almost certainly natural (pulsators, known binaries, saturation), but this is the channel that *should* catch a sporadic anomaly if one exists.
+
+### 🧑 Tonio
+
+It looks like at first blush we are getting the null result we expected but we have done useful work along the way including validating our overall approach, creating a disk detector, and creating a pipeline for inspecting future white dwarf observations.
+
+### 🤖 Claude
+
+
+_[tools: Bash]_
+
+Exactly right, and I'd put it more strongly: the null isn't a consolation prize, it's the *registered primary outcome* — and the thing that makes it worth anything is that we reached it by **explanation, not assumption**. Every candidate that could have been waved away as "noise" was instead chased down to a concrete natural cause: cirrus in the beam, a marginal detection, an off-target eclipsing binary, a known pulsator. A null defended that way is a real measurement; a null asserted by filtering is just a prior dressed up as a result. We did the former.
+
+On the byproducts, being precise about what genuinely has standalone value:
+
+- **The validation is the spine of the whole thing.** The machinery recovered 536 debris disks at a 511 K median (textbook), nailed WD 1856 b's period to the fourth decimal, and reproduced the literature disk-fraction among polluted WDs (~few %). A pipeline that demonstrably finds the things it *should* is what licenses us to believe its non-detections.
+
+- **The disk detector / catalogue is a real product.** The 536 disks + companions, the variable-disk candidates from NEOWISE, and now the polluted-WD clean-zone catalogue are usable by anyone studying WD debris — independent of the SETI framing.
+
+- **The reusable inspection pipeline is the most durable thing here.** SED excess vs. a calibrated photosphere, free-temperature blackbody fitting, the genomics-style empirical-null/λ-inflation calibration, Stetson-J variability, BLS + difference-image centroiding, cirrus vetting — that's a general toolkit you can point at *any* future white-dwarf observation (or survey data release) and get a principled anomaly assessment out the other end. That's the "pipeline for inspecting future WD observations" you named.
+
+- **f_max is the one hard number.** "Fewer than ~0.01–0.1% of solar-neighborhood WDs host an unexplained cold excess" is a concrete, citable ceiling, and we showed it's robust to the atmosphere assumption.
+
+Two honest qualifiers on "at first blush": the expanded variability run (Gemini's #4) is still fetching, and it's the one place left where the edges could get interesting — a *variable bare WD* is the §1.1 highest-value signature the v1 couldn't see. Most likely it's natural too. And the whole thing still wants domain-expert eyes before any write-up. But you've essentially described a publishable methods-plus-null-plus-catalogue paper — which is what you said you'd be happy with from the very first conversation.
+
+I'll report the variability result the moment the epochs land.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bknb1vbik</task-id>
+<tool-use-id>toolu_018NHj5muArGP8Xgap9AaPiy</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/bknb1vbik.output</output-file>
+<status>completed</status>
+<summary>Background command "Re-run NEOWISE bright fetch with int64 upload fix (background)" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Bash]_
+
+The expanded fetch worked — **271,520 clean epochs for 861 W1-bright WDs** (vs 80k for 807 excess-only before). Now the key run: variability on the full bright sample, including bare WDs.
+
+
+_[tools: Bash]_
+
+The expansion surfaced many variable WDs — but the **"UNEXPLAINED" tag is misleading here**: it just means "no battery excess class" (i.e., a *bare* WD), which is exactly the population we added. The v1 vetting was built for the excess set; bare variable WDs need their own natural-explanation vetting (binaries, pulsators, CVs, contamination). Let me get the summary counts and start vetting properly — first via spectral class (CVs/binaries) and SIMBAD.
+
+
+_[tools: Bash]_
+
+Sharp result. **35 flagged variable** (of 847; the empirical null self-recalibrated to δ₀=1.75 because bright-source NEOWISE errors are underestimated). Of the 35, the only ones with SDSS spectra are **3 CVs** (cataclysmic variables — accreting binaries, intrinsically variable; fully natural). The other 32 are unclassified bare WDs needing vetting. The dominant false positive — exactly like Channel B's BEBs — will be **a nearby star contaminating the ~6″ NEOWISE beam**. Let me vet all 35 with SIMBAD + Gaia-neighbor checks.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+The vetting works but my verdict logic is too crude — it **missed several known CVs/novae** (e.g., `GW Lib [No*]` is a famous dwarf nova; `AT 2024loi [ev]` is a transient). And critically: the *loudest* variables (χ²ᵣₑₐ up to 240, J up to 13) are all unambiguously natural — CVs (EF Eri, IW Eri, PHL 1364…) or a bright blend. Let me re-classify from the saved data with a proper variable-star otype list (no re-querying needed):
+
+
+_[tools: Bash]_
+
+Now 16 natural / 19 residual — and the two strongest residuals stand out: `291057843317534464` (J=6.25) and `6589283094028544384` (J=5.37) — both isolated (no Gaia blend), high correlated variability, and SIMBAD only calls them "WD." These are exactly the variable-bare-WD candidates the expansion was built to find. But UV-bright (GALEX) isolated WDs with strong IR variability are the classic signature of **unrecognized CVs / WD+companion binaries** (IR variability from the companion/accretion). Let me not assert that — let me inspect the light curves and check for an IR excess (companion) on all residuals.
+
+
+_[tools: Bash]_
+
+**That resolves it cleanly.** The strongest "residuals" aren't bare WDs at all — they have **large IR excesses** (w1_chi up to 38), i.e. a companion or dust disk:
+
+- `291057843317534464` (J=6.25): w1/w2_chi ≈ 16 → IR excess, 1.08 mag amplitude — a binary.
+- `6589283094028544384` (J=5.37): w1/w2_chi ≈ 38/30, **2.5 mag** amplitude — outburst-like, a binary/CV.
+- `3251748915515143296` (J=1.63): this is **GD 56** — a *famous* WD with a known *variable dust disk* (textbook). Its recovery validates the search.
+
+So the picture: every *high-significance* variable is natural (CV, blend, or IR-excess binary/variable-disk), and the only isolated, no-excess residuals are all **low-J (≤1.9), low-amplitude** — the empirical-null tail. Let me finalize the verdict with the IR-excess criterion and make a light-curve figure (the variability analogue of the transit figures).
+
+
+_[tools: Bash]_
+
+**Now it's a clean, fully-vetted result.** Of 35 flagged variables: **28 natural** (cataclysmic variables, neighbor blends, and IR-excess binaries/variable-disks — including the textbook variable-dust-disk WD **GD 56**, a nice validation), and **7 residual** — all **low-J (≤1.86), isolated, no IR excess**, i.e. the empirical-null tail / NEOWISE systematics. **No anomalous fluctuating bare WD.**
+
+
+_[tools: SendUserFile]_
+
+Now let me document the expanded variability result. Let me update the RESULTS variability section:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_

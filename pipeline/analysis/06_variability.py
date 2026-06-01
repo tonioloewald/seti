@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-LC = os.path.join(ROOT, "data", "raw", "neowise", "neowise_excess_epochs.parquet")
+LC = os.path.join(ROOT, "data", "raw", "neowise", "neowise_bright_epochs.parquet")
 BAT = os.path.join(ROOT, "data", "derived", "battery_w34.parquet")
 AW = os.path.join(ROOT, "data", "raw", "allwise", "allwise_xmatch.parquet")
 OUT = os.path.join(ROOT, "data", "derived", "variability.parquet")

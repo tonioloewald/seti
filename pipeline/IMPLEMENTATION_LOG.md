@@ -184,6 +184,17 @@ substantive points. Responses, with the work that addresses each:
 |---|----------|-----------|------------|
 | 20 | `analysis/12_fmax_da_check.py`: recompute `f_max` on three samples — ALL, EXCLUDE-confirmed-non-DA, and confirmed-DA-only. | Quantify review point #3 for the limit, per the reviewer's "filter H0 to confirmed DA" suggestion. | §5.7 |
 | 21 | NEOWISE variability sample changed from the IR-excess set to a **brightness-limited** set (all AllWISE WDs with W1<15.5), the NEOWISE single-exposure detection floor. | Review point #4: requiring a static excess to trigger the variability check was a selection bias blind to transient/bare-WD variables. | §1.1, §5.3 |
+| 22 | Vetting for the bare-WD variables (`analysis/13_vet_variables.py`): SDSS class (CV), SIMBAD object type (CV/nova/binary/known-variable), Gaia-neighbour **blend** in the ~6″ NEOWISE beam, and **IR excess** (companion / variable disk). | Bare variable WDs need their own natural-explanation battery — the v1 keyed off the (now-absent) excess class. IR variability + IR excess ⇒ a binary or variable disk, not a bare WD. | §5.2, §5.3 |
+| — | NEOWISE TAP upload must send `source_id` as **int64**, not the string used in-process (IRSA rejects unicode upload columns). int64 round-trips exactly through VOTable. | A string-id reproducibility gotcha worth recording. | — |
+
+**RESULT (#4 / expanded variability):** 271,520 clean epochs for 861 W1-bright WDs (vs 807
+excess-only); empirical null self-recalibrates to χ²_red δ₀=1.75. **35** flagged correlated-
+variables → **28 natural** (cataclysmic variables [EF Eri, IW Eri, …]; aperture blends; and
+IR-excess binaries / variable dust disks — incl. the textbook **GD 56**), **7 residual** (all
+Stetson J ≤ 1.9, isolated, no IR excess → empirical-null tail / systematics; some are ROSAT
+X-ray WDs). **No anomalous fluctuating bare WD** — removing the selection bias (review #4)
+leaves the highest-value-signal null intact, and the search validates by recovering known CVs
+and GD 56's variable disk. Figure: `figures/variability_bright.png`.
 
 **RESULT (#3 / decision #20):** `f_max(T=100 K, f=0.1)` = **3.4×10⁻⁴** for ALL (N=295,406)
 and **3.4×10⁻⁴** for EXCLUDE-non-DA (N=290,809) — identical to 2 sig figs; the ~1.6%

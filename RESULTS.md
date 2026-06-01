@@ -104,9 +104,32 @@ Of **540** WDs with ≥10 epochs, **17** show significant correlated variability
 
 So the variability layer **works** (it cleanly recovers real disk variability) and finds
 **no compelling anomalous fluctuation** — a null for the highest-value signal, with a
-variable-disk byproduct. *Scope caveat:* this v1 searched only the IR-excess population; a
-full-sample variability search (to catch pure transients with no static excess) is a
-future extension.
+variable-disk byproduct.
+
+### Expanded variability — the bare-WD population (removing the selection bias)
+
+The v1 above only searched WDs that *already* had a static IR excess — a selection bias
+(flagged in external review): a transient or sporadic event on an otherwise-bare WD averages
+to the photospheric baseline and would be missed. We therefore re-ran the variability search
+on a **brightness-limited** sample — **all** AllWISE WDs bright enough for NEOWISE
+single-exposure detection (W1 < 15.5), excess or not: **271,520 clean epochs for 861 WDs**.
+The empirical null self-recalibrates here (χ²_red δ₀=1.75, σ₀=0.25 — bright-source NEOWISE
+errors are mildly underestimated), and **35** WDs pass the correlated-variability threshold.
+
+Vetting each (SDSS class, SIMBAD, Gaia-neighbour blend in the ~6″ beam, and IR excess):
+
+- **28 are natural** — the strong variables are **cataclysmic variables** (accreting WD
+  binaries: EF Eri, IW Eri, BW Scl, …), **aperture blends** with a neighbour in the NEOWISE
+  beam, or **IR-excess systems** (an unresolved companion or a *variable dust disk* — the
+  search cleanly recovers the textbook example **GD 56**). See `figures/variability_bright.png`.
+- **7 residual** — all **low-significance (Stetson J ≤ 1.9), isolated, with no IR excess**:
+  consistent with the empirical-null statistical tail / NEOWISE systematics, not compelling
+  anomalies (a couple are ROSAT X-ray WDs, i.e. likely magnetic/accreting).
+
+**No anomalous fluctuating bare white dwarf.** Removing the selection bias and searching the
+previously-invisible bare-WD population still yields a clean null: every high-significance
+variable has a natural cause, and the residual is a marginal statistical tail. The search
+also validates itself by recovering known CVs and GD 56's variable disk.
 
 ## Channel B — TESS transit morphology (secondary)
 
