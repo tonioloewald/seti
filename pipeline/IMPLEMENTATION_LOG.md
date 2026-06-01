@@ -103,6 +103,18 @@ in place** by re-labelling from the (order-preserved) target list, *verified* by
 row-by-row `g_mag` match before relabelling — equivalent to a re-run since BLS depends only
 on the unchanged coordinates.
 
+**Channel-A string hardening + re-run verification.** Although the audit proved no
+Channel-A result was corrupted, `source_id` was converted to a **string at every load
+and producer** across the whole pipeline (build/01, analysis/01–06, fetch/02 & 04) for
+defence-in-depth, then the **entire Channel-A compute chain was re-run on the cached
+(pinned) archive pulls** and diffed column-by-column against a pre-change snapshot.
+**Every science output is identical** — optical baseline (359,073), excess χ sums,
+battery class counts (426 disk / 110 companion / 104 cold / …), cold funnel (12→0),
+`f_max`, variability (17 flagged) — with `source_id` now a validated string. The change
+is provably inert on the results; only the id representation changed. (The committed
+parent manifest `wd_sample.csv.gz` was left untouched — read as string — so its pinned
+checksum stays valid.)
+
 **RESULT — Channel B v1:** of 157 bright WDs, 136 had usable TESS light curves. The
 strongest signals are **stellar variability, not transits**: of the top 9 by BLS S/N, six
 are smooth sinusoidal modulations (duty 0.19–0.33, sin-R² 0.4–0.99) and SIMBAD confirms

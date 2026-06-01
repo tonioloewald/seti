@@ -3993,3 +3993,158 @@ _[tools: Edit]_
 
 
 _[tools: Edit]_
+
+Now commit the whole remediation + Channel-B result:
+
+
+_[tools: Bash]_
+
+Done — committed and pushed (`76c0fa5`). Here's the candidate figure:
+
+
+_[tools: SendUserFile]_
+
+To answer your question directly: **yes — strings are the right fix, and I've adopted them.** Here's the whole arc of what happened:
+
+**Your instinct was correct.** A 19-digit Gaia `source_id` can't fit in float64's exact-integer range (2⁵³ ≈ 9×10¹⁵). A string never gets coerced to float, round-trips through CSV/Parquet exactly, and these IDs are *identifiers, not quantities* — you never do math on them. So strings are immune to this entire bug class.
+
+**What the bug was.** A routine sanity check — "do all flagged candidates trace back to the parent sample?" — failed: 99 of 157 transit results had source_ids that didn't exist in our catalogue. Cause: in the transit step, the per-target loop pulled the ID from a pandas `iterrows()` row that happened to be *all numeric*, so pandas upcast the whole row (and the ID) to float, mangling the trailing digits. Crucially, the **BLS science was unaffected** — coordinates are genuinely float and lossless, so only the *labels* were wrong.
+
+**The audit (the part that matters for integrity).** I checked every script in the pipeline. The corruption needs an *all-numeric* row — and every Channel-A script either merges on `source_id` before iterating, or iterates a row that carries a string column (`ph_qual`/`class`) that keeps the ID intact. Verified directly: battery 923/923, cold candidates 104/104, variability 540/540, NEOWISE 80,379/80,379 — **all valid. No Channel-A result is affected.** Only the transit step was vulnerable, and it's now repaired (re-labelled by position, verified by an exact row-by-row g_mag match — equivalent to a re-run since BLS only depends on coordinates).
+
+**And it actually finished Channel B** — the bug was masking the real result by silently dropping candidates from the vetting merge. The corrected Channel B v1:
+- **6 of the top-9 loud signals are stellar variability**, not transits — and SIMBAD confirms most are already known (HZ 43B, a WD+dM pair; SH 2-216, a planetary-nebula central star; several catalogued WDs).
+- **3 are transit-shaped but shallow (0.7–1.2%)** — too shallow to be a planet transiting the WD itself (that's a *deep* eclipse), and each has a faint Gaia neighbour whose flux matches the depth under a deep eclipse → almost certainly blended background binaries, pending the mandatory difference-image centroid test (the registered next step).
+- **No transit-of-a-WD anomaly.**
+
+One open choice: I scoped the string conversion to Channel B (the only place that broke). I could roll it across the Channel-A scripts too — pure hardening, since they're verified-correct, so no re-run and no result change. Want me to, or leave Channel A as-is and move to the centroid (BEB) vetting of those 3 finalists / Channel C?
+
+### 🧑 Tonio
+
+If we do it to the channel A scripts we should rerun everything and make sure the results stay the same. It was a relatively cheap run no?
+
+### 🤖 Claude
+
+Good instinct — re-running is the right way to prove the string change is inert. Let me first see what's cached on disk (so I know whether "re-run" means re-compute on cached raw data, or also re-fetch from the archives — the latter adds archive-variability noise that's unrelated to the string change).
+
+
+_[tools: Bash]_
+
+Everything's cached — the 568 MB parent catalogue, the AllWISE cross-match, and the NEOWISE epochs are all on disk. So I can re-run the **entire compute chain on the cached archive pulls** without re-fetching (which keeps the test clean — any difference is the string change, not archive drift). The committed manifest (`wd_sample.csv.gz`) I'll leave untouched and just read as string, so its pinned checksum stays valid.
+
+Let me snapshot the current results first, so I can diff against them after.
+
+
+_[tools: Bash]_
+
+Reference fingerprints captured. Now let me apply the string conversion. Let me read the exact load/produce lines across the Channel-A scripts.
+
+
+_[tools: Bash]_
+
+All mapped. Now the edits — I'll coerce `source_id` to string at every load and make producers emit strings, preserving numeric sort order. Let me read the two producers' exact context first, then edit all of them.
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now the consumers — coerce `source_id` to string at every load:
+
+
+_[tools: Edit]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now step 06 (variability) — the epochs load, the battery/allwise loads, and the print:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now the two fetchers (producers). I'm not re-running them — the cached pulls are reused and consumers now coerce — but I'll make them string-native so a fresh fetch is correct too. Let me read their write regions.
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Let me check the remaining two scripts (empirical-null diagnostic and upper-limit) for source_id loads:
+
+
+_[tools: Bash]_
+
+Scripts are string-native now. Let me re-run the full compute chain on the cached archive data (manifest untouched), in order:
+
+
+_[tools: Bash]_
+
+Now the cold-vetting (IRSA dust queries) and then diff everything against the snapshot:
+
+
+_[tools: Bash]_
+
+All re-ran clean — cold vetting still 0/12 survive. Now the decisive test: diff every new output against the pre-change snapshot.
+
+
+_[tools: Bash]_
+
+**All PASS — every science column is byte-identical, and `source_id` is now a validated string everywhere.** The string conversion is provably inert: same row counts, same `T_x`/`chi2`/class distributions, same excess χ values, same f_max, same 17 variables, same 0/12 cold survivors — only the ID dtype changed (int64 → string).
+
+Let me record the verification and commit:
+
+
+_[tools: Edit]_

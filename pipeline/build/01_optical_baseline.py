@@ -52,7 +52,10 @@ def main():
                     continue
             except ValueError:
                 continue
-            rec = {"source_id": int(sl(line, COLS["source_id"]))}
+            # source_id as a canonical digit STRING: 19-digit Gaia IDs overflow
+            # float64's exact-integer range, so any numeric coercion downstream would
+            # silently corrupt them. str(int(...)) normalises whitespace/leading zeros.
+            rec = {"source_id": str(int(sl(line, COLS["source_id"])))}
             for c in FLOAT_COLS:
                 v = sl(line, COLS[c])
                 try:
@@ -60,7 +63,8 @@ def main():
                 except ValueError:
                     rec[c] = None
             recs.append(rec)
-    df = pd.DataFrame.from_records(recs).sort_values("source_id").reset_index(drop=True)
+    df = pd.DataFrame.from_records(recs).sort_values(
+        "source_id", key=lambda s: s.astype("int64")).reset_index(drop=True)
     df.to_parquet(OUT, index=False)
 
     h = hashlib.sha256()

@@ -51,10 +51,11 @@ def fit_excess_bb(lam, fexc, sig):
 
 
 def main():
-    irx = pd.read_parquet(IRX)
+    irx = pd.read_parquet(IRX); irx["source_id"] = irx["source_id"].astype(str)
     aw = pd.read_parquet(AW)[["source_id", "ph_qual"] +
                             [f"w{b}mpro" for b in range(1, 5)] +
                             [f"w{b}mpro_error" for b in range(1, 5)]]
+    aw["source_id"] = aw["source_id"].astype(str)
     df = irx.merge(aw, on="source_id", how="inner")
     ph = df["ph_qual"].astype(str).to_numpy()
     cand = np.array([len(s) == 4 and (s[2] in "ABC" or s[3] in "ABC") for s in ph])

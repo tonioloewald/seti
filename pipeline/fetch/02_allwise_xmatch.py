@@ -85,7 +85,9 @@ def main():
     if not parts:
         print("no matches"); return
     merged = pd.concat([pd.read_parquet(p) for p in parts], ignore_index=True)
-    merged = merged.sort_values("source_id").reset_index(drop=True)
+    # source_id as STRING (Gaia IDs overflow float64's exact range); sort numerically
+    merged["source_id"] = merged["source_id"].astype("int64").astype(str)
+    merged = merged.sort_values("source_id", key=lambda s: s.astype("int64")).reset_index(drop=True)
     mp = os.path.join(RAW, "allwise_xmatch.parquet")
     merged.to_parquet(mp, index=False)
     n_matched = len(merged)

@@ -47,7 +47,7 @@ def emp_null(x):
 
 
 def main():
-    lc = pd.read_parquet(LC)
+    lc = pd.read_parquet(LC); lc["source_id"] = lc["source_id"].astype(str)
     for c in ["w1mpro", "w1sigmpro", "w2mpro", "w2sigmpro"]:
         lc[c] = pd.to_numeric(lc[c], errors="coerce")
     rows = []
@@ -76,7 +76,8 @@ def main():
 
     # vet flagged against natural variability
     bat = pd.read_parquet(BAT)[["source_id", "class"]]
-    aw = pd.read_parquet(AW)[["source_id"]]
+    bat["source_id"] = bat["source_id"].astype(str)
+    aw = pd.read_parquet(AW)[["source_id"]]; aw["source_id"] = aw["source_id"].astype(str)
     v = v.merge(bat, on="source_id", how="left")
     v["saturated"] = v["w1_mean"] < 8.0
     v.to_parquet(OUT, index=False)
@@ -95,7 +96,7 @@ def main():
             if r["class"] in ("natural_companion",): nat.append("BD-weather")
             if r["saturated"]: nat.append("W1-saturated")
             tag = ",".join(nat) if nat else "** UNEXPLAINED **"
-            print(f"    {int(r['source_id'])}  n={int(r['n_ep'])}  chi2red={r['chi2red']:.1f}"
+            print(f"    {r['source_id']}  n={int(r['n_ep'])}  chi2red={r['chi2red']:.1f}"
                   f"  J={r['stetson_J']:.2f}  class={r['class']}  -> {tag}")
     print(f"  wrote {OUT}")
 

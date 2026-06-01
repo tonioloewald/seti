@@ -36,9 +36,10 @@ ADQL = ("SELECT u.source_id, w.mjd, w.w1mpro, w.w1sigmpro, w.w2mpro, w.w2sigmpro
 
 def main():
     os.makedirs(OUTDIR, exist_ok=True)
-    bat = pd.read_parquet(BAT)[["source_id"]]
+    bat = pd.read_parquet(BAT)[["source_id"]]; bat["source_id"] = bat["source_id"].astype(str)
     aw = pd.read_parquet(AW)[["source_id", "w1mpro"]].rename(columns={"w1mpro": "aw_w1"})
-    man = pd.read_csv(MAN)[["source_id", "ra_deg", "dec_deg"]]
+    aw["source_id"] = aw["source_id"].astype(str)
+    man = pd.read_csv(MAN, dtype={"source_id": str})[["source_id", "ra_deg", "dec_deg"]]
     tgt = bat.merge(man, on="source_id").merge(aw, on="source_id")
     print(f"targets: {len(tgt):,}", flush=True)
     svc = pyvo.dal.TAPService(TAP)
@@ -61,6 +62,7 @@ def main():
     ep = pd.concat(parts, ignore_index=True)
     for c in ["w1mpro", "w1sigmpro", "w2mpro", "w2sigmpro", "w1snr", "w2snr", "qual_frame"]:
         ep[c] = pd.to_numeric(ep[c], errors="coerce")
+    ep["source_id"] = ep["source_id"].astype(str)
     ep = ep.merge(aw, on="source_id", how="left")
     good = (ep["qual_frame"] > 0) & \
            (ep["cc_flags"].astype(str).isin(["00", "0000", "0", ""])) & \

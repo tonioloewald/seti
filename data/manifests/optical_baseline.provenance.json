@@ -1,7 +1,7 @@
 {
   "step": "2a optical baseline (photosphere anchor)",
   "derived_from": "Gentile Fusillo 2021 maincat.dat.gz (pinned; see SHA256SUMS)",
-  "built_utc": "2026-06-01T07:39:13+00:00",
+  "built_utc": "2026-06-01T13:23:18+00:00",
   "n_catalogue_rows": 1280266,
   "n_selected": 359073,
   "n_with_teff_h": 295406,
@@ -20,5 +20,5 @@
     "logg_h_err"
   ],
   "product": "data/derived/optical_baseline.parquet (gitignored; regenerable)",
-  "parquet_sha256": "ae4130e430842bb76637962aa712b50895db1e14525b57f52683de2dba5988bf"
+  "parquet_sha256": "3280cb5fe58c7f9f690d415cdca99903f2414df2a84742ff953cd836008fc606"
 }

@@ -61,8 +61,8 @@ def load_grid():
 
 def main():
     interp = load_grid()
-    ob = pd.read_parquet(OB)
-    aw = pd.read_parquet(AW)
+    ob = pd.read_parquet(OB); ob["source_id"] = ob["source_id"].astype(str)
+    aw = pd.read_parquet(AW); aw["source_id"] = aw["source_id"].astype(str)
     df = aw.merge(ob[["source_id", "g_mag", "teff_h", "logg_h"]], on="source_id", how="left")
 
     teff = df["teff_h"].to_numpy(float)

@@ -40,9 +40,9 @@ def ebv_sfd(ra, dec):
 
 
 def main():
-    b = pd.read_parquet(BAT)
-    aw = pd.read_parquet(AW)
-    man = pd.read_csv(MAN)[["source_id", "ra_deg", "dec_deg"]]
+    b = pd.read_parquet(BAT); b["source_id"] = b["source_id"].astype(str)
+    aw = pd.read_parquet(AW); aw["source_id"] = aw["source_id"].astype(str)
+    man = pd.read_csv(MAN, dtype={"source_id": str})[["source_id", "ra_deg", "dec_deg"]]
     cold = b[b["class"] == "COLD_candidate(<300K)"].merge(aw, on="source_id", how="left")
 
     cc = cold["cc_flags"].astype(str)
@@ -58,7 +58,7 @@ def main():
     for _, r in surv.iterrows():
         e = ebv_sfd(r["ra_deg"], r["dec_deg"])
         ebv.append(e)
-        print(f"    {int(r['source_id'])}  T_x={r['T_x']:.0f}K  E(B-V)={e:.3f}"
+        print(f"    {r['source_id']}  T_x={r['T_x']:.0f}K  E(B-V)={e:.3f}"
               f"  {'CIRRUS' if (np.isfinite(e) and e > EBV_CEILING) else 'low-cirrus'}")
     surv["ebv_sfd"] = ebv
     surv["cirrus_flag"] = surv["ebv_sfd"] > EBV_CEILING
@@ -70,7 +70,7 @@ def main():
     if len(final):
         print("  surviving cold candidates (source_id, T_x K, E(B-V)):")
         for _, r in final.iterrows():
-            print(f"    {int(r['source_id'])}  {r['T_x']:.0f}  {r['ebv_sfd']:.3f}")
+            print(f"    {r['source_id']}  {r['T_x']:.0f}  {r['ebv_sfd']:.3f}")
 
 
 if __name__ == "__main__":
