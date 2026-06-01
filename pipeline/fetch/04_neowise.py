@@ -54,6 +54,10 @@ def main():
         sub = tgt.iloc[i:i + CHUNK]
         up = Table.from_pandas(sub.rename(columns={"ra_deg": "ra", "dec_deg": "dec"})
                                [["source_id", "ra", "dec"]])
+        # IRSA TAP upload rejects unicode-string columns ("Unimplemented data type:
+        # unicodeChar"); upload source_id as int64 (long) — exact through VOTable, the
+        # float-corruption risk lives only in pandas casting, never a TAP round-trip.
+        up["source_id"] = up["source_id"].astype("int64")
         for attempt in range(4):
             try:
                 r = svc.run_async(ADQL, uploads={"tgt": up}).to_table().to_pandas()
@@ -67,7 +71,7 @@ def main():
     ep = pd.concat(parts, ignore_index=True)
     for c in ["w1mpro", "w1sigmpro", "w2mpro", "w2sigmpro", "w1snr", "w2snr", "qual_frame"]:
         ep[c] = pd.to_numeric(ep[c], errors="coerce")
-    ep["source_id"] = ep["source_id"].astype(str)
+    ep["source_id"] = ep["source_id"].astype("int64").astype(str)   # int64 from TAP -> string
     ep = ep.merge(aw, on="source_id", how="left")
     good = (ep["qual_frame"] > 0) & \
            (ep["cc_flags"].astype(str).isin(["00", "0000", "0", ""])) & \
