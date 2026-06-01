@@ -1,0 +1,9 @@
+{
+  "table": "catwise_2020",
+  "service": "https://irsa.ipac.caltech.edu/TAP",
+  "radius_arcsec": 3.0,
+  "n_targets": 359073,
+  "n_rows": 91667,
+  "n_wd_matched": 91197,
+  "sha256_out": "c6a116ef35bf52b35c7df35693f0e86d50832f773543f10b4b184c0072de9219"
+}
