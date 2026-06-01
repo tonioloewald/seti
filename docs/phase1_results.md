@@ -79,7 +79,10 @@ remain unconstrained until far-infrared data (JWST, Herschel) are integrated.
 - **Far-infrared (JWST / Herschel)** — required to say anything about the sub-50 K regime.
 - **Domain-expert review** of the full pass before submission.
 
-> **A candid methodological note (from review).** Re-running the variability search on the
-> bare-WD population was a critical catch: leaving that selection bias in place would have
-> compromised the integrity of the dynamic-regime null. And the deeper-photometry limitation
-> above is the most pressing boundary to push for v2.
+> **A note on the variability search.** Searching the full bright sample — not just stars
+> that already showed a static excess — was always part of the registered plan; §5.3 named
+> the full-sample variability search as a planned extension. We simply executed it. It can
+> only *add* candidates, never remove them, so there is no harm and every benefit in
+> reporting it. This is not a heroic catch; it is the pre-established approach doing its job,
+> and we include the extra results because we are being transparent at every step. The
+> deeper-photometry improvement (unWISE/CatWISE) is the most pressing boundary to push for v2.
