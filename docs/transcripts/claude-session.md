@@ -3285,3 +3285,60 @@ That's a clean, honest headline figure. Let me log the step, commit, and show it
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+
+_[tools: SendUserFile]_
+
+Pushed (`74adf56`). **That figure is the registered RQ4 deliverable — the headline result.** Step back and look at what we have:
+
+## The complete first Channel-A result
+Starting from a loose idea, we now have a **registered, fully-reproducible pipeline that ran end-to-end on 295,406 real white dwarfs** and produced:
+
+**A clean, explained null + a quantitative upper limit.**
+- In the **cold-anomaly window (~50–300 K)** — where a cold excess is both WISE-detectable *and* distinguishable from a natural disk — **zero unexplained excesses**, giving `f_max ≈ few×10⁻⁴ to 10⁻³`. Concretely: at `T_x = 100 K` with 10% of the WD's light reprocessed, **fewer than ~0.03% of white dwarfs** host an unexplained cold excess.
+- **Below ~50 K: WISE-blind** — honestly unconstrained, exactly as §4.A warned (needs far-IR).
+- **Above 300 K:** every excess is a natural debris disk (~536 recovered, median 511 K — a genuinely useful disk catalogue, the "new natural astrophysics" byproduct §7 predicted).
+
+This is *precisely* the registered outcome: **the expected, valuable null with a quantitative bound** — reached by explaining every candidate away, not by assertion, with the whole chain on the public record for the experts to second-guess.
+
+## What's genuinely done vs. what remains
+**Done:** the entire Channel-A static-excess pipeline (sample → photometry → photosphere → excess → battery → calibration → upper limit), reproducible, logged, committed.
+
+**Natural next moves** (in rough priority):
+1. **Time-variability (NEOWISE W1/W2)** — our self-declared *highest-value* signature (§1.1), and we already have the data path. The fluctuating-anomaly search.
+2. **`f_max` refinements** — CatWISE/unWISE forced photometry (deepen W1/W2), position-dependent depths.
+3. **Channel B (TESS transits)** and **Channel C (accretion clean-zone)** — secondary/corroborating.
+4. A **`RESULTS.md`** write-up tying it together.
+
+My instinct: **go for the time-variability next** — it's the highest-value thing we said we'd look for, it's still unexplored, and a *fluctuating* anomaly is the one signal that a static disk can't mimic. Keep rolling, or is this the moment to pause and write up what we have?
+
+### 🧑 Tonio
+
+Keep rolling. I’m going to update the glossary with descriptions of our channels and how to interpret the results.
+
+### 🤖 Claude
+
+On it — time-variability is the prize. And great, you take the glossary; I'll build the analysis.
+
+First I need to validate the NEOWISE multi-epoch query (it's a different IRSA table, no Gaia precomputed cross-match). Let me test it on a few of our bright AllWISE-detected WDs.
+
+
+_[tools: Bash]_
+
+NEOWISE multi-epoch works — bright WDs have **183–291 epochs** (W1 std ~0.14–0.26, a baseline for "quiet"). But the 3rd source exposed a real gotcha: WDs are often **high-proper-motion**, so a fixed-position cone can grab a background source (that "1 epoch at W1=16.4"). I'll guard with Gaia positions + a magnitude-consistency cut.
+
+Let me build the NEOWISE fetcher, focused on the IR-excess candidate set (where a *varying* excess is the high-value signal), and run it in the background.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+The NEOWISE pull is running in the background (`b7u5ndwvb`, ~900 light curves). While it runs, let me write the variability analysis so it's ready when the data lands — and commit both.
+
+
+_[tools: Write]_
