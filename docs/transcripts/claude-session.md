@@ -5574,3 +5574,34 @@ Now the critical step — **commit this as the freeze**, which timestamps the v2
 
 
 _[tools: Bash]_
+
+**Frozen at `f510757`** — the v2 plan is now timestamped in the git history before any CatWISE2020/unWISE photometry of the sample has been touched. That ordering is what keeps the extension *confirmatory* rather than post-hoc. The full plan is in [`preregistration_v2_unwise.md`](preregistration_v2_unwise.md).
+
+The pre-specified choices, in case you want to weigh in before I fetch (revising is still fine — it's all pre-data until I pull the data):
+
+- **Data:** CatWISE2020 primary (Marocco+ 2021 — W2 ~1.5 mag deeper than our AllWISE floor), unWISE as a cross-check so conclusions aren't pipeline-specific.
+- **Cross-match (fixed now):** nearest source within 2.0″, reject if a second source within 3.0″ (blend guard), detection = SNR≥5 with clean flags.
+- **Statistics:** *identical* to v1 — same excess statistic, same empirical-null/λ recalibration (re-derived on the deeper data), same FDR, and the **unchanged natural-explanation battery** for anything flagged.
+- **Two tiers:** Tier 1 (catalogue cross-match → deeper excess search + tighter warm-regime f_max) is definite; Tier 2 (true forced photometry at *every* position for a per-source depth) is registered as conditional so it stays confirmatory if we manage it.
+
+And the honest framing is baked in: this **tightens the warm edge (~150–400 K) and deepens the excess census, but does not move the cold-core (≲150 K) limit** — that's W4-limited and needs far-IR. I also pre-registered the predictions (more warm disks, a modestly tighter warm f_max, a few new candidates expected to vet as natural) so the result is falsifiable.
+
+If you're happy with those choices, I'll proceed to **write `pipeline/fetch/06_catwise.py` and pull the CatWISE2020 W1/W2 for the sample** — the IRSA `int64`-upload fix from the NEOWISE work already solves the one gotcha that bit us last time. Want me to go, or adjust anything in the frozen plan first?
+
+### 🧑 Tonio
+
+I should add a new registration to the project as well, I think.
+
+### 🤖 Claude
+
+That's exactly the right call — and arguably the *cleaner* one, given the Update button is dead. A fresh OSF registration of the v2 plan gives it its own immutable, timestamped, DOI-bearing record without fighting the broken update flow. It's also standard practice (staged/amendment registrations are common); the only requirement is that the two are explicitly linked so the provenance reads cleanly.
+
+Three things make it clean, and let me set up the first one for you now:
+
+**1. Cross-reference the two registrations.** The v2 registration should state it amends v1 (cite `10.17605/OSF.IO/6YH7R`), and the repo should carry the v2 DOI once minted. Let me add that scaffolding to the frozen plan so it's submission-ready:
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_

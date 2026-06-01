@@ -13,11 +13,15 @@ freeze; the authoritative order-of-decisions record is the commit history. It re
 **Registration provenance.**
 - **Parent registration (v1):** OSF [osf.io/6yh7r](https://osf.io/6yh7r) · DOI
   **10.17605/OSF.IO/6YH7R** (accepted, live). This document amends/extends that plan.
-- **This (v2) registration:** filed as a **separate OSF registration from the same project**
-  (OSF's native registration-Update flow is unavailable for the v1 Open-Ended Registration).
-  DOI: **_[to be added once minted]_**.
-- **Frozen at git commit `f510757`** — the exact, immutable v2 plan; the OSF v2 registration is
-  created *before* the deeper data are fetched, preserving confirmatory status.
+- **Authoritative record of this amendment:** this committed document plus the public git
+  history (timestamped, force-push-protected) in the repository that is **linked from the
+  accepted v1 OSF registration**. That already makes the v2 plan public and immutable *before*
+  the deeper data are fetched — which is all that confirmatory status requires. **A separate
+  OSF registration is not needed.**
+- **Frozen at git commit `f510757`** — the exact, immutable v2 plan.
+- **Also uploaded to the OSF project** (OSF-timestamped file), so the frozen plan is
+  independently time-stamped on **both OSF and GitHub** before the deeper data are fetched. A
+  separate standalone OSF *registration* is optional and not required for confirmatory status.
 
 **No-peeking declaration.** The only prior contact with CatWISE was a *connectivity probe*
 (a `gaiadr3`/`external.catwise2020` upload query during v1) that returned a server error and

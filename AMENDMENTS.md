@@ -2,7 +2,14 @@
 
 This file records every change to the registered plan ([`preregistration.md`](preregistration.md)) made **after** the Open Science Framework (OSF) registration, in service of the open-science commitments in §8 of the pre-registration.
 
-The OSF registration is an immutable, timestamped snapshot. Each amendment below is **also filed as a formal Update to the OSF Registration** — OSF's native, immutable update mechanism, which is the *authoritative* record. This file and the public git history (on `main`, force-push-protected once the repository is made public) are the human-readable companion, establishing the order of every decision relative to the data — which is what keeps the work honest.
+The OSF registration is an immutable, timestamped snapshot of the *original plan*. The
+**authoritative record of every post-registration amendment is this file plus the public git
+history** (on `main`, force-push-protected) in the repository that is **linked from the accepted
+OSF registration**: each commit is timestamped and tamper-evident, which establishes the order
+of every decision relative to the data — and that is what keeps the work honest. (OSF's native
+registration-Update mechanism is unavailable for this Open-Ended Registration, so the linked
+repository *is* the amendment record rather than a mere companion to it. A separate OSF
+registration per amendment is optional and not required for confirmatory status.)
 
 Each entry states:
 - **What** changed (section + summary),
