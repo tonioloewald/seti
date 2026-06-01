@@ -5888,3 +5888,86 @@ The v2 picture is now complete and clean. The **W1+W2 corroboration cut 5,035 si
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+v2 complete and committed (`9c856e8`). Here's the comparison figure:
+
+
+_[tools: SendUserFile]_
+
+**v2 is done — and it's a clean, pre-registered confirmation.** Honestly, the headline result is that *nothing about the headline changed*, which is exactly what we predicted and is itself worth having proven with data:
+
+**What v2 settled:**
+- **The cold-anomaly limit (50–300 K) is unchanged** — the curves sit on top of each other in the shaded window. Deeper W1/W2 (5.4× more WDs, ~1.5 mag deeper) does *nothing* for it, because a cold 50–150 K excess emits at 12–22 µm (W3/W4), not 3.4/4.6 µm. The only band that moved is >300 K (the natural-disk regime, ~2× tighter — not an anomaly limit).
+- This is the **definitive, data-backed proof** of what I'd been asserting: the headline limit is W4-limited, and **far-IR (JWST/Herschel) is the *only* way to improve it** — deeper WISE-band photometry, however deep, can't.
+
+**What v2 contributed:**
+- A **5.4× larger excess-search census** → 866 W1+W2-corroborated warm excesses (51 known disks, 44 SDSS binaries/CVs, 774 warm disk/companion candidates). All warm, all natural — a useful debris-disk/companion catalogue byproduct.
+- A second, independent demonstration that the **empirical-null calibration is essential** (λ inflated even harder, 19–29, on the deeper sample).
+- And it caught and handled a real systematic (the W2 catalogue offset) the right way.
+
+**The integrity angle is the quiet win here:** we pre-registered the predictions ("cold core unchanged, warm edge modestly tighter, new excesses resolve as natural"), then the data confirmed each one. That's the pre-registration machinery working exactly as designed — no post-hoc story.
+
+**Where this leaves things:**
+- The **far-IR follow-up** is already registered as the next planned amendment, but it's *targeted* (JWST/Herschel on specific candidates), not a survey pass — so it's not something we execute here; it's a proposal/future-work item.
+- The **manuscript** could gain a short v2 paragraph: "deepening W1/W2 by 5.4× leaves the cold limit unchanged, confirming it is W3/W4-limited; the deeper search extends the warm-disk census." That actually *strengthens* the paper — it pre-empts the obvious reviewer question ("why not go deeper in WISE?") with a definitive answer.
+
+Want me to fold a concise v2 paragraph into the draft (and regenerate the PDF), or leave the manuscript at v1 and keep v2 as a documented repo result for now?
+
+### 🧑 Tonio
+
+Let’s do the former ie fold in the v2 results and update the PDF. This is all version controlled so there’s no downside.
+
+### 🤖 Claude
+
+On it — version control means we can iterate freely. Let me fold v2 into the manuscript: a new Results subsection with the comparison figure, an Abstract clause, an updated limitation, and the CatWISE2020 reference. First let me locate the anchor points:
+
+
+_[tools: Bash]_
+
+
+_[tools: Read]_
+
+Now insert the v2 subsection (§4.7) with the comparison figure, after the robustness section:
+
+
+_[tools: Edit]_
+
+Now the Abstract clause:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now update the §5 limitation — the unWISE point is now *executed*, not future:
+
+
+_[tools: Read]_
+
+The §4.7 insert shifted line numbers. Let me re-find the §5 limitation about unWISE:
+
+
+_[tools: Bash]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now add the CatWISE2020 reference. Let me find the reference list:
+
+
+_[tools: Bash]_
+
+
+_[tools: Edit]_
+
+Now regenerate the PDF and verify it's clean:
+
+
+_[tools: Bash]_

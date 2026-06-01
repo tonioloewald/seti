@@ -56,7 +56,10 @@ difference-image centroiding (a 16–33 arcsecond offset from the white dwarf in
 arcsecond pixels). For cold (~50–300 K) infrared excesses we place a zero-detection upper
 limit of f_max ≈ 10⁻³–10⁻⁴ on the fraction of (predominantly solar-neighbourhood) WDs hosting
 such an excess (fewer than one in a thousand to one in ten thousand), and show this limit is
-robust to the photospheric-atmosphere assumption. We release the full reproducible pipeline
+robust to the photospheric-atmosphere assumption. A pre-registered extension deepening W1/W2
+by 5.4× (CatWISE2020) leaves the cold limit unchanged, confirming it is set by the longer
+(12–22 µm) bands and that far-infrared data are required to improve it. We release the full
+reproducible pipeline
 as a general-purpose tool for principled anomaly assessment of white-dwarf observations.</p>
 <p><strong>Key words:</strong> white dwarfs — circumstellar matter — infrared: stars — methods:
 statistical — astrobiology — techniques: photometric</p>
@@ -327,6 +330,35 @@ and the limit are robust to the atmosphere assumption.</p>
 <p>(A separate, software-level identifier-integrity hazard and its fix are described in §2 under
 <em>Identifier integrity</em>, where they belong — they concern data handling, not the statistical
 robustness of the result.)</p>
+<h3>4.7 A pre-registered deeper-W1/W2 extension (CatWISE2020)</h3>
+<p>Following external review, we executed a pre-registered amendment (frozen before the deeper
+data were examined) deepening the W1/W2 excess search and the warm-regime upper limit with
+CatWISE2020 (Marocco et al. 2021), which reaches ~1.4–1.75 mag deeper than AllWISE in W1/W2.
+The cross-match yields <strong>91,197 WDs with W1/W2 — 5.4× the AllWISE sample, 75,060 of them new</strong>
+— with W2 reaching ~20.5 mag. The deeper, cooler sample&rsquo;s photosphere-prediction scatter is
+even larger (genomic-control λ ≈ 19 in W1, 29 in W2, versus 10.6 in v1), re-confirming the
+necessity of the empirical-null calibration.</p>
+<p>The outcome matches the pre-registered predictions exactly. Requiring <strong>W1+W2 corroboration</strong>
+(a real excess must appear in both bands — W1 cross-calibrates cleanly to AllWISE while W2
+carries a small catalogue offset the per-band empirical null absorbs), the deeper search yields
+866 robust excesses, <strong>all warm by construction</strong> — a cold 50–150 K excess does not emit
+detectably at 3.4/4.6 µm — dominated by known disks, spectroscopic binaries, and cataclysmic
+variables, with the remainder warm debris-disk/companion candidates. The deeper W1/W2 thus
+extends the warm-excess census but, by wavelength, <strong>cannot</strong> surface a cold-anomaly candidate.
+Recomputing f_max with the deeper W1/W2 depths (W3/W4 unchanged; Figure 6) leaves the
+<strong>50–300 K cold-anomaly window unchanged</strong> (1.0–1.2×) and tightens only the &gt;300 K natural-disk
+regime (~2×). This confirms <em>with data</em> that the headline cold limit is W3/W4-limited, and that
+far-infrared facilities (JWST/Herschel) — not deeper WISE-band photometry — are the only route
+to improving it.</p>
+<figure>
+  <img src="../figures/f_max_v2.png" alt="f_max v1 vs v2 deeper W1/W2">
+  <figcaption><b>Figure 6.</b> The cold-excess upper limit with v1 AllWISE depths (dashed) and
+  the v2 deeper CatWISE2020 W1/W2 depths (solid; W3/W4 unchanged). The curves coincide across
+  the 50–300 K cold-anomaly window (shaded) — deepening W1/W2 by ~1.5 mag does not move the
+  cold limit, which is set by W3/W4 — and separate only in the >300 K natural-disk regime. The
+  headline limit is W3/W4-limited; only far-infrared data can improve it.</figcaption>
+</figure>
+
 <h2>5. Discussion</h2>
 <p><strong>A defended null is a measurement.</strong> Every channel returns a null, and in every case the
 null is reached by chasing each candidate to a concrete natural cause — Galactic cirrus in
@@ -340,12 +372,9 @@ than by the detected subset alone.</p>
 probed, neighbourhood-weighted</em> population, not the full Galactic WD census; beyond geometry,
 the local sample may also differ physically (local ISM, recent cloud passages affecting
 accretion, age gradients), which we flag as a caveat on the natural baseline itself. (ii)
-The excess search uses AllWISE <em>detections</em>, so the non-detected majority of WDs enters the
-upper limit only through the nominal survey depth; <strong>forced photometry on the deeper
-unWISE/CatWISE W1/W2 coadds</strong> — providing an actual measurement or deeper limit at every
-position — is the most pressing near-term improvement, and would tighten the bound in the
-warm, W1/W2-sensitive regime. We register it as the priority v2 amendment (to be
-pre-registered before the deeper data are examined). (iii) WISE cannot see genuinely cold
+the v1 excess search used AllWISE <em>detections</em> only; the deeper CatWISE2020 extension (§4.7)
+has now addressed this, finding that deeper W1/W2 extends the warm-excess census but leaves the
+cold limit unchanged — so the binding limitation is wavelength, not depth. (iii) WISE cannot see genuinely cold
 (≲50 K) excess; that regime requires far-infrared data (Herschel, JWST/MIRI) and is
 honestly outside our reach. (iv) Channel B is secondary and bright-limited; a calibrated,
 fainter, all-sector transit search is a natural extension. (v) Most fundamentally, the search
@@ -414,6 +443,7 @@ DA-atmosphere assumption, and a variability selection bias) are addressed in §4
 <li>Jura, M. 2003, <em>ApJ</em>, 584, L91 — flat opaque dust-disk model.</li>
 <li>Kovács, G., Zucker, S., &amp; Mazeh, T. 2002, <em>A&amp;A</em>, 391, 369 — Box Least Squares.</li>
 <li>Mainzer, A., et al. 2011, <em>ApJ</em>, 731, 53 — NEOWISE.</li>
+<li>Marocco, F., et al. 2021, <em>ApJS</em>, 253, 8 — The CatWISE2020 Catalog (deeper W1/W2).</li>
 <li>Ricker, G. R., et al. 2015, <em>J. Astron. Telesc. Instrum. Syst.</em>, 1, 014003 — TESS.</li>
 <li>Schlegel, D. J., Finkbeiner, D. P., &amp; Davis, M. 1998, <em>ApJ</em>, 500, 525 — Galactic dust/reddening map.</li>
 <li>Stetson, P. B. 1996, <em>PASP</em>, 108, 851 — variability index J.</li>
