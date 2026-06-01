@@ -445,9 +445,14 @@ version is tagged in the Git history.
 
 ## 8. Acknowledgements
 
+We thank Terhi Loewald for her critical review and for the cross-disciplinary insight —
+bringing the population-level statistical standards of epidemiology and genome-wide association
+studies to bear on an astrophysical problem — that directly motivated the empirical-null
+calibration and genomic-control (λ-inflation) framework on which this search's statistics rest.
+
 This research used the Gaia mission archive (ESA), the NASA/IPAC Infrared Science Archive
-(AllWISE, NEOWISE), the Barbara A. Mikulski Archive for Space Telescopes (TESS), the
-VizieR and SIMBAD services (CDS, Strasbourg), and the Montreal White Dwarf Database model
+(AllWISE, CatWISE2020, NEOWISE), the Barbara A. Mikulski Archive for Space Telescopes (TESS),
+the VizieR and SIMBAD services (CDS, Strasbourg), and the Montreal White Dwarf Database model
 grids. We thank the white-dwarf and exoplanet communities whose catalogues make a search
 like this possible.
 
