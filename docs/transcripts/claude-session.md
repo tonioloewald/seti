@@ -3520,3 +3520,89 @@ That figure tells the story. Let me document it, commit, and report — you're n
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Sending you the light curves so you can see what the variability search turned up:
+
+
+_[tools: SendUserFile]_
+
+Definitely not stuck — just a long productive stretch. Here's what happened and where we landed:
+
+**The detour:** the NEOWISE pull hung on a single un-timed-out IRSA query, so I killed it and rebuilt it as a **bulk TAP cross-match** — which pulled **80,379 clean light-curve epochs** in 4 minutes instead of an hour.
+
+**The result — time-variability is a null for anomalous fluctuation, with a nice byproduct.** Of 540 WDs with NEOWISE light curves, 17 show real correlated variability:
+- **14 are natural** — debris-disk variability (a *known* phenomenon) or brown-dwarf weather. The top two panels in the figure are striking ~0.4–1.3 mag disk events over the decade — genuinely good *variable-disk* candidates for the debris-disk community, recovered cleanly by our pipeline.
+- **3 "unexplained"** are only unexplained in the sense that the static battery hadn't classified their excess; their light curves (bottom panels) are marginal/noisy or a bright-source systematic — not compelling anomalies.
+
+The NEOWISE errors are well-behaved (χ²_red null = exactly 1.00), so the detections are trustworthy. The §1.1 *highest-value* signal — a fluctuating anomaly — comes up **null**, by explanation, not assertion. (Scope caveat: this v1 searched only the IR-excess population; a full-sample transient search is a future extension.)
+
+## Channel A is now complete
+Both branches done and documented in [`RESULTS.md`](https://github.com/tonioloewald/seti/blob/main/RESULTS.md):
+- **Static excess** → clean explained null + the `f_max` upper limit (RQ4).
+- **Time-variability** → null for anomalous fluctuation + a variable-disk catalogue.
+
+That's the entire infrared-excess channel — searched, explained, and bounded. All committed (`7e3d498`), reproducible, on the record.
+
+**Remaining channels:** B (TESS transit morphology) and C (accretion clean-zone), plus the `f_max` refinements. Want me to push into **Channel B** next, or pause here — Channel A is a clean, complete, documented unit if you'd like to let the experts chew on it first.
+
+### 🧑 Tonio
+
+I'd like to fold in some more glossary terms. They should also be complementary to the existing terms BUT they have an incompatible numbering system. Same source, here's the session link https://gemini.google.com/share/51f8d5d3b748 and here's the additional content: Here are the accessible definitions for "cirrus ceiling" and several other specialized astrophysical and algorithmic terms that appear in the project document. These are formatted to drop straight into the same Wiki glossary.
+
+### 1. Astrophysical Environments & Physics
+
+* **Galactic Cirrus & The "Cirrus Ceiling"**
+**The Concept:** Just as Earth has wispy cirrus clouds, our Milky Way galaxy is filled with faint, cold clouds of interstellar dust. Because this dust is cold, it glows faintly in the far-infrared.
+**Why it matters:** When looking for a cold anomaly around a distant white dwarf, we have to look *through* this galactic dust. The "cirrus ceiling" is the threshold where the background interstellar dust is simply too bright or too clumpy to reliably spot a faint infrared excess from the white dwarf itself. It’s the observational equivalent of trying to see a flashlight through dense fog.
+[Read more about Infrared Cirrus](https://en.wikipedia.org/wiki/Infrared_cirrus)
+* **Poynting–Robertson Drag**
+**The Concept:** A quirk of orbital physics caused by radiation pressure. When a star's light hits a small grain of dust orbiting it, the dust grain absorbs the light and re-emits it. Because the grain is moving, this creates a microscopic braking effect, causing the dust to slowly lose momentum and spiral inward to be consumed by the star.
+**Why it matters:** This is a "natural clearing mechanism" for Channel C. If a star has no dust in its inner zone, it might just be because Poynting-Robertson drag has already vacuumed it up naturally.
+[Read more about Poynting-Robertson Effect](https://en.wikipedia.org/wiki/Poynting%E2%80%93Robertson_effect)
+* **Sublimation Radius**
+**The Concept:** The absolute closest a solid object (like a comet or dust grain) can get to a star before the intense heat causes it to instantly vaporize (sublimate) from a solid into a gas.
+**Why it matters:** This is another natural clearing mechanism for Channel C. You wouldn't expect to see solid dust inside this radius because physics dictates it would burn away.
+* **Photosphere & Photospheric Baseline**
+**The Concept:** The "surface" of a star—the layer where it becomes transparent and light can escape into space.
+**Why it matters:** To find an anomaly, you have to know exactly what the bare star looks like. The "photospheric baseline" is the mathematical model of the light emitted *only* by the star's surface. We subtract this baseline from our telescope measurements; whatever is left over is the "excess."
+* **Wien Tail**
+**The Concept:** Every warm object emits a spectrum of light (a blackbody curve) that peaks at a certain wavelength and trails off on either side. The "Wien tail" is the short-wavelength (higher energy) slope of this curve.
+**Why it matters:** If an anomaly is extremely cold (e.g., 30 Kelvin), almost all of its light is emitted in the far-infrared. The WISE telescope's longest wavelength band (W4) can only just barely catch the very edge—the Wien tail—of that cold light, making cold anomalies notoriously difficult to detect with current data.
+[Read more about Wien's Displacement Law](https://en.wikipedia.org/wiki/Wien%27s_displacement_law)
+
+### 2. Observational & Algorithmic Jargon
+
+* **Malmquist Bias**
+**The Concept:** An inescapable selection effect in astronomy. If you look at the night sky, you will easily see dim stars that are close to Earth, and you will only see distant stars if they are exceptionally bright.
+**Why it matters:** Because this project requires high-quality data to run its tests, it will naturally exclude distant white dwarfs that are too faint for our telescopes to measure accurately. This creates a Malmquist bias: the project's final conclusions apply strictly to the *local* stellar neighborhood, not a perfect cross-section of the entire galaxy.
+[Read more about Malmquist Bias](https://en.wikipedia.org/wiki/Malmquist_bias)
+* **RUWE (Renormalized Unit Weight Error)**
+**The Concept:** A quality-control metric from the Gaia space telescope. Gaia measures the exact position of a star over time. If a star moves in a perfectly straight line, its RUWE is near 1.0. If the star wobbles unexpectedly, its RUWE spikes.
+**Why it matters:** High RUWE usually means a star is being gravitationally tugged by an unseen companion (like a brown dwarf). Standard astronomical surveys throw out high-RUWE stars as "bad data." This project explicitly *keeps* them, because an unexpected wobble or a shifted center-of-light could be a clue to an anomaly.
+* **BLS / TLS (Box-fitting Least Squares & Transit Least Squares)**
+**The Concept:** The standard algorithms used by astronomers to comb through millions of light curves looking for the tiny, periodic dips of a transit.
+**Why it matters:** BLS is mathematically optimized to find square-shaped dips (like a solid block passing in front of a star). TLS is optimized to find U-shaped dips (like a spherical planet). Channel B uses these to flag initial events before checking if their morphology is completely weird.
+[Read more about Box-fitting Least Squares](https://www.google.com/search?q=https://en.wikipedia.org/wiki/Box-fitting_Least_Squares)
+
+### 🤖 Claude
+
+Folding these in. The fix for the numbering clash: their "Observational & Algorithmic Jargon" terms (Malmquist, RUWE, BLS/TLS) go into the existing **§1 Measurement & Observational Techniques**, and their physics terms become a new **§2 Astrophysical Environments & Physics** — which bumps the existing Statistical → §3 and Literature → §4. Clean, no clashes.
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Let me verify the section numbering is now clean, then record the source session and commit.
+
+
+_[tools: Bash]_
+
+Numbering is clean: **The Detection Channels → §1 Measurement → §2 Astrophysical → §3 Statistical → §4 Literature → Possible Outcomes**, with all new terms in and no google-search links in *my* additions. Let me record the source session in the glossary's provenance note and commit.
+
+
+_[tools: Edit]_

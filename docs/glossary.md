@@ -1,4 +1,4 @@
-> I provided Gemini with a copy of the paper in its form as of June 1, 2026 and it produced this for me.
+> The glossary entries here were produced by Gemini from a copy of the pre-registration (June 1, 2026) across a few sessions — including <https://gemini.google.com/share/51f8d5d3b748> — and folded in by the investigator. Full AI-collaboration transcripts are archived in [`transcripts/`](transcripts/).
 
 # Project Glossary
 
@@ -50,8 +50,40 @@ A light curve is a graph of a star's brightness over time. "Morphology" refers t
 * **Spectral Energy Distribution (SED) & IR Excess**
 An SED is a graph showing how much energy an object emits across different wavelengths of light. A bare white dwarf has a predictable SED that drops off smoothly in the infrared. An "IR excess" is a bulge in that curve, indicating that something around the star is absorbing starlight and re-radiating it as heat.
 [Read more about Spectral Energy Distributions](https://en.wikipedia.org/wiki/Spectral_energy_distribution)
+* **Malmquist Bias**
+**The concept:** An inescapable selection effect in astronomy. If you look at the night sky, you will easily see dim stars that are close to Earth, and you will only see distant stars if they are exceptionally bright.
+**Why it matters:** Because this project requires high-quality data to run its tests, it will naturally exclude distant white dwarfs that are too faint for our telescopes to measure accurately. This creates a Malmquist bias: the project's final conclusions apply strictly to the *local* stellar neighborhood, not a perfect cross-section of the entire galaxy.
+[Read more about Malmquist Bias](https://en.wikipedia.org/wiki/Malmquist_bias)
+* **RUWE (Renormalized Unit Weight Error)**
+**The concept:** A quality-control metric from the Gaia space telescope. Gaia measures the exact position of a star over time. If a star moves in a perfectly straight line, its RUWE is near 1.0. If the star wobbles unexpectedly, its RUWE spikes.
+**Why it matters:** High RUWE usually means a star is being gravitationally tugged by an unseen companion (like a brown dwarf). Standard astronomical surveys throw out high-RUWE stars as "bad data." This project explicitly *keeps* them, because an unexpected wobble or a shifted center-of-light could be a clue to an anomaly.
+* **BLS / TLS (Box-fitting Least Squares & Transit Least Squares)**
+**The concept:** The standard algorithms used by astronomers to comb through millions of light curves looking for the tiny, periodic dips of a transit.
+**Why it matters:** BLS is mathematically optimized to find square-shaped dips (like a solid block passing in front of a star). TLS is optimized to find U-shaped dips (like a spherical planet). Channel B uses these to flag initial events before checking if their morphology is completely weird.
+[Read more about Box Least Squares](https://docs.astropy.org/en/stable/timeseries/bls.html)
 
-## 2. Statistical & Analytical Methods
+## 2. Astrophysical Environments & Physics
+
+* **Galactic Cirrus & The "Cirrus Ceiling"**
+**The concept:** Just as Earth has wispy cirrus clouds, our Milky Way galaxy is filled with faint, cold clouds of interstellar dust. Because this dust is cold, it glows faintly in the far-infrared.
+**Why it matters:** When looking for a cold anomaly around a distant white dwarf, we have to look *through* this galactic dust. The "cirrus ceiling" is the threshold where the background interstellar dust is simply too bright or too clumpy to reliably spot a faint infrared excess from the white dwarf itself. It's the observational equivalent of trying to see a flashlight through dense fog.
+[Read more about Infrared Cirrus](https://en.wikipedia.org/wiki/Infrared_cirrus)
+* **Poynting–Robertson Drag**
+**The concept:** A quirk of orbital physics caused by radiation pressure. When a star's light hits a small grain of dust orbiting it, the dust grain absorbs the light and re-emits it. Because the grain is moving, this creates a microscopic braking effect, causing the dust to slowly lose momentum and spiral inward to be consumed by the star.
+**Why it matters:** This is a "natural clearing mechanism" for Channel C. If a star has no dust in its inner zone, it might just be because Poynting–Robertson drag has already vacuumed it up naturally.
+[Read more about the Poynting–Robertson Effect](https://en.wikipedia.org/wiki/Poynting%E2%80%93Robertson_effect)
+* **Sublimation Radius**
+**The concept:** The absolute closest a solid object (like a comet or dust grain) can get to a star before the intense heat causes it to instantly vaporize (sublimate) from a solid into a gas.
+**Why it matters:** This is another natural clearing mechanism for Channel C. You wouldn't expect to see solid dust inside this radius because physics dictates it would burn away.
+* **Photosphere & Photospheric Baseline**
+**The concept:** The "surface" of a star — the layer where it becomes transparent and light can escape into space.
+**Why it matters:** To find an anomaly, you have to know exactly what the bare star looks like. The "photospheric baseline" is the mathematical model of the light emitted *only* by the star's surface. We subtract this baseline from our telescope measurements; whatever is left over is the "excess."
+* **Wien Tail**
+**The concept:** Every warm object emits a spectrum of light (a blackbody curve) that peaks at a certain wavelength and trails off on either side. The "Wien tail" is the short-wavelength (higher-energy) slope of this curve.
+**Why it matters:** If an anomaly is extremely cold (e.g., 30 Kelvin), almost all of its light is emitted in the far-infrared. The WISE telescope's longest wavelength band (W4) can only just barely catch the very edge — the Wien tail — of that cold light, making cold anomalies notoriously difficult to detect with current data.
+[Read more about Wien's Displacement Law](https://en.wikipedia.org/wiki/Wien%27s_displacement_law)
+
+## 3. Statistical & Analytical Methods
 
 * **Bonferroni Correction & The Trial Factor**
 When you run 100,000 tests, a "1-in-10,000" statistical fluke is guaranteed to happen roughly 10 times. To avoid drowning in false positives, you apply a "trial factor" penalty. The Bonferroni correction is the most conservative version of this: if your desired false positive rate is $\alpha$, you require a significance of $\alpha / N$ (where $N$ is the number of tests).
@@ -80,7 +112,7 @@ A visual diagnostic tool. It plots your actual observed data distribution agains
 
 ---
 
-## 3. Cited Literature & Papers
+## 4. Cited Literature & Papers
 
 ### The "Assumed Mechanism" SETI Baseline
 
