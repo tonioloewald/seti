@@ -3642,3 +3642,31 @@ Just the one. Fixing it:
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+All clean (`09ad1f5`) — the whole glossary now uses direct links.
+
+Now **Channel B — TESS transit morphology**. It's registered as *secondary/candidate-generating* (TESS is photon-starved on faint WDs), so first I need to gauge how much usable TESS data our WDs actually have. Let me probe availability on the brightest ones.
+
+
+_[tools: Bash]_
+
+TESS data is plentiful for bright WDs (multiple SPOC/QLP/TESS-SPOC products at G<12). The question is how much of our sample is bright enough. Let me size the Channel-B-searchable subset.
+
+
+_[tools: Bash]_
+
+TESS is feasible for the bright subset: **157 WDs at G<14, 566 at G<15** — that's the Channel-B-searchable sample (TESS can't usefully see the faint majority). Before building the search, let me validate the machinery on the textbook case — **WD 1856+534 b**, the known deep-transiting white dwarf — to confirm we'd actually recover a real transit.
+
+
+_[tools: Bash]_
+
+**Recovered it exactly** — BLS found WD 1856+534 b at **1.4080 d** (truth 1.4079 d) in 24 s. The transit machinery works. Now I'll build the Channel-B search over the bright subset (G<14, 157 WDs) and run it in the background.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
