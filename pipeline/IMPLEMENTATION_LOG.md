@@ -135,3 +135,21 @@ dip centroid is offset from the white dwarf by **0.76 / 0.76 / 1.56 px (16 / 16 
 in each case toward the field/neighbour. They are **confirmed background/blended eclipsing
 binaries**, not transits of the WDs. **Channel B closes as a clean, fully-vetted null — no
 transit-of-a-WD anomaly.** Figures: `figures/transit_candidates.png`, `figures/centroid_vet.png`.
+
+## 2026-06-01 — Channel C (accretion clean-zone; RQ3, §5.5)
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| 16 | Polluted (accreting) WDs identified from the **same pinned catalogue's** `sdssspec.dat` table (SDSS visual spectral classes; `fetch/05_sdss_spectral.py`): every WD class containing **Z** (Ca H&K metal lines). 1,137 in the P_WD>0.75 sample. | Deterministic, citable, no new survey — a different table of an already-pinned release (pre-data amendment, SOURCES.md). | §5.5, RQ3 |
+| 17 | "Inner dust / disk-bearing" = membership in the **calibrated W3/W4 battery** excess classes, NOT a raw W1/W2 χ cut. | Channel A showed W1/W2 excess χ is inflation-dominated (λ≈10); a raw cut there manufactures false-positive disks (it gave a spurious 18.5% vs 6.4% with the calibrated criterion). | §5.3, §5.5 |
+| 18 | Elevation rule applied verbatim from §5.6: a clean-zone object counts **only if coincident with a Channel-A or -B survivor**. | Clean-zone is common/natural (items 10–11), so corroborating-only — no standalone threshold. | §5.5, §5.6 |
+
+**RESULT — Channel C:** of 1,137 polluted WDs, 157 have AllWISE coverage; **10 (6.4%) are
+disk-bearing, 147 (93.6%) have a clean inner zone** — i.e. a clean inner zone is the norm,
+consistent with the literature's small WD-disk fraction (the WISE-covered polluted subset is
+bright/nearby-biased, so ~6% vs the literature few-% is expected). With **0 Channel-A and 0
+Channel-B survivors**, the clean-zone set coincides with the A∪B survivors in **0 objects** →
+Channel C elevates nothing, exactly as its corroborating-only registration anticipates. It
+leaves a characterised polluted-WD / clean-zone catalogue as a byproduct
+(`data/derived/channel_c_clean_zone.parquet`). **All three registered channels now complete
+— three clean nulls.**

@@ -1,0 +1,6 @@
+{
+  "source_url": "https://cdsarc.cds.unistra.fr/ftp/J/MNRAS/508/3877/sdssspec.dat.gz",
+  "sha256_sdssspec_gz": "3016e1a69c0748a6e1f24d3d4e51fb5d7863e8cbb89a91686ed41f7f141e807f",
+  "n_rows": 41820,
+  "n_classes": 46
+}

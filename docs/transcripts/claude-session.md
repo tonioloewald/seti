@@ -4202,3 +4202,99 @@ _[tools: Edit]_
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+**Channel B is done — a clean, fully-vetted null.** Every loud signal is stellar variability (mostly catalogued), and all three transit-shaped residuals are confirmed off-target eclipsing binaries by difference imaging. Committed (`45aabe9`).
+
+Now **Channel C — the accretion clean-zone.** Let me read exactly how it's registered so I implement it faithfully (not from memory).
+
+
+_[tools: Bash]_
+
+Let me read the full registered Channel-C spec (§5.5 and the item-6 natural tests):
+
+
+_[tools: Bash]_
+
+Now I have the exact registered spec. **Channel C is deliberately modest:** it's an *ordinal corroborating flag with no standalone threshold* (§5.5) — "accreting but no inner dust" is common and natural, so per §5.6 it only elevates an object **when coincident with a Channel-A or -B survivor**. Since both A and B are clean nulls, Channel C structurally cannot produce an anomaly — but I'll do the work faithfully: build the polluted (accreting) sample, characterize the clean-inner-zone population, and formally confirm the (zero) coincidence.
+
+First — do we already have pollution/spectral-type info in the pinned parent catalogue, or do I need a new pinned source?
+
+
+_[tools: Bash]_
+
+The pinned catalogue includes a second file — **`sdssspec.dat` (41,820 rows): the Gaia–SDSS spectroscopic sample with visual spectral classifications** (DA, DAZ, DZ, DBZ, …). That's the deterministic, already-pinned source for identifying polluted (accreting) WDs — same VizieR catalogue we already use. Let me get its byte layout, especially the spectral-class column.
+
+
+_[tools: Bash]_
+
+
+_[tools: Bash]_
+
+The polluted/accreting classes are those with **Z** (Ca H&K metal lines): DAZ, DZA, DZ, DBZ, DZB, DABZ/DBAZ/DZAB/DZBA, DZH. Let me get the `source_id` byte offset in `sdssspec.dat`, then build the Channel-C fetcher.
+
+
+_[tools: Bash]_
+
+Everything's specified. `sdssspec.dat`: source_id at bytes 25–43, `specClass` at 496–501, Pwd at 117–124, Teff at 173–181, G at 128–134 — same pinned VizieR catalogue. Let me build the Channel-C fetcher (downloads `sdssspec.dat.gz`, deterministic, checksummed), then the analysis.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+Missing values are `---`. Let me make the float parse robust:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+**1,161 metal-polluted WDs** identified. Now the Channel-C analysis: among polluted (accreting) WDs, which have detectable inner dust vs an anomalously clean inner zone — then the registered coincidence check against A/B survivors.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+The 18.5% disk-bearing fraction is a red flag — it **contradicts** the literature figure I cited in the same breath. The cause: I used a raw `W1/W2 chi > 5` cut, but Channel A already showed W1/W2 excess χ is inflated (λ≈10 — textbook errors badly underestimate the photospheric scatter), so raw χ>5 over-counts with false positives. The rigorous, photosphere-independent disk detection is the **battery's W3/W4 classification**. Let me fix the criterion to use that (keeping warm_chi only as a diagnostic).
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+6.4% (10/157) — now in the right ballpark. Let me make the wording honest rather than overclaiming an exact literature match (our WISE-covered polluted subset is bright/nearby-biased, so a few-% is expected):
+
+
+_[tools: Edit]_
+
+Now document Channel C. Update RESULTS.md:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Update the IMPLEMENTATION_LOG, the "What's next" list, and add the SOURCES row:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Add the SOURCES.md provenance row for the new fetched table:
+
+
+_[tools: Edit]_

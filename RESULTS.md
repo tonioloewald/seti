@@ -5,10 +5,11 @@ data. All numbers are reproducible from the committed code (`pipeline/`), the fr
 manifests (`data/manifests/`), and the pinned sources (`SOURCES.md`); granular build
 decisions are in [`pipeline/IMPLEMENTATION_LOG.md`](pipeline/IMPLEMENTATION_LOG.md).
 
-**Scope of this document (v1).** It covers **Channel A — the static infrared excess**
-(end to end, incl. NEOWISE time-variability) and a first pass of **Channel B — TESS
-transit morphology**. Channel C (accretion clean-zone) is not yet reported. This is a
-first, un-reviewed pass with the stated caveats below — not a final paper.
+**Scope of this document (v1).** It covers all three registered channels: **A — static
+infrared excess** (end to end, incl. NEOWISE time-variability), **B — TESS transit
+morphology** (incl. difference-image centroid vetting), and **C — the accretion
+clean-zone** corroborating flag. This is a first, un-reviewed pass with the stated
+caveats below — not a final paper.
 
 ---
 
@@ -152,6 +153,34 @@ to fainter magnitudes and across all sectors is a future extension.
 > carrying `source_id` as a **string** throughout; the transit table was repaired in place
 > and verified by an exact per-row `g_mag` match.
 
+## Channel C — accretion clean-zone (corroborating only)
+
+Channel C (RQ3) asks whether any *polluted* (actively accreting) white dwarf shows an
+anomalously **clean inner zone** — accreting yet no inner dust. It is registered as an
+**ordinal corroborating flag with no standalone threshold** (§5.5): "accreting but no
+detectable dust" is common and natural, so per §5.6 it elevates an object **only when it
+coincides with a Channel-A or -B survivor**.
+
+We identify the polluted WDs deterministically from the *same pinned* Gentile Fusillo 2021
+catalogue — its `sdssspec.dat` table of SDSS visual spectral classifications — taking every
+WD class containing **Z** (Ca H&K metal lines): **1,137** polluted WDs in our P_WD>0.75
+sample (mostly DZ, plus DAZ/DBZ/DBAZ/…). Of these, **157** have AllWISE coverage, so inner
+dust *could* be seen. Using the calibrated, photosphere-independent disk detection (the
+Channel-A W3/W4 battery — deliberately **not** a raw W1/W2 cut, which Channel A showed is
+inflation-dominated), **10 (6.4%) are disk-bearing and 147 (93.6%) have a clean inner
+zone.** Only a few percent showing a disk — with a clean zone the norm — is the expected,
+literature-consistent picture (our WISE-covered polluted subset is bright/nearby-biased, so
+~6% vs the literature few-% is unsurprising). The clean state is natural (gas-only or
+optically-thin disks, recently-fully-accreted events; §5.2 item 10), and many non-detections
+are simply sensitivity-limited (item 11).
+
+**Coincidence (the only elevation rule):** with **0 Channel-A residual survivors** and
+**0 Channel-B on-target survivors**, the clean-zone set intersects the A∪B survivors in
+**0 objects**. Channel C therefore contributes **no elevated anomaly** — exactly what its
+corroborating-only registration anticipates — while leaving a useful byproduct: a
+characterised polluted-WD / clean-inner-zone catalogue
+(`data/derived/channel_c_clean_zone.parquet`).
+
 ## Caveats (this is a v1)
 
 - **Nominal, uniform WISE depths** for `f_max`; position-dependent depths would refine it.
@@ -172,7 +201,12 @@ fetched on demand (gitignored) per `SOURCES.md`; the recipe is committed.
 
 ## What's next
 
-1. **Time-variability** (NEOWISE W1/W2) — the fluctuating-anomaly search (§1.1); in progress.
-2. **`f_max` refinements** — CatWISE/unWISE forced photometry; position-dependent depths.
-3. **Channel B** (TESS transit morphology) and **Channel C** (accretion clean-zone).
-4. Domain-expert review (entering as pre-data amendments, §8).
+All three registered channels have now had a first end-to-end pass (all clean nulls).
+Remaining work, each entering as a dated pre-data amendment (§8):
+
+1. **`f_max` refinements** — CatWISE/unWISE forced photometry; position-dependent depths;
+   far-IR (Herschel/JWST-MIRI) to reach the sub-50 K regime WISE is blind to.
+2. **Channel B to fainter mags / all sectors** — and upgrading it toward a calibrated
+   channel as better time-domain data arrive (the §5.3 extensibility clause).
+3. **Full-sample variability** — to catch pure transients with no static excess.
+4. **Domain-expert review** of the whole pass before any write-up.
