@@ -71,6 +71,11 @@ def main():
             continue
         if o.get("isMeta"):
             continue  # skip skill instructions / injected scaffolding (not conversation)
+        if o.get("isCompactSummary") or o.get("isVisibleInTranscriptOnly"):
+            continue  # auto-generated context-compaction summary, injected with a
+            # user role — NOT something Tonio said. The turns it summarizes are
+            # already present verbatim earlier in this same log, so dropping it
+            # loses nothing and avoids mis-attributing a machine summary to a human.
         typ = o.get("type")
         msg = o.get("message")
         if not isinstance(msg, dict):
