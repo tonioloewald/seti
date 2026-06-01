@@ -5527,3 +5527,45 @@ _[tools: Read]_
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Status updated and committed (`c5c7883`) — the registration now reads as accepted/live, with the linked repo noted as the amendment record. (The other "once archiving finishes" mentions are only in the archived transcripts, so those stay as the historical record.)
+
+And on the professor — ha, totally normal. 😄 Cold email + busy academic = a reply on *their* clock, not yours. Faculty inboxes are notorious black holes, and a thoughtful cold message often sits a week or two before they get to it (or before curiosity wins). I wouldn't read anything into silence yet.
+
+Rough rule of thumb: if nothing after ~10–14 days, a short, friendly one-liner nudge — "just bumping this in case it slipped past; no worries if you're swamped" — is completely appropriate and often does the trick. Anything sooner risks looking impatient. Happy to draft that nudge if/when the time comes.
+
+In the meantime you've banked a genuine win today: the OSF registration is formally accepted and live, which only makes the eventual pitch to him (or any reviewer) stronger. Nothing else needs doing right now — the manuscript's review-ready with figures, the provenance trail is clean, and v2 is queued whenever you want it. Enjoy the small victory.
+
+### 🧑 Tonio
+
+This is great. Let's move on with v2 while we wait!
+
+### 🤖 Claude
+
+Let's do it — and the disciplined first step for v2 is the one that keeps the whole project honest: **pre-register the deeper-photometry analysis *before* we touch the deeper data.** So I'll draft the v2 pre-registration spec now, freeze it (timestamped commit), and only then fetch CatWISE/unWISE.
+
+First, let me verify the two catalog citations so the registered plan is accurate:
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+Both citations verified — **CatWISE2020** (Marocco et al. 2021, ApJS 253, 8): W1/W2 forced photometry, 90% depth W1=17.7 / W2=17.5; **unWISE** (Schlafly, Meisner & Green 2019, ApJS 240, 30): ~0.7 mag deeper than AllWISE. The W2 gain (~1.5 mag vs our AllWISE 16.0) is the meaningful one for the warm edge of the cold window.
+
+Now the v2 pre-registration. I'll write it as a frozen, citable amendment plan — specifying data, method, thresholds, and *predictions* — before any deeper data are examined:
+
+
+_[tools: Write]_
+
+Now log it in the amendments register and flip the "planned" unWISE entry to "registered":
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_

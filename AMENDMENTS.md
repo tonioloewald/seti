@@ -17,6 +17,7 @@ Each entry states:
 | 2026-06-01 | pre-data | §5.2–5.7 | Channel-A battery + upper limit; Channel B (transit BLS + mandatory difference-image centroid vetting); Channel C polluted-WD identification via the **same pinned catalogue's** `sdssspec.dat` SDSS spectral classes. | Registered-method elaborations; all thresholds from the empirical null / injection-recovery, not candidate inspection (decisions #8–#18 in the implementation log). |
 | 2026-06-01 | confirmatory (registered extension) | §5.3 | Time-variability search extended from the IR-excess set to the **brightness-limited** sample (all AllWISE WDs with W1<15.5). | The registration already named the full-sample variability search as a future extension; executed here (prompted by external review). Bias-reducing — it can only *add* candidates, not remove them — and the outcome remained a clean null. Decisions #21–#22. |
 | 2026-06-01 | robustness | §5.3, §5.7 | DA-photosphere assumption checked against the DB grid (cold null) and against confirmed-DA-only / non-DA-excluded subsets (f_max); `source_id` carried as a string pipeline-wide. | Responses to external review; results unchanged. Decisions #19–#20. |
+| 2026-06-01 | **pre-data (v2)** | §5.3, §5.7 | **Deeper W1/W2 (CatWISE2020 / unWISE) extension** — full plan frozen in [`preregistration_v2_unwise.md`](preregistration_v2_unwise.md): deeper excess search + tighter warm-regime `f_max`, identical excess statistic / empirical null / battery as v1. **Committed before any CatWISE2020/unWISE photometry of the sample was examined** (no-peeking declaration in that file). | External-review priority. Pre-registered to keep it confirmatory under the §5.3 extensibility clause. |
 
 ### Planned amendments (intent recorded before the new data are examined)
 
@@ -24,12 +25,9 @@ To preserve confirmatory status under the §5.3/§8 extensibility clause, the fo
 recorded **now**, before the relevant data are fetched or analysed. Each will be filed as a
 formal OSF Registration Update (by the human author) before execution.
 
-- **unWISE / CatWISE forced photometry (priority v2).** Deepen W1/W2 by forced photometry on
-  the unWISE/CatWISE coadds at every WD position, so the non-detected majority enters the
-  upper limit through an actual measurement/limit rather than the nominal AllWISE survey
-  depth. Pre-registered analysis: identical excess statistic and empirical-null calibration as
-  Channel A, applied to the deeper W1/W2; recompute `f_max` in the warm/W1–W2-sensitive
-  regime. Flagged by external review as the most pressing limitation.
+- **Deeper W1/W2 (CatWISE2020 / unWISE).** ✅ **Now registered** — see
+  [`preregistration_v2_unwise.md`](preregistration_v2_unwise.md) (the v2 row above). Fetch and
+  analysis proceed *after* that freeze.
 - **Far-infrared (Herschel / JWST-MIRI).** Required to constrain the sub-50 K regime that WISE
   cannot reach; targeted follow-up of any future candidate, not a survey-wide pass.
 
