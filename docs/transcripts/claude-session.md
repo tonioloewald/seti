@@ -2924,3 +2924,52 @@ So we now have the genuine **Channel-A detection working set**: ~17k WDs with W1
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Committed (`5aca96d`). Two real data layers are now frozen: the **359k sample** and the **16,924-WD AllWISE detection set** — both reproducible, both with the bulk data out of git.
+
+## Where this leaves us (§6 progress)
+- ✅ 1. Frozen sample · ✅ 2b. AllWISE detections (Channel-A working set)
+- ⬜ **2a. Optical baseline** — Gaia G/BP/RP + a starting Teff for all 359k, *straight from the pinned catalogue we already downloaded* (no archive call). This is the photosphere (H₀) anchor every SED fit needs.
+- ⬜ **2c. Upper-limit layer** — CatWISE2020/unWISE (W1/W2) + AllWISE-depth model (W3/W4), for the censored likelihood + `f_max`.
+- ⬜ **3. SED fits** — photosphere vs natural alternatives on the WISE-detected subset → the first real IR-excess significances.
+
+## My proposed next move
+Do **2a now** (quick, deterministic), which immediately unlocks the **first Channel-A SED fits (step 3)** on those ~17k WISE-detected WDs — i.e. the first time we actually measure excesses and run the natural-explanation battery. That's the detection-side pipeline working end-to-end on real data.
+
+The **upper-limit layer (2c)** is the other half — needed before any *population* `f_max`, but it can follow once the detection side is proven. I'll go with the **CatWISE/unWISE + AllWISE-depth** plan I outlined unless you'd rather route it differently.
+
+One discipline note as we enter SED-fitting: I'll resist the temptation to eyeball "the interesting W3/W4 objects" and instead build the registered pipeline (photosphere fit → battery → calibration) systematically — that ordering is exactly what the pre-registration exists to protect.
+
+Want me to proceed with 2a → first SED fits? And is the 2c upper-limit plan good as proposed?
+
+### 🧑 Tonio
+
+Yes this all sounds good. We are not peeking so this is all legitimate exploration.
+
+### 🤖 Claude
+
+Right — building and running the registered pipeline on real data *is* the legitimate confirmatory analysis; the only forbidden move is hand-tuning the procedure to specific objects, which we won't do (thresholds come from the empirical null + injection-recovery, not from eyeballing). Let me build the optical baseline (step 2a). First I need the photometry/Teff byte ranges from the catalogue ReadMe I already downloaded.
+
+
+_[tools: Bash]_
+
+The multi-file ReadMe confused the grep (it has blocks for `maincat`, `rpm_ext`, and `sdssspec`). Let me isolate just the `maincat` block and list its columns cleanly.
+
+
+_[tools: Bash]_
+
+Got the exact byte ranges — Gaia `Gmag/BPmag/RPmag` (+errors) and the catalogue's fitted `TeffH/loggH` (pure-H atmosphere). Let me build the optical baseline (the H₀ photosphere anchor) for all 359k from the already-pinned catalogue.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+Step 2a done — and the join is exactly what we want: **all 16,924 WISE-detected WDs have a Gaia optical baseline**, 15,844 with a pure-H Teff. Median Teff 10,883 K, full range a sensible 3,575–139,717 K. So we now hold **complete optical→IR SEDs for the Channel-A working set.** Let me commit.
+
+
+_[tools: Edit]_
