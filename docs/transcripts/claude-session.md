@@ -3606,3 +3606,39 @@ Numbering is clean: **The Detection Channels → §1 Measurement → §2 Astroph
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Done and pushed (`1e8d41d`). The new terms are folded in with the numbering resolved:
+
+- **§1 Measurement & Observational Techniques** ← gained Malmquist bias, RUWE, BLS/TLS
+- **§2 Astrophysical Environments & Physics** ← *new* (cirrus / cirrus ceiling, Poynting–Robertson drag, sublimation radius, photosphere / photospheric baseline, Wien tail)
+- **§3 Statistical & Analytical Methods** (was §2) · **§4 Cited Literature** (was §3)
+
+I used direct Wikipedia/astropy links rather than the search-redirect URLs, and recorded the source session in the provenance note. Transcript refreshed too.
+
+One small FYI, no action unless you want it: the **original** glossary batch (the first Gemini pass) still has **7 `google.com/search?q=…` redirect links** (e.g. on Centroiding, Injection Testing, Dyson, Landauer, Poisson) — they work but bounce through a Google search instead of going straight to the page. I left them as your content, but I'm happy to swap them for direct links in a quick cleanup pass if you'd like the whole glossary consistent.
+
+Otherwise the glossary's in good shape — and Channel A (static + variability) remains complete and documented. Whenever you're ready, Channel B (TESS transits) is the next build.
+
+### 🧑 Tonio
+
+If you could clean up the links that would be great. Then let’s continue.
+
+### 🤖 Claude
+
+Cleaning up the redirect links now.
+
+
+_[tools: Bash]_
+
+The cleanup worked (7 replaced, 0 google links left), but my regex tripped on one URL that contained a literal `)` — the **Transit** link kept a `%23` instead of `#`. Let me catch any leftover encoding.
+
+
+_[tools: Bash]_
+
+Just the one. Fixing it:
+
+
+_[tools: Edit]_

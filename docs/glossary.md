@@ -40,13 +40,13 @@ To understand what we are searching for, it helps to know how we actually look a
 
 * **Difference-Image / Photocentroid Analysis**
 When a telescope with large pixels (like TESS) sees a star dim, the dip might actually be a completely different background star in the same pixel undergoing an eclipse. This technique subtracts consecutive images or precisely tracks the "center of light" (centroid) to confirm the dimming is physically localized to the target white dwarf.
-[Read more about Centroiding in Astronomy](https://www.google.com/search?q=https://en.wikipedia.org/wiki/Centroid_(astronomy))
+[Read more about Centroiding in Astronomy](https://en.wikipedia.org/wiki/Centroid_(astronomy))
 * **Injection-Recovery**
 A method for determining a pipeline's sensitivity (completeness). You artificially inject fake signals (synthetic IR excesses or transit dips) into the real, messy observational data, and then run your detection algorithm to see how many it successfully flags.
-[Read more about Injection Testing](https://www.google.com/search?q=https://en.wikipedia.org/wiki/Software_testing%23Fault_injection)
+[Read more about Injection Testing](https://en.wikipedia.org/wiki/Software_testing#Fault_injection)
 * **Light-Curve Morphology**
 A light curve is a graph of a star's brightness over time. "Morphology" refers to the specific shape of any dips (transits). While a spherical planet creates a predictable U-shaped dip, an irregular, asymmetric, or flat-bottomed shape could indicate dust, debris tails, or an artificial construct.
-[Read more about Transit Light Curves](https://www.google.com/search?q=https://en.wikipedia.org/wiki/Transit_(astronomy)%23Light_curve)
+[Read more about Transit Light Curves](https://en.wikipedia.org/wiki/Transit_(astronomy)#Light_curve)
 * **Spectral Energy Distribution (SED) & IR Excess**
 An SED is a graph showing how much energy an object emits across different wavelengths of light. A bare white dwarf has a predictable SED that drops off smoothly in the infrared. An "IR excess" is a bulge in that curve, indicating that something around the star is absorbing starlight and re-radiating it as heat.
 [Read more about Spectral Energy Distributions](https://en.wikipedia.org/wiki/Spectral_energy_distribution)
@@ -93,7 +93,7 @@ A statistical technique for handling "non-detections." If a telescope looks for 
 [Read more about Censored Regression](https://en.wikipedia.org/wiki/Censored_regression_model)
 * **Empirical Null & Local FDR**
 Standard statistics often assumes noise follows a perfect, theoretical bell curve (the "theoretical null"). In real-world data with instrumental quirks, the actual noise distribution is often wider. The "empirical null" builds the baseline normal distribution out of the bulk of the actual data itself, ensuring anomalies are judged against reality, not theory.
-[Read more about Empirical Null Distribution](https://www.google.com/search?q=https://en.wikipedia.org/wiki/False_discovery_rate%23Local_false_discovery_rate)
+[Read more about Empirical Null Distribution](https://en.wikipedia.org/wiki/False_discovery_rate#Local_false_discovery_rate)
 * **False Discovery Rate (FDR) / Benjamini–Hochberg Procedure**
 A way to manage false positives in large datasets. Instead of strictly trying to prevent *any* false positives (which kills your ability to find faint signals), FDR controls the *proportion* of false positives among the subset of items you flag as interesting.
 [Read more about False Discovery Rate](https://en.wikipedia.org/wiki/False_discovery_rate)
@@ -105,7 +105,7 @@ A physics term for the statistical penalty you pay when searching a large parame
 [Read more about the Look-Elsewhere Effect](https://en.wikipedia.org/wiki/Look-elsewhere_effect)
 * **Poisson Bound (Zero-Detection Limit)**
 A mathematical way to state an upper limit when you find absolutely nothing. If you observe zero anomalies, the Poisson distribution dictates that you can be 95% confident the true average rate is less than 3.0 divided by your sample size (adjusted for your pipeline's sensitivity).
-[Read more about Poisson Confidence Intervals](https://www.google.com/search?q=https://en.wikipedia.org/wiki/Poisson_distribution%23Confidence_interval)
+[Read more about Poisson Confidence Intervals](https://en.wikipedia.org/wiki/Poisson_distribution#Confidence_interval)
 * **Quantile-Quantile (Q-Q) Plot**
 A visual diagnostic tool. It plots your actual observed data distribution against the expected theoretical distribution. If your data is well-behaved, it tracks a straight diagonal line. True anomalies will visually peel away from the line at the extreme upper right.
 [Read more about Q-Q Plots](https://en.wikipedia.org/wiki/Q%E2%80%93Q_plot)
@@ -120,10 +120,10 @@ A visual diagnostic tool. It plots your actual observed data distribution agains
 
 * **Dyson (1960)** · *Search for Artificial Stellar Sources of Infrared Radiation*
 **Thrust:** The foundational paper proposing that advanced civilizations might enclose their host stars to capture energy, radiating the waste heat in the infrared.
-[Link to Paper (Science)](https://www.google.com/search?q=https://doi.org/10.1126/science.131.3414.1667)
+[Link to Paper (Science)](https://doi.org/10.1126/science.131.3414.1667)
 * **Landauer (1961)** · *Irreversibility and Heat Generation in the Computing Process*
 **Thrust:** Establishes the physical lower limit of energy consumption for computation. Frequently used in SETI to argue that advanced tech would trend extremely cold for maximum thermodynamic efficiency.
-[Link to Paper (IBM)](https://www.google.com/search?q=https://doi.org/10.1147/rd.53.0183)
+[Link to Paper (IBM)](https://doi.org/10.1147/rd.53.0183)
 * **Kardashev (1964)** · *Transmission of Information by Extraterrestrial Civilizations*
 **Thrust:** Proposes the famous scale categorizing civilizations by their gross energy consumption (Planetary, Stellar, Galactic).
 [Link to Paper (ADS)](https://ui.adsabs.harvard.edu/abs/1964SvA.....8..217K/abstract)
