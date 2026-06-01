@@ -3427,3 +3427,43 @@ _[tools: Edit]_
 
 
 _[tools: Edit]_
+
+Merged. Now regenerating the transcript (your other request) and committing both.
+
+
+_[tools: Bash]_
+
+Both done and pushed (`1c35a95`):
+
+- **Transcript refreshed** in the repo — `docs/transcripts/claude-session.md`, now 59 of your turns (245 KB), current through this conversation.
+- **Glossary merged** into `docs/glossary.md`: your **Detection Channels** (A/B/C with natural-vs-anomalous for each) now lead the doc, your **Possible Outcomes & Interpretation** closes it, with the Techniques & Literature in between. Retitled to "Project Glossary," fixed the broken Agol link, and removed the duplicate root file I'd started.
+
+Two small FYIs, no action needed:
+- The transcript only auto-commits when something else does (the Stop hook regenerates it but doesn't commit) — so it'll always be current as of the last commit. Just now it's fully up to date.
+- Your Outcome-1 text says *"a successful, quantifiable scientific result"* — that's the same "successful" we softened to "useful/worthwhile" in the pre-registration. It reads fine in an accessible glossary, so I left it verbatim as your content; say the word if you'd like them aligned.
+
+Meanwhile the **NEOWISE light-curve pull is still running** in the background (`b7u5ndwvb`) — when it lands I'll run the variability analysis and report whether anything in our IR-excess population is actually *moving*. Good luck with the rest of the remote work; I'll surface the variability result the moment the data's in.
+
+### 🧑 Tonio
+
+While we are at it, we could document the results of our channels A work. It’s a real result!
+
+### 🤖 Claude
+
+Absolutely — it deserves a proper write-up. Let me create a `RESULTS.md` documenting the Channel-A result (the explained null + the `f_max` upper limit), honestly scoped as a v1.
+
+
+_[tools: Write]_
+
+Let me link it from the README — and the README's Status section is now stale (it still says "not yet registered / no analysis run"), so I'll fix that too. Let me read the current state.
+
+
+_[tools: Read]_
+
+Updating the README status (it's pre-registration-era) and linking the new results doc.
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_

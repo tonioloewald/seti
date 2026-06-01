@@ -8,9 +8,11 @@ A pre-registered, open search for **anomalous departures — static or time-vary
 
 ## Status
 
-📋 **Final pre-registration draft — NOT yet registered.** No project-specific data analysis has been run.
+✅ **Registered on OSF** (2026-06-01) — DOI [10.17605/OSF.IO/6YH7R](https://doi.org/10.17605/OSF.IO/6YH7R), frozen at git tag `registered-1.0`. Analysis is under way on real archival data, all of it post-dating the locked plan.
 
-This repository is **public** so the entire drafting history is openly visible. The pre-registration will be timestamped on the Open Science Framework (OSF); the public commit history (on a force-push-protected `main`) is an independent record that all analysis post-dates the locked plan.
+📊 **First results — Channel A (static infrared excess): a clean, *explained* null plus a quantitative upper limit (`f_max`).** See [`RESULTS.md`](RESULTS.md).
+
+The repository is **public** with a force-push-protected `main`, so the entire drafting + analysis history is an independent, tamper-evident record that all analysis post-dates the registration.
 
 ## Why this design
 
@@ -25,10 +27,12 @@ This repository is **public** so the entire drafting history is openly visible. 
 | [`preregistration.md`](preregistration.md) | The locked pre-registration document (the heart of the project) |
 | [`REGISTRATION.md`](REGISTRATION.md) | Registration route, timing, and provenance decisions (the record of *why*) |
 | [`AMENDMENTS.md`](AMENDMENTS.md) | Dated log of post-registration changes (pre-data = confirmatory; post-data = exploratory) |
-| [`docs/`](docs/) | Background notes, including the original project brief |
-| [`data/`](data/) | Frozen, checksummed sample manifests (Gaia source IDs + cuts). Bulk/derived data is **not** tracked. |
-| [`pipeline/`](pipeline/) | Analysis code (sample selection, cross-match, SED fitting, anomaly scoring) — to be developed **after** registration |
-| [`notebooks/`](notebooks/) | Exploratory and sensitivity-analysis notebooks |
+| [`RESULTS.md`](RESULTS.md) | First results — Channel A: the explained null + the `f_max` upper limit |
+| [`SOURCES.md`](SOURCES.md) | Data sources, pinned releases, determinism policy, fetched-artifact log |
+| [`pipeline/`](pipeline/) | Analysis code (fetch → SED fitting → battery → upper limit), env lock, and the [implementation log](pipeline/IMPLEMENTATION_LOG.md) — developed post-registration |
+| [`docs/`](docs/) | The [project glossary](docs/glossary.md), original brief, and archived AI-collaboration transcripts |
+| [`data/`](data/) | Frozen, checksummed sample manifests + small reference grids. Bulk/derived data is fetched on demand, **not** tracked. |
+| [`figures/`](figures/) | Result and diagnostic figures (`f_max.png`, QQ plots) |
 
 ## Open-science commitments
 
