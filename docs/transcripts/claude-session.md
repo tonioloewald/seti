@@ -3171,3 +3171,52 @@ Let me commit the battery and log it, then I'll lay out the real picture.
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Pushed (`ef3c701`). Here's the honest state of Channel A's detection branch.
+
+## What we've genuinely established
+**The pipeline works, and it proves it by recovering known astrophysics.** Of the 705 fitted W3/W4 excesses, **536 (76%) are natural warm disks + companions, median T_x = 511 K** — textbook WD debris-disk territory. That's the crucial validation: the "explain-away" machinery demonstrably *does* explain away the things it should. Which means a future failure-to-explain would actually mean something.
+
+## The residual so far — and the discipline
+**97 objects fit a cold (<300 K) blackbody and survive `cc_flags`.** That is *not* "97 anomalies." It's 97 things that passed exactly **one** of the battery's filters. Two more are pending:
+- **W4 reliability** — 68 of the 97 are driven by W4, WISE's least reliable band; many are likely marginal (ph_qual 'C', low S/N) detections that won't survive a real reliability cut.
+- **Cirrus** (battery item 3) — the cold band is cirrus-contaminated; that check needs a far-IR dust map and isn't applied yet.
+
+And §4.A told us this in advance: WISE basically *can't* detect genuinely cold (<150 K) excess, so the WISE-detection branch is expected to yield warm natural disks, with the real cold-anomaly sensitivity living in the **upper-limit / forced-photometry layer** we haven't built yet.
+
+## Strategic fork — your call
+1. **Finish the detection branch** — vet the 97 (W4 reliability now; then fetch a dust map for cirrus) → close it out honestly with whatever residual survives, then the proper A-based empirical null. *(Mostly quick; completes the "explain away.")*
+2. **Pivot to the upper-limit layer** — CatWISE/unWISE forced photometry + AllWISE-depth → the actual cold-anomaly sensitivity and the first real `f_max`. *(The scientifically central branch; more data engineering.)*
+
+My recommendation: **finish vetting the 97 first** (it's fast and intellectually honest to not leave them dangling — and I'd bet most evaporate under the reliability cut), then build the upper-limit layer. Which way do you want to go?
+
+### 🧑 Tonio
+
+Yes I agree.
+
+### 🤖 Claude
+
+On it — finishing the vet. First the W4-reliability cut on the 97 (data in hand), which should cull the marginal detections.
+
+
+_[tools: Bash]_
+
+**97 → 12.** The reliability cut (clean `cc_flags`, a reliable A/B detection in W3/W4, S/N ≥ 5) eliminated 85 of the 97 as marginal/noise — exactly as predicted. The 12 survivors are genuinely cool (T_x ≈ 116–285 K) and mostly **W3+W4-only** excesses (W1/W2 are upper limits — i.e. a *cold* SED with no warm component).
+
+Now the last battery filter on these 12: **cirrus** (item 3). Let me query the far-IR dust at each position.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+**All 12 are in high-cirrus fields** — E(B-V) from 0.30 to 1.22, every one far above any reasonable ceiling. **Zero survive.**
+
+That's a clean, fully-explained result for Channel A's detection branch. Let me log and commit it.
+
+
+_[tools: Edit]_
