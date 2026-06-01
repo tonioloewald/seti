@@ -67,3 +67,51 @@ So the WISE-detection branch of Channel A yields **no unexplained cold excess** 
 | — | Scope (v1): the IR-excess candidate set only. Full-sample variability (pure transients with no static excess) deferred. | Tractable v1; NEOWISE per-epoch needs W1/W2-bright sources anyway. | §5.3 |
 
 **RESULT:** 540 light curves (≥10 epochs); 17 significantly variable; 14 natural (disk variability / BD weather), 3 battery-unclassified-excess variables that are marginal or systematic on inspection — **no compelling anomalous fluctuation**. NEOWISE errors well-calibrated (χ²_red null = 1.00). A null for the highest-value signal, with a variable-disk byproduct. Figure: `figures/variability_examples.png`.
+
+## 2026-06-01 — Channel B (TESS transit morphology; §4.B, §5.4)
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| 13 | Channel B runs on the **bright subset only** (Gaia G < 14 → 157 WDs; G<15 → 566, of 359k). BLS (`astropy`/`lightkurve`) on each SPOC/TESS-SPOC/QLP light curve; record period, depth, duration, periodogram peak S/N. Validated end-to-end on WD 1856+534 b (recovered P=1.4080 d vs truth 1.4079). | §5.4: TESS is photon-starved on faint WDs, so Channel B is **secondary / candidate-generating, not calibrated**. Bright WDs have the only usable TESS photometry. | §4.B, §5.4 |
+| 14 | Vetting discriminants (§5.2 items 6–8): **duty cycle** (duration/period) + **sinusoid variance-explained at P and 2P**. High duty or high sin-R² ⇒ smooth modulation (ellipsoidal/reflection/pulsation) = stellar variability, not a transit. `flat_top` reported but NOT decisive (noise-dominated for shallow faint-WD signals). Plus a **SIMBAD identity** check. | A box (flat baseline + brief dip) is transit-like; a continuous sinusoid is not. Identity catches already-catalogued variables. | §5.2 |
+| — | **Physical prior:** a planet transiting a WD (Earth-sized star) gives a **deep/total** eclipse; an observed dip of ≲1% therefore is **not** a transit *of the WD* — it is diluted, i.e. blended (a background eclipsing binary in TESS's 21″ pixels) or systematics. The shallow-depth argument is itself a strong natural filter. | §5.2 item 9 (difference-image / BEB vetting); WD geometry. | §5.2, §4.B |
+
+### BUG FOUND & FIXED — `source_id` float64 corruption (integrity-relevant)
+
+While vetting, a sanity check ("do all flagged candidates trace back to the parent
+sample?") **failed**: 99/157 Channel-B result `source_id`s were absent from the parent
+catalogue. Root cause: a 19-digit Gaia `source_id` exceeds float64's exact-integer range
+(2⁵³ ≈ 9×10¹⁵). In `07_transit_search.py` the per-target loop pulled the id from a
+**pandas `iterrows()` row that contained only numeric columns**, so pandas upcast the
+whole row (and the int64 id) to float64, silently corrupting the trailing ~3 digits.
+The **BLS results were unaffected** (coordinates are genuinely float and lossless), so
+only the id *labels* were wrong.
+
+**Blast-radius audit (all of `pipeline/`):** the corruption requires an **all-numeric**
+iterrows row. Every Channel-A script that touches `source_id` either (a) keys it through
+a *vectorised* merge before any row iteration, or (b) iterates a row that **also carries
+a string column** (`ph_qual` / `class`), which forces the row to `object` dtype and
+preserves the int64 id. Verified directly: battery 923/923, cold candidates 104/104,
+variability 540/540, NEOWISE epochs 80,379/80,379 — **all `source_id`s valid and in the
+parent sample. No Channel-A result is affected.** Only step 07 was vulnerable.
+
+**Fix:** (1) `07` now indexes the id column by position (never via a numeric iterrows
+row); (2) **`source_id` is carried as a STRING** throughout Channel B (and adopted as the
+standard — strings cannot be coerced to float, round-trip exactly through CSV/Parquet, and
+are identifiers not quantities); (3) the existing `transit_search.parquet` was **repaired
+in place** by re-labelling from the (order-preserved) target list, *verified* by an exact
+row-by-row `g_mag` match before relabelling — equivalent to a re-run since BLS depends only
+on the unchanged coordinates.
+
+**RESULT — Channel B v1:** of 157 bright WDs, 136 had usable TESS light curves. The
+strongest signals are **stellar variability, not transits**: of the top 9 by BLS S/N, six
+are smooth sinusoidal modulations (duty 0.19–0.33, sin-R² 0.4–0.99) and SIMBAD confirms
+most are already catalogued (WG 21, FBS 0702+616, WG 17 [binary], HZ 43B [known WD+dM],
+SH 2-216 [PN central star], a high-proper-motion star). **Three** signals are transit-
+shaped (duty ≤0.02, low sin-R², no SIMBAD entry): Gaia `2660358032257156736` (P=0.258 d),
+`6348672845649310464` (P=4.088 d), `5274517467840296832` (P=5.394 d). All three are
+**shallow (0.7–1.2%)** — far too shallow for a planet transiting the WD itself — and each
+has a faint Gaia neighbour (ΔG≈3.9–4.9, 1–3% flux) whose flux, under a deep eclipse,
+matches the observed depth. Leading natural explanation: **blended/background eclipsing
+binaries**, to be confirmed by the mandatory difference-image centroid step (§5.2 item 9,
+**not yet run**). **No transit-of-a-WD anomaly.** Figures: `figures/transit_candidates.png`.

@@ -55,26 +55,32 @@ def process(coord):
 
 
 def main():
+    # source_id kept as STRING throughout: 19-digit Gaia IDs exceed float64's exact
+    # range, so any numeric coercion (e.g. an all-numeric iterrows row) silently
+    # corrupts the trailing digits. Strings are immune and round-trip exactly.
     ob = pd.read_parquet(OB).dropna(subset=["g_mag"])
-    man = pd.read_csv(MAN)[["source_id", "ra_deg", "dec_deg"]]
+    ob["source_id"] = ob["source_id"].astype(str)
+    man = pd.read_csv(MAN, dtype={"source_id": str})[["source_id", "ra_deg", "dec_deg"]]
     tgt = ob[ob["g_mag"] < GMAX].merge(man, on="source_id")[
         ["source_id", "g_mag", "ra_deg", "dec_deg"]].reset_index(drop=True)
-    done = {}
+    done = set()
     if os.path.exists(OUT):
         prev = pd.read_parquet(OUT)
-        done = {int(s): True for s in prev["source_id"]}
+        prev["source_id"] = prev["source_id"].astype(str)
+        done = set(prev["source_id"])
         rows = prev.to_dict("records")
     else:
         rows = []
     print(f"bright WDs (G<{GMAX}): {len(tgt)}; already done: {len(done)}", flush=True)
     t0 = time.time()
-    for i, r in tgt.iterrows():
-        sid = int(r["source_id"])
+    for i in range(len(tgt)):
+        sid = tgt["source_id"].iat[i]            # already a string — exact
         if sid in done:
             continue
-        rec = {"source_id": sid, "g_mag": float(r["g_mag"])}
+        ra, dec = float(tgt["ra_deg"].iat[i]), float(tgt["dec_deg"].iat[i])
+        rec = {"source_id": sid, "g_mag": float(tgt["g_mag"].iat[i])}
         try:
-            rec.update(process(SkyCoord(r["ra_deg"], r["dec_deg"], unit="deg")))
+            rec.update(process(SkyCoord(ra, dec, unit="deg")))
         except Exception as e:
             rec["status"] = f"err:{type(e).__name__}"
         rows.append(rec)
@@ -90,7 +96,7 @@ def main():
         cand = ok.sort_values("bls_snr", ascending=False).head(12)
         print("  top transit-like signals (BLS S/N) -- candidates for morphology/centroid vet:")
         for _, c in cand.iterrows():
-            print(f"    {int(c['source_id'])} G={c['g_mag']:.1f}  P={c['period_d']:.3f}d  "
+            print(f"    {c['source_id']} G={c['g_mag']:.1f}  P={c['period_d']:.3f}d  "
                   f"depth={c['depth']:.3f}  snr={c['bls_snr']:.1f}", flush=True)
 
 

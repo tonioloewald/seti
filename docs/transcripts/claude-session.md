@@ -3773,3 +3773,223 @@ _[tools: Read]_
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Checked it end-to-end, and the verdict is reassuring: **compaction didn't damage anything.** It actually surfaced (and let me fix) one cosmetic flaw.
+
+**What compaction does — and doesn't do:**
+- It's a *context-window* operation. It summarizes the conversation so **I** can keep working in a smaller context — it does **not** touch the on-disk log.
+- The raw session log is a single file (same session ID), now ~2,170 events / 6.95 MB, and it **kept growing** through the compaction. Every original turn is still there verbatim — I confirmed the earliest pre-compaction content ("markdown file," "thermodynamic efficiency," "Duchamp moment") is still present byte-for-byte. Nothing was deleted, truncated, or replaced.
+
+**The one flaw it exposed (now fixed):**
+- Compaction injects its summary into the log as a *user-role* message. The transcript exporter was rendering that machine-generated summary as a turn attributed to **you** ("🧑 Tonio") — which, for a provenance archive, is exactly the wrong thing: a machine summary masquerading as the human.
+- I patched the exporter to skip those events (they're flagged `isCompactSummary` / `isVisibleInTranscriptOnly`). Because the turns the summary covers are *already in the log verbatim*, dropping it loses zero information — it just stops the mis-attribution.
+
+**After the fix:** regenerated archive is clean — 64 human turns, 630 assistant blocks, summary-leak count **0**, earliest content still present. Committed and pushed (`9763cc7`).
+
+So the integrity of the archived transcript is intact — arguably better than before, since it no longer puts words in your mouth. The Channel-B run (`b483n9axc`) is still going in the background; I'll report when it lands.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>b483n9axc</task-id>
+<tool-use-id>toolu_016xzR9y1Ar29B4zLJc1EJnU</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/b483n9axc.output</output-file>
+<status>completed</status>
+<summary>Background command "Re-run Channel-B transit search (background)" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+Channel-B run finished. Let me see the results.
+
+
+_[tools: Bash]_
+
+**136 of 157** got usable light curves, and there's a clean structure to the result. The S/N distribution sits at median 5.8 (noise floor), with **6 signals standing clearly above it** (S/N 9.7–45.7) and a long tail at ~8 that's just the continuum.
+
+But here's the tell already visible in the table: the top candidates all have **short periods (0.25–0.42 d) with the transit duration pinned at my grid's upper edge (0.08 d)** — a ~23% duty cycle. That's not a transit shape; that's BLS latching onto a *smooth sinusoid* (close-binary ellipsoidal/reflection variation or pulsation). Real transits sit at low duty cycle with a flat baseline. The morphology discriminant is doing its job — but I need to actually fold them and confirm, plus check what's already known about these stars. Let me vet the top candidates properly.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+Only 4 of 9 rows printed — my `grep` filter likely swallowed some lines. Let me re-run capturing the full output, since I need to see the top S/N=45.7 signal and the longer-period transit-shaped ones especially.
+
+
+_[tools: Bash]_
+
+Same 4 — so the script itself is only emitting 4 rows (the missing ones are the top S/N=45.7 and the longer-period ones — every other rank). Something's interrupting specific iterations. Let me look at stderr and the tail.
+
+
+_[tools: Bash]_
+
+It finished cleanly with no error — the *plotting loop* is silently dropping prints (buffering), but the data computed fine. Rather than fight the buffering, let me get a complete table for all 9 directly — especially the two **low-duty-cycle (transit-shaped)** ones at P=4.09 d and 5.39 d, which are the only morphologically interesting candidates and happen to be the ones that didn't print.
+
+
+_[tools: Bash]_
+
+Still exactly 4, even unbuffered with flush — and it's a perfect alternation (ranks 2,4,6,8 print; 1,3,5,7,9 don't). That's not buffering, it's something deterministic in the SIMBAD call. Let me isolate it: print the pure-pandas table for all 9 first (guaranteed), then do SIMBAD separately on the 5 missing.
+
+
+_[tools: Bash]_
+
+Part [1] confirms the full picture, and it sharpens the result. **Six of the top nine are sinusoidal** (duty cycle 0.19–0.33 — ellipsoidal/reflection/pulsation, not transits), four already SIMBAD-confirmed as known WDs / a known WD+dM binary (HZ 43) / a planetary-nebula central star.
+
+But **three are genuinely transit-shaped** (low duty cycle) — these are the real candidates:
+- `2660358032257156608` — P=0.258 d, duty 0.019, S/N 12.0
+- `6348672845649310720` — P=4.088 d, duty 0.002, S/N 8.6
+- `5274517467840296960` — P=5.394 d, duty 0.002, S/N 8.4
+
+(Part [2] crashed on an invalid SIMBAD field name — my bug, not the data.) These three need real folding + identity + centroid vetting. Let me focus there.
+
+
+_[tools: Bash]_
+
+Crashed silently again (stderr hidden). Let me see the actual error.
+
+
+_[tools: Bash]_
+
+SIMBAD is fine. The crash is an unwrapped exception during one finalist's download/fold. Let me wrap per-target and surface the actual error.
+
+
+_[tools: Bash]_
+
+Line 13 — `rows[rows.source_id==sid]` is empty for the first finalist, so the merge dropped it. Almost certainly a source_id dtype/precision issue (19-digit Gaia IDs silently becoming float). Let me check directly.
+
+
+_[tools: Bash]_
+
+These 3 are in the results but *not* in the manifest they were supposedly drawn from — a contradiction that could signal a real data-integrity bug. Let me investigate before trusting anything downstream.
+
+
+_[tools: Bash]_
+
+These 3 source_ids are absent from `ob`, `man`, *and* the searched set `tgt` — yet they carry real BLS results. That means either the manifest changed after the run, or the source_id column is misaligned. This is exactly the kind of thing I must not paper over. Let me check file mtimes and whether ob/man source_id sets actually agree.
+
+
+_[tools: Bash]_
+
+Found the thread to pull. **99 of 157 output source_ids don't exist in the parent sample** (man and ob are identical sets, both unchanged since before the run). And critically — this also explains the "alternating" print mystery: step 08's `ok.merge(man)` silently *dropped* the foreign source_ids, so only the 4 real ones survived to print. My three "transit-shaped finalists" all have corrupted IDs.
+
+My leading hypothesis: 19-digit Gaia source_ids exceed float64's exact-integer range (2⁵³≈9×10¹⁵), so somewhere `int(float(source_id))` is mangling the last digits. Let me confirm by reproducing step 07's exact `tgt` construction.
+
+
+_[tools: Bash]_
+
+**Confirmed — and it's a textbook pandas trap.** `tgt.source_id` is int64, but `iterrows()` collapses each row to a single-dtype Series: mixing the int64 ID with float coords **upcasts the whole row to float64**, and 19-digit Gaia IDs exceed float64's exact range (2⁵³≈9×10¹⁵). So `int(r["source_id"])` silently corrupted the trailing digits on 99 of 157 rows.
+
+The crucial saving grace: `process()` used `r["ra_deg"]`/`r["dec_deg"]` — those are *already* float, so the coordinates (and therefore the **BLS results are correct**). Only the source_id *labels* are wrong. Since the output rows are in `tgt` order with none skipped (fresh run), I can recover the true int64 IDs by position — and verify the alignment via the stored g_mag. Let me fix the script and repair the labels with verification.
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Repaired cleanly — g_mag matched row-for-row (max diff **0.0**), 99 labels corrected, all IDs now trace to the parent sample. The corrected IDs differ only in their trailing ~3 digits (e.g. `…396032`→`…395648`) — the float64 signature exactly.
+
+Now the integrity-critical question: **did this same `iterrows` + `int(source_id)` bug touch the Channel-A scripts?** If any reported result was keyed on individual source_ids, it could be affected. Let me audit the whole pipeline.
+
+
+_[tools: Bash]_
+
+Audit done — now let me assess whether any **Channel-A conclusion** is actually affected, versus just cosmetic ID labels. The risk is a source_id-keyed *join* silently dropping rows. Let me trace the data flow in the battery and cold-vetting scripts.
+
+
+_[tools: Bash]_
+
+The battery's *merge* happens on int64 before iterrows, so its **science is correct** — only the output's source_id label column is corrupted. The critical question is whether `04_vet_cold` joins those corrupted IDs back to coordinates for the IRSA cirrus query — if so, the 104→0 cold-candidate result could be affected. Let me check.
+
+
+_[tools: Bash]_
+
+Found the real impact. The battery's *science* is correct (it merges on int64 before iterrows), but it **writes corrupted source_id labels** to `battery_w34.parquet`. Then `04_vet_cold` does `cold.merge(aw, on="source_id", how="left")` — so corrupted IDs **fail that join**, get NaN flags, and could be dropped at the "reliability" stage for the wrong reason. That potentially distorts the headline 104→12→0 cold funnel. Let me quantify the blast radius before responding.
+
+
+_[tools: Bash]_
+
+The battery and cold candidates are **all clean — 923/923, 104/104 valid IDs, zero corruption.** Here's why, and it's the key to the whole audit: in those scripts the iterrows row *includes a string column* (`ph_qual`), so pandas makes the row `object`-dtype and the int64 ID survives. **Only step 07's `tgt` was all-numeric** (source_id + 3 floats → float64 upcast). So the Channel-A cold funnel (104→12→0) is intact. Let me just confirm step 06 (variability) likewise carries a string column, then I'll answer your question.
+
+
+_[tools: Bash]_
+
+Complete audit verdict: **only Channel B (step 07) was ever corrupted** — and it's already repaired. Every Channel-A output is clean (540/540, 923/923, 104/104, 80,379/80,379 valid IDs), because those iterrows rows carry a string column (`ph_qual`/`class`) that keeps the row `object`-dtype and protects the int64 ID. Channel-A conclusions stand.
+
+Now — **to answer your question: yes, and that's exactly the right fix.** Strings are immune to this entire bug class:
+
+- The corruption only happens because a 19-digit Gaia ID can't fit in float64's exact-integer range (2⁵³ ≈ 9×10¹⁵), and pandas upcast the ID to float when a row was *all numeric*. A string ID never gets coerced to float — in an `iterrows` row it forces `object` dtype (which is exactly why the `ph_qual`-bearing Channel-A frames survived by accident), it round-trips through CSV/Parquet exactly, and merges stay exact.
+- It's also what real Gaia tooling does — these IDs are identifiers, not quantities; you never do arithmetic on them.
+
+Let me make it the standard across the pipeline so a fresh run is correct by construction, then finish Channel B properly.
+
+
+_[tools: Bash]_
+
+Rather than re-fetch the (correct, gitignored) derived data, I'll coerce `source_id` to string **at every load site** — this works on the existing files and makes every merge and iterrows string-safe. Let me convert the Channel-B scripts first (to finish the channel), then the rest.
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now repair the existing output to string IDs and rewrite step 08 to be string-safe and finish the vetting properly:
+
+
+_[tools: Bash]_
+
+
+_[tools: Bash]_
+
+All 157 IDs valid as strings. Now I'll rewrite step 08 to be string-safe and actually complete the vetting (the merge will now work, so all candidates fold):
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+All 9 now fold and identify correctly — the string fix resolved the merge-drop. But my `verdict()` is over-flagging: it lumps the 3 genuinely transit-shaped signals into "VARIABLE" because of `flat_top`, which is unreliable on these shallow (~0.001–0.009 depth), noisy faint-WD curves. The **robust** discriminants tell a clean story:
+
+- **6 high-S/N signals are sinusoidal variables** (duty 0.19–0.33, sin_r2 0.43–0.99) — and SIMBAD confirms most: `WG 21` & `FBS 0702+616` (WDs), `WG 17` (binary `**`), `HZ 43B` (known WD+dM), `SH 2-216` (PN central star), a high-proper-motion star. Ellipsoidal/reflection/rotation — natural.
+- **3 are transit-shaped** (duty ≤0.02, sin_r2 ≤0.15, no SIMBAD entry): `2660358032257156736` (P=0.258d), `6348672845649310464` (P=4.088d), `5274517467840296832` (P=5.394d). These are the real candidates for the mandatory difference-image/centroid (BEB) stage.
+
+Let me fix the verdict to use the robust metrics and re-render.
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Now the result is clean and correct. Let me strengthen the explain-away with a real, tractable check. A key physical point: a planet transiting a *white dwarf* (Earth-sized) produces a **deep or total** eclipse — yet these dips are shallow (0.7–1.2%). Shallow dips on a WD almost always mean the signal is **diluted by a blend** in TESS's huge 21″ pixels (a background eclipsing binary). Let me confirm blends exist by querying Gaia for neighbors around the 3 finalists.
+
+
+_[tools: Bash]_
+
+The blend picture is more nuanced than a slam-dunk: **none of the 3 has a bright neighbor**, but each has a *faint* one (ΔG≈3.9–4.9, i.e. 1–3% of the WD's flux) whose contribution — if it's a deep eclipsing binary — quantitatively matches the shallow ~1% depth. So a background-EB blend is *plausible but unconfirmed*, which is exactly why difference-image centroiding (registered item 9) can't be shortcut. And decisively: **all three depths are far too shallow to be a planet transiting the WD itself** (that would be deep/total), so none is a WD-transit anomaly.
+
+That's an honest Channel-B v1 stopping point. Let me record the result and commit the bug fix + remediation. First the implementation-log entry:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now a Channel-B section in RESULTS.md and update the scope note:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_

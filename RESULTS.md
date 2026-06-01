@@ -5,10 +5,10 @@ data. All numbers are reproducible from the committed code (`pipeline/`), the fr
 manifests (`data/manifests/`), and the pinned sources (`SOURCES.md`); granular build
 decisions are in [`pipeline/IMPLEMENTATION_LOG.md`](pipeline/IMPLEMENTATION_LOG.md).
 
-**Scope of this document (v1).** It covers **Channel A — the static infrared excess**,
-end to end. Time-variability (the §1.1 highest-value signature), Channel B (transits),
-and Channel C (accretion clean-zone) are in progress and not yet reported here. This is
-a first, un-reviewed pass with the stated caveats below — not a final paper.
+**Scope of this document (v1).** It covers **Channel A — the static infrared excess**
+(end to end, incl. NEOWISE time-variability) and a first pass of **Channel B — TESS
+transit morphology**. Channel C (accretion clean-zone) is not yet reported. This is a
+first, un-reviewed pass with the stated caveats below — not a final paper.
 
 ---
 
@@ -106,6 +106,44 @@ So the variability layer **works** (it cleanly recovers real disk variability) a
 variable-disk byproduct. *Scope caveat:* this v1 searched only the IR-excess population; a
 full-sample variability search (to catch pure transients with no static excess) is a
 future extension.
+
+## Channel B — TESS transit morphology (secondary)
+
+Channel B is registered as **secondary and candidate-generating** (§5.4): TESS is
+photon-starved on faint WDs, so it runs only on the bright subset (Gaia **G < 14 → 157
+WDs**; just 566 reach G<15, of 359k). The Box-Least-Squares machinery was validated by
+recovering the known deep transiter **WD 1856+534 b (P = 1.4080 d** vs. truth 1.4079).
+
+Of 157 bright WDs, **136** had usable TESS light curves. The strongest periodic signals
+are **stellar variability, not transits** — of the top 9 by BLS S/N, six are smooth
+sinusoidal modulations (ellipsoidal/reflection/pulsation; duty cycle 0.19–0.33), and
+SIMBAD confirms most are already catalogued (WG 21, FBS 0702+616, WG 17 [binary],
+**HZ 43B** [a known WD+dM pair], **SH 2-216** [planetary-nebula central star], a
+high-proper-motion star).
+
+**Three** signals are genuinely transit-shaped (duty cycle ≤ 0.02, not sinusoidal, no
+SIMBAD entry): Gaia `2660358032257156736` (P=0.258 d), `6348672845649310464` (P=4.088 d),
+`5274517467840296832` (P=5.394 d). But all three are **shallow (0.7–1.2%)** — and a planet
+transiting a white dwarf (an Earth-sized star) would produce a *deep or total* eclipse, so
+a ~1% dip **cannot be a transit of the WD itself**. Each has a faint Gaia neighbour
+(ΔG ≈ 3.9–4.9; 1–3% of the WD flux) whose light, under a deep eclipse, quantitatively
+matches the observed shallow depth — pointing to a **blended/background eclipsing binary**
+in TESS's 21″ pixels. Confirming that requires the registered difference-image **centroid
+(BEB) test** (§5.2 item 9), which is the next step and **not yet run**. Figure:
+`figures/transit_candidates.png`.
+
+**Channel B v1: no transit-of-a-WD anomaly** — the loud signals are (mostly known)
+stellar variables, and the three transit-shaped residuals are too shallow to be WD
+transits and consistent with blended binaries pending centroid vetting.
+
+> **Integrity note (logged in full in `pipeline/IMPLEMENTATION_LOG.md`).** A routine
+> "do all candidates trace back to the parent sample?" check caught a bug: 19-digit Gaia
+> `source_id`s overflow float64's exact range, and one all-numeric pandas `iterrows` row
+> in the transit step silently corrupted 99/157 id *labels* (the BLS results, which depend
+> only on coordinates, were unaffected). A full pipeline audit confirmed **no Channel-A
+> result was touched** (those rows carry a string column that protects the id). Fixed by
+> carrying `source_id` as a **string** throughout; the transit table was repaired in place
+> and verified by an exact per-row `g_mag` match.
 
 ## Caveats (this is a v1)
 
