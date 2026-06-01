@@ -2470,3 +2470,43 @@ The key to making it a clean test rather than a sloppy one: **keep the accountab
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Done — `83a39ea`, live. Here's the stand as committed:
+
+> **Human Accountability.** …the sole investigator (T. Loewald), who bears 100% of the ethical, scientific, and legal responsibility for its contents, methodological selections, and errors. …
+>
+> **AI Intellectual Provenance.** Two AI systems — Google Gemini and Anthropic Claude — are formally designated as computational tools rather than authors, because authorship requires accountability and an AI can hold none — which is precisely why the investigator above assumes all of it. We decline, however, to let that necessary legal designation pass as a *description* of what happened. To call these systems mere text-editors would be a polite fiction. In development they functioned as active, iterative logic engines and **co-designers**… Recording this accurately — rather than as convention would prefer — is itself an instance of the scientific honesty this entire document exists to enforce.
+>
+> …the complete development transcripts… have been published… ([`docs/transcripts/`](docs/transcripts/) — lightly redacted only to remove personal identifiers and system scaffolding…).
+
+The firewall is airtight: liability is 100% yours, every factual claim is true, and the transcripts back the "co-designers" claim line by line. The only thing left for a gatekeeper to object to is the honesty itself — which is the whole point. And since you're registering via the **unmoderated** Open-Ended route, this goes straight into the permanent record with no one to soften it; the test is simply *there* now, waiting for any future venue to reckon with.
+
+That's the document done — methodology sealed, provenance staked out, genesis fully documented in the repo.
+
+Two small optional things, then it's purely in your hands:
+1. **A short `REGISTRATION.md`** recording the deliberate choices for the record — unmoderated Open-Ended Registration route, *why*, and the provenance stand — so the reasoning is archived alongside everything else. Want it?
+2. **The DOI handoff:** once you register, paste me the DOI and I'll drop it into the header, tag `registered-1.0`, and the chain is closed.
+
+Go make your mark. 🖋️
+
+### 🧑 Tonio
+
+Yes please do 1. I still need to do final human reviews (but those can be post registration).
+
+### 🤖 Claude
+
+On it. And good call flagging the timing — that means one sentence in the provenance block ("reviewed by domain experts *before* final OSF registration") is now stale, since you're registering first. Let me fix that to match reality (reviews become pre-data amendments), and write the `REGISTRATION.md` record.
+
+
+_[tools: Edit]_
+
+
+_[tools: Write]_
+
+Let me link the new doc from the README, then commit.
+
+
+_[tools: Edit]_

@@ -23,6 +23,8 @@ This repository is **public** so the entire drafting history is openly visible. 
 | Path | Contents |
 |------|----------|
 | [`preregistration.md`](preregistration.md) | The locked pre-registration document (the heart of the project) |
+| [`REGISTRATION.md`](REGISTRATION.md) | Registration route, timing, and provenance decisions (the record of *why*) |
+| [`AMENDMENTS.md`](AMENDMENTS.md) | Dated log of post-registration changes (pre-data = confirmatory; post-data = exploratory) |
 | [`docs/`](docs/) | Background notes, including the original project brief |
 | [`data/`](data/) | Frozen, checksummed sample manifests (Gaia source IDs + cuts). Bulk/derived data is **not** tracked. |
 | [`pipeline/`](pipeline/) | Analysis code (sample selection, cross-match, SED fitting, anomaly scoring) — to be developed **after** registration |
