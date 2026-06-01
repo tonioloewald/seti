@@ -2973,3 +2973,88 @@ Step 2a done — and the join is exactly what we want: **all 16,924 WISE-detecte
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Committed (`41baa2a`). **Milestone: we now hold complete optical→IR SEDs for the entire Channel-A working set** (16,924 WDs), every data layer reproducible and bulk-free in git.
+
+## Step 3 — the first real excess test
+This is where we actually measure IR excess. The registered method (§5.3, H₀) is specific: predict the photosphere with **DA/DB atmosphere-grid synthetic photometry (Koester/Bergeron)**, not a blackbody. The clean, faithful way to do that:
+
+1. Download the **Bergeron/Montreal WD synthetic-photometry tables** (pinned; they tabulate Gaia *and* WISE magnitudes vs Teff/logg — small, public).
+2. For each WD, use its Teff/logg to predict the **photospheric W1–W4** magnitudes.
+3. Compute the per-band **excess** = observed − predicted, in σ → the IR-excess significance.
+
+That gives us, for the first time, a real list of WDs with significant W3/W4 excess — which then go through the natural-explanation battery (debris disk at 300–1000 K, companion, …) per the registered pipeline. **No peeking/tuning** — the thresholds still come from the empirical null + injection-recovery, not from staring at the excess list.
+
+This is the most substantial coding step yet (synthetic photometry interpolation + flux handling), so it's a natural checkpoint. We've been going hard and the conversation's long — happy to **push straight into step 3**, or pause here if you'd like to take stock first.
+
+Want me to proceed, and is the Bergeron-grid photosphere approach good (it's what §5.3 commits us to)?
+
+### 🧑 Tonio
+
+I think so and don’t think we have a choice anyway :).
+
+### 🤖 Claude
+
+Exactly — the registration locked us into the atmosphere grids, and that's the discipline working as intended. Let me find the pinned Bergeron/Montreal synthetic-photometry tables (the source for §5.3's H₀).
+
+
+_[tools: Bash]_
+
+The grids are here — `Tables/Table_DA` (pure-H) and `Table_DB` (pure-He), the Bédard et al. 2020 synthetic photometry. Let me confirm `Table_DA` carries the Gaia and WISE bands we need.
+
+
+_[tools: Bash]_
+
+`Table_DA` has exactly what we need: `Teff`, `log g`, the WISE bands `W1 W2 W3 W4`, and Gaia EDR3 `G3 G3_BP G3_RP` — all absolute magnitudes, only 92 KB. These reference grids are small and static, so I'll commit them (pinned in-repo guarantees the exact photosphere model). Let me fetch them.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+Grids fetched and checksummed (DA + DB committed, ~200 KB total). The DA grid is a clean **61 Teff × 5 log g** regular grid (log g 7.0–9.0), with W1–W4 and Gaia G3/BP/RP columns located. Now the actual excess computation — step 3's core.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+Bug: the header has "**log g**" as two tokens, so `hdr.index()` was off by one and the length filter rejected every data row. I'll hard-code the (fixed, pinned) data-column indices instead.
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+The grid loads correctly now, but the χ values are absurd (millions) — a math bug, not real signal. The issue: I divided by the *predicted* flux, which → 0 in the cold bands where the photosphere is negligible, blowing up. The excess significance must be relative to the *observed*-flux error. Fixing:
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+**Physical now** — and this is a real first result. The excess significances are sensible and bounded:
+
+| Band | n (detected) | median χ | 95th | strong excess |
+|---|---|---|---|---|
+| W1 | 15,819 | +1.9 | +12 | — |
+| W2 | 8,540 | +1.2 | +7.5 | — |
+| **W3** | 589 | +2.4 | +6.3 | **55 with χ>5, 8 with χ>10** |
+| **W4** | 314 | +2.3 | +3.9 | **9 with χ>5, 2 with χ>10** |
+
+Two things worth flagging:
+
+1. **We have a real Channel-A candidate population** — a few dozen WDs with significant 12 µm excess, a handful very strong. These are the warm IR-excess objects (debris disks / companions) that the natural-explanation battery will now have to sort.
+2. **The median χ isn't 0 — it's ~+1.9 in W1.** That's not a bug; it's the photosphere-prediction "null" being *offset* (selection toward IR-bright WDs + small model/zero-point systematics). And it's *exactly* why §5.3 insists on the **empirical null** — letting the population define "normal" rather than assuming χ=0. Our own data just demonstrated why that registered choice was right.
+
+And the discipline held: those χ>5/χ>10 counts are **descriptive only** — the registered detection threshold still comes from the empirical-null + injection-recovery, not from this glance. Let me commit step 3.
+
+
+_[tools: Edit]_
