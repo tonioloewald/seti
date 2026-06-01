@@ -3120,3 +3120,54 @@ _[tools: Edit]_
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Pushed (`a6e818a`). That QQ-plot earned its keep — it shows a real result *and* corrected my sequencing. Reading it:
+
+**Top row (W1/W2):** the empirical null is genuine but **wide** — σ₀≈3, **λ≈10**. That means the photosphere-prediction errors are ~3× larger than the textbook values (selection toward IR-bright WDs + model/zero-point systematics). Without the empirical null we'd flag *thousands* of false positives; with it, the strict bar rises to z\*≈4.5 and only a clean upper tail survives. **This is the registered empirical-null doing exactly its job** — λ caught the inflation, just as the genomics method promised.
+
+**Bottom row (W3/W4):** the "bulk" collapses to σ₀≈0.3 — a tell-tale artifact. The reason: *no bare white dwarf is detectable at 12/22 µm*, so every W3/W4 detection already **is** an excess. The bulk there is **debris disks, not photospheres.**
+
+**The correction:** that means calibrating the *raw* excess in W3/W4 compares disks-to-disks — wrong. Per §5.3, the empirical null belongs on the **post-battery residual `A`** (how badly the *best natural model* fits), not on the raw excess. I jumped a step; the registered design caught it. So `02_empirical_null.py` is now flagged as a **diagnostic**, and I've logged this as decision #8. The correct order is:
+
+> **excess → natural-explanation battery → A → empirical null → flag**
+
+## Next: the natural-explanation battery (the right step)
+For each WISE excess, fit the natural models — a **300–1000 K debris disk** and a **cool companion** — against the agnostic free-temperature excess. Objects an ordinary disk explains get `A≈0` (they become the bulk = the real null); the residual that *no* natural model fits is the anomaly.
+
+Honest prediction, stated up front (not peeking): the WISE-detectable excesses are *warm* (12/22 µm), so **most will resolve as natural debris disks** — that's the expected, scientifically-correct outcome, and it's the validation that the battery works. The *cold* anomalies we actually care about live below W4 and only show up in the **upper-limit/forced-photometry layer** (the next data pull), exactly as §4.A warned.
+
+I'll build the battery next — it's the heart of Channel A. Keep rolling?
+
+### 🧑 Tonio
+
+Yes. That QQ chart looked really exciting and the correction is sobering but still exciting. We aren’t dead yet!
+
+### 🤖 Claude
+
+Ha — "we aren't dead yet" is the perfect motto for a search that *expects* a null. Let's build the battery — the heart of Channel A.
+
+
+_[tools: Write]_
+
+Let me fix an overcomplicated column-name line before running.
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+The battery works — and it's a real result. Let me immediately vet the surprising bits before saying anything exciting, because the registered battery has *more* tests (contamination flags) I haven't applied yet.
+
+
+_[tools: Bash]_
+
+Important discipline check — and the answer is nuanced. The cc_flags vetting did **not** clear them: **97 of 104 cold-fit objects pass clean `cc_flags` + `ext_flag=0`.** So they're not trivially flagged artifacts. But they are also **not yet anomalies** — I've only applied *one* of the battery's filters. The cirrus check (item 3) and W4-reliability aren't done, and 68 of the 97 are driven by a W4 detection (WISE's least reliable band). So the honest read: most are probably marginal-W4 / cirrus artifacts, but they've earned a proper vetting rather than dismissal.
+
+Let me commit the battery and log it, then I'll lay out the real picture.
+
+
+_[tools: Edit]_
