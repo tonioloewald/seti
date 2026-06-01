@@ -27,11 +27,13 @@ inspecting candidates. The pipeline reproduces known astrophysics — it recover
 debris disks/companions (median dust temperature ≈ 511 K), the transiting giant
 planet WD 1856+534 b, the variable-dust-disk WD GD 56, and a population of cataclysmic
 variables — which licenses interpretation of its non-detections. We find **no unexplained
-anomaly** in any channel: every flagged candidate resolves to a concrete natural cause
-(Galactic cirrus, marginal detections, background eclipsing binaries, accreting binaries,
-or stellar variability). For cold (~50–300 K) infrared excesses we place a
-zero-detection upper limit of f_max ≈ 10⁻³–10⁻⁴ on the fraction of
-(predominantly solar-neighbourhood) WDs hosting such an excess, and show this limit is
+anomaly** in any channel: every flagged candidate resolves to a concrete natural cause —
+Galactic cirrus, marginal detections, accreting binaries, or stellar variability — and every
+transit-shaped candidate resolves to a background eclipsing binary once constrained by
+difference-image centroiding (a 16–33 arcsecond offset from the white dwarf in TESS's 21
+arcsecond pixels). For cold (~50–300 K) infrared excesses we place a zero-detection upper
+limit of f_max ≈ 10⁻³–10⁻⁴ on the fraction of (predominantly solar-neighbourhood) WDs hosting
+such an excess (fewer than one in a thousand to one in ten thousand), and show this limit is
 robust to the photospheric-atmosphere assumption. We release the full reproducible pipeline
 as a general-purpose tool for principled anomaly assessment of white-dwarf observations.
 
@@ -109,6 +111,26 @@ manifests, and SHA-256 checksums; bulk products are fetched on demand and verifi
 the committed checksums. All data work post-dates the OSF registration; the registered
 version is tagged in the public Git history.
 
+**Identifier integrity (a data-handling caution for Gaia-based pipelines).** We flag a
+silent data-corruption hazard that we encountered and that we believe is broadly relevant to
+anyone building a Python/pandas pipeline against the Gaia archive. A 19-digit Gaia
+`source_id` exceeds the exact-integer range of IEEE-754 double precision (2⁵³ ≈ 9×10¹⁵).
+pandas will *silently* cast an integer column to floating point whenever it is combined with
+floats in an all-numeric context (for example, when a row is materialised by
+`DataFrame.iterrows`), which truncates the trailing digits and can map several distinct stars
+onto a single corrupted identifier. The failure is invisible — it raises no error and
+produces only quietly wrong cross-matches. In an intermediate step of this work it corrupted
+99 of 157 identifiers before we caught it, via a routine "do all flagged candidates trace
+back to the parent sample?" sanity check; because the corruption affected only the *labels*
+and never the coordinate-based measurements, repair was exact and a full re-run reproduced
+every science result identically. Two practical rules prevent it: **(i)** carry Gaia
+identifiers as strings (or explicit 64-bit integers) throughout, and never allow them to be
+coerced to floating point; and **(ii)** when uploading identifiers to VOTable/TAP services —
+which reject unicode-string columns — send them as 64-bit integers, which round-trip exactly.
+We state this prominently rather than as a footnote precisely because the error is silent: a
+replicator who reuses naïve identifier handling would inherit corrupted cross-matches with no
+warning.
+
 ## 3. Methods
 
 ### 3.1 Integrity invariant and the natural-explanation battery
@@ -171,8 +193,8 @@ Channel-A or -B survivor.
 White-dwarf photospheric prediction carries scatter that the formal photometric errors
 underestimate. We therefore calibrate thresholds against an **empirical null** (Efron 2004):
 the bulk of the test-statistic distribution defines the null, and a **genomic-control**
-inflation factor λ (Devlin & Roeder 1999) rescales it. We measure $\lambda\approx
-10.6$ in W1 — i.e. the textbook errors understate the true scatter roughly threefold — which
+inflation factor λ (Devlin & Roeder 1999) rescales it. We measure λ ≈ 10.6 in W1 — i.e. the
+textbook errors understate the true scatter roughly threefold — which
 *validates the empirical-null approach*: using formal errors would manufacture thousands of
 false flags. Multiplicity is controlled with the Benjamini–Hochberg/Storey false-discovery
 rate, and the staged look-elsewhere effect (Gross & Vitells 2010) is carried through to the
@@ -216,11 +238,11 @@ The resulting upper limit (Figure 1) has three regimes. Below ~50 K the search i
 WISE-blind (the reddest band is 22 µm). In the **50–300 K cold-anomaly window**, where a cold
 excess is both WISE-detectable and distinguishable from a warm disk, with zero unexplained
 excesses we obtain f_max ≈ few×10⁻³ to 10⁻⁴; e.g. at
-T_x = 100 K reprocessing 10% of the WD's light (f = 0.1), $f_\mathrm{max}\approx3\times
-10^{-4}$. Above 300 K any excess is classified as a natural disk, so the tight numbers there
-are a generic IR-excess limit, not an anomaly limit. In plain terms: **fewer than
-~0.01–0.1% of (predominantly solar-neighbourhood) white dwarfs host an unexplained cold
-(50–300 K) infrared excess**, with the colder regime beyond WISE's reach.
+T_x = 100 K reprocessing 10% of the WD's light (f = 0.1), f_max ≈ 3×10⁻⁴. Above 300 K any
+excess is classified as a natural disk, so the tight numbers there
+are a generic IR-excess limit, not an anomaly limit. In plain terms: **fewer than one in a
+thousand to one in ten thousand (predominantly solar-neighbourhood) white dwarfs host an
+unexplained cold (50–300 K) infrared excess**, with the colder regime beyond WISE's reach.
 
 ### 4.3 Channel B — no transit of a white dwarf
 
@@ -275,15 +297,9 @@ T_x = 100 K, f = 0.1, versus 3.4×10⁻⁴ for the full sample); a confirmed-DA-
 is weaker only because N is ~18× smaller, not because the physics shifts. The cold null
 and the limit are robust to the atmosphere assumption.
 
-*A reproducibility caveat.* 19-digit Gaia `source_id` values exceed the exact-integer range
-of IEEE-754 double precision (2⁵³), so casting them to floating point — as pandas does
-silently when an all-numeric table row is iterated — corrupts the trailing digits and maps
-distinct stars onto coincident identifiers. We caught this via a routine "do all candidates
-trace back to the parent sample?" check, traced and repaired it, and converted the entire
-pipeline to carry `source_id` as a string; a full re-run reproduced every science result
-identically. We document it here because it is a structural hazard for any Gaia-based Python
-pipeline (the safe upload type for VOTable/TAP services, which reject unicode columns, is
-64-bit integer).
+(A separate, software-level identifier-integrity hazard and its fix are described in §2 under
+*Identifier integrity*, where they belong — they concern data handling, not the statistical
+robustness of the result.)
 
 ## 5. Discussion
 
