@@ -2399,3 +2399,74 @@ _[tools: Edit]_
 
 
 _[tools: Edit]_
+
+Now regenerate the transcript and commit the whole round.
+
+
+_[tools: Bash]_
+
+Done — `7fbd8ee`, pushed. All five points are in, both Gemini transcripts archived and indexed.
+
+## The five (all adopted)
+1. **§1.1** — added an explicit *detectability* bound: we presuppose nothing about the cause, but the search only sees macro-scale thermal/occultation imprints (microscopic/beamed mechanisms are out of reach). Honest, and it no longer overstates.
+2. **§4** — the central tension stated plainly: the highest-value signature (cold + fluctuating) is the *least* observable, so this iteration constrains mainly static/warm-variable anomalies and leaves cold-fluctuating largely unconstrained.
+3. **§3** — Malmquist caveat extended to *local-environment physics* skewing the natural baseline, not just geometry.
+4. **§3** — fixed the "exclude none" overreach → "confidence + data-sufficiency gate, no filtering for interestingness/proximity."
+5. **Provenance** — see below.
+
+## One thing that's genuinely your call: the provenance statement
+
+I adopted Gemini's needle-threaded version — **"Human Accountability"** (you bear 100% liability — the shield administrators want) + AI as **"active, iterative logic engines"** (dropping the alarm-word *"co-designer"*). I fixed two things Gemini got wrong: it claimed "**unredacted**" (false — we redact PII and summarize tools, so I kept "lightly redacted"), and it used a `google.com/search` link (I used the real repo path).
+
+But Gemini's own warning still applies, and you should own this consciously — even the softened version asserts the AI did *more than text-editing*, which some OSF reviewers/editors may flag. You're effectively at a **middle setting**. You can dial it:
+
+- **More provocative** (restore "co-designers," push the point) — maximal honesty, higher rejection risk.
+- **Current (middle)** — honest about function, with the liability firewall; mild provocation.
+- **Conservative** — plain "used as tools," no functional claims — safest, least transparent (but the linked transcripts still tell the real story).
+
+I left it at the middle setting. Say the word if you want it dialed either direction.
+
+Everything else is locked, the methodology is sealed, and the repo now documents its own genesis. Whenever you (and the domain experts) are ready, it's a clean run to OSF registration — hand me the DOI and I'll tag `registered-1.0`.
+
+### 🧑 Tonio
+
+Here's the question. If we are rejected by OSF is it still a record or do they erase all trace of our existence?
+
+### 🤖 Claude
+
+Good question to ask *before* you commit to a venue — and the answer is reassuring, but let me verify the OSF specifics rather than wing it, since it bears on a real decision.
+
+
+_[tools: WebSearch]_
+
+
+_[tools: WebSearch]_
+
+Verified — and the answer is reassuring on every layer. Short version: **you effectively cannot be erased, and the path I recommended has no one who can reject you in the first place.**
+
+Three things, in order of how they protect you:
+
+**1. "Rejection" isn't erasure — it's a bounce-back.** In a *moderated* registry, if a moderator rejects a submission, the registration simply **returns to you as a draft** to revise and resubmit (with their comments). Nothing is destroyed; you keep everything and try again. Rejection is a status, not a deletion. ([OSF: approving/rejecting](https://help.osf.io/article/115-approving-rejecting-submitted-updates))
+
+**2. Once registered, it can *never* be deleted — only withdrawn, and withdrawal leaves a permanent tombstone.** OSF's whole design is permanence: "a frozen version that can never be edited or deleted." The most that can ever happen is a *withdrawal*, which removes the content but keeps a permanent public **tombstone** — title, contributors, date created, **date registered, DOI**, description, and the withdrawal justification. So even in the worst case there's an indelible public record that you registered, when, and under what DOI. "Erase all trace of our existence" is simply not a thing OSF does, by design. ([OSF: withdrawing a registration](https://help.osf.io/hc/en-us/articles/360019738874-Withdraw-a-Registration))
+
+**3. The path I recommended has no gatekeeper at all.** Moderation only happens if you submit to a *specific moderated registry*. The default **Open-Ended Registration on OSF is unmoderated** — you create the frozen, DOI-stamped snapshot directly, and no one approves or rejects it. So the "administrative rejection" Gemini warned about (over the provenance wording) doesn't apply to the route we planned. If you want zero rejection risk, that's the route — and it's the one that best fits a custom methodology anyway.
+
+**And the bedrock under all of it:** you *already* have an independent, un-erasable timeline — the **public, branch-protected GitHub history** (timestamped by GitHub) plus the archived transcripts. OSF would be a *second* timestamp, not the only one. So the provenance-statement "provocation risk" is genuinely low-stakes: worst case at a moderated venue, you'd revise and resubmit; meanwhile your record already exists and can't be rewritten.
+
+So you can register the honest version on the unmoderated OSF route without fear of being "disappeared" — and if you ever *did* tangle with a moderated registry, the downside is a revision request, not oblivion.
+
+Want me to note this in the repo somewhere (e.g., a short "registration plan" note recording that we're using the unmoderated Open-Ended Registration route, and why), so the decision is documented alongside everything else?
+
+### 🧑 Tonio
+
+In which case let's go to 1. This is our DuChamps moment. If they want to reject us based on intellectual hypocrisy, they can create the tombstone.
+
+### 🤖 Claude
+
+Understood — and the Duchamp framing is exactly right. *Fountain* worked because the Society of Independent Artists *claimed* to accept everything, so rejecting it exposed them, not Duchamp. Same structure here: if a venue that brands itself as the home of openness and rigor rejects an scrupulously-honest account of how the work was made, the tombstone documents *their* contradiction, with your DOI on it.
+
+The key to making it a clean test rather than a sloppy one: **keep the accountability firewall airtight, and keep every factual claim scrupulously true** — so the *only* possible grounds for rejection is the "polite fiction" itself. That's the version I'll write: 100% human liability (removes their one legitimate objection), "co-designers" restored, the fiction named — and "lightly redacted" kept exactly accurate, because a stand *for* honesty can't contain even a small overclaim.
+
+
+_[tools: Edit]_
