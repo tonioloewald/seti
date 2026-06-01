@@ -5755,3 +5755,136 @@ The fetch finished cleanly (no stall), and the v2 excess search ran — but it s
 
 
 _[tools: Bash]_
+
+Cross-cal clarifies it nicely:
+- **W1: CatWISE ≈ AllWISE** (offset +0.004 mag) — clean. So W1's inflated null is purely the *photosphere-prediction scatter*, the same phenomenon as v1 (just larger on this deeper/cooler sample) — which **re-confirms why the empirical-null calibration is essential**, now in v2 too.
+- **W2: a real catalogue offset** (+0.04 to +0.17 mag, CatWISE vs AllWISE). The empirical null absorbs it (that's the point of re-deriving δ₀), but it means W2-based excess claims carry an extra caveat.
+
+Let me commit the v2 excess step and checkpoint with you, because the results have a nuance worth your eye:
+
+
+_[tools: Bash]_
+
+**No stall — v2 is well underway and already producing results.** Quick status:
+
+**Fetch (done):** 91,197 WDs with CatWISE2020 W1/W2 — **5.4× the AllWISE sample, 75,060 of them new**, reaching W2 ≈ 20.5. Exactly the deepening the plan promised.
+
+**Deeper excess search (done):** after the frozen cuts, 60,446 WDs. The recalibrated empirical null is **even more inflated (λ ≈ 19–29 vs v1's 10.6)** — the deeper, cooler sample widens the photosphere-prediction scatter, which *re-confirms* (in v2) that the empirical-null calibration is a structural necessity, not a preference. W1 is clean vs AllWISE; W2 has a small catalogue offset the null absorbs. Flagged candidates (5,035 W1 / 877 W2) are all pending the unchanged battery.
+
+**Two things worth your eye before I barrel on:**
+1. The flagged counts are large because the null is heavy-tailed even after λ-inflation — so the **battery does the heavy lifting** here, and (per the registered prediction) these are expected to resolve as warm disks/companions and photospheric-scatter tails, not anomalies. W1/W2 deepening improves the **warm regime**; the cold core is unchanged, as registered.
+2. The **W2 catalogue offset** means I'd treat any W2-only excess claim with extra caution (cross-check against W1).
+
+**Remaining v2 steps:**
+- **(a) f_max warm-edge recompute** with the deeper W1/W2 depth — the clean headline deliverable ("did the limit tighten?"), and it's *robust* to the excess-flag/W2 nuances since it uses survey depth, not the flags.
+- **(b) Battery** on the flagged warm excesses → expected-natural census.
+
+My suggestion: do **(a) first** — it's the cleanest answer to whether v2 paid off — then **(b)**. Want me to proceed with that, or would you rather I pause here so you can weigh in on the W2-offset handling first?
+
+### 🧑 Tonio
+
+Explain to me the W2 offset handling in simple terms if possible.
+
+### 🤖 Claude
+
+Sure — and it's actually one of the prettier ideas in the whole pipeline. Let me build it up plainly.
+
+**The problem in one sentence.** To find an infrared "excess," we compare how much W2 light a white dwarf *actually* emits to how much a bare one *should* emit. But when we checked the two catalogues against each other on the same stars, CatWISE2020 and AllWISE disagree slightly on W2 — by about 0.04–0.17 mag (magnitude = the brightness unit). It's like two rulers that are very slightly mismarked: measure the same object, get slightly different numbers.
+
+**Why that's dangerous.** This disagreement isn't real astrophysics — it's a calibration difference between two software pipelines. But it shifts *every* star in the same direction by roughly the same amount. So if we naively asked "is this star brighter than expected?", almost every star would look a little "in excess" — not because of dust or anything interesting, but purely because we swapped rulers. We'd drown in fake signals.
+
+**The fix: grade on a curve, not against an absolute.** Instead of trusting our "expected brightness" as absolute truth, we look at the *whole crowd* of ~60,000 white dwarfs and ask: where does the bulk of them sit? Almost all white dwarfs are ordinary (no excess), so the bulk *defines what "normal" looks like* in this dataset. We re-center on that bulk and then only flag the stars that stand out **from the crowd**, not from the (mis-calibrated) prediction.
+
+Here's the key: a uniform offset lifts the *entire crowd* by the same amount. When we re-center on the crowd, that lift cancels out automatically. We end up measuring "unusual compared to your peers," and a ruler that's off-by-a-constant simply doesn't matter to that question. (That's the same empirical-null / "grade on the curve" machinery behind the whole project — this is just it doing its job again on the new data.)
+
+**The analogy.** Imagine the photocopier printed every exam score 5 points too high. Grade against "pass = 60" and everyone looks better than they were. But grade on a curve — "who scored unusually high *relative to the class*?" — and the 5-point error is invisible, because it lifted everyone equally. The curve cancels the systematic. We grade white dwarfs on a curve.
+
+**The honest caveat (why I still flagged it).** Two wrinkles:
+
+1. The curve cancels a *perfectly uniform* shift cleanly. But our check hinted the W2 offset is a bit bigger for faint stars than bright ones (+0.17 vs +0.04) — so it's not a single clean shift, and the re-centering is only approximate. That residual lumpiness is the real reason for caution.
+2. **The safety net is W1, which is clean** (no offset). A *genuine* excess should appear in **both** W1 and W2. So if a candidate lights up in both, I trust it; if it lights up only in W2 but not W1, I distrust it — that's the fingerprint of the ruler problem rather than real dust.
+
+So "handling the W2 offset" = (a) let the empirical-null curve absorb the bulk of it automatically, and (b) require W1 corroboration before believing any W2 excess, since W1 is the trustworthy ruler.
+
+### 🧑 Tonio
+
+That sounds reasonable but isn’t the W2 collection 5x the size? So most contenders won’t have a corresponding W1 value?
+
+### 🤖 Claude
+
+That's a really good challenge — let me check the actual numbers rather than assume, because if you're right it undermines the whole safety net.
+
+
+_[tools: Bash]_
+
+Checked it, and it's the reverse of what we'd both feared — your instinct to question it was right, but the data lands the other way:
+
+| | count |
+|---|---|
+| WDs with **W1** detection | 53,808 |
+| WDs with **W2** detection | 21,036 |
+| both | 20,914 |
+| **W2 detections that also have W1** | **99.4%** |
+| W2-only (no W1) | **122** |
+
+So the safety net is essentially fully intact. Two things were getting conflated:
+
+- The **"5×"** was *CatWISE vs AllWISE* — the whole catalogue is 5.4× bigger than v1's. That's a different comparison from W1 vs W2.
+- Within CatWISE, **W1 is the *larger* set, not W2** (54k vs 21k). That's because W1 (3.4 µm) is the more sensitive WISE band *and* white dwarfs are intrinsically brighter at the shorter wavelength (they're on the Rayleigh-Jeans tail, which falls off toward longer wavelengths). So W2 is the *harder* detection — and almost anything bright enough to be seen in W2 is comfortably seen in W1 too. W2 detections are basically a subset of W1.
+
+The upshot: for **99.4%** of W2 candidates I have a clean W1 ruler to cross-check against, exactly as the safety net needs. Only **122** WDs are W2-only — and those are precisely the ones where I *can't* corroborate, so the honest move is to treat them as low-confidence (flag them, don't trust a W2-only excess from that handful, set them aside for individual inspection rather than letting them into a headline claim).
+
+So the W2 offset is doubly contained: the empirical-null curve absorbs the bulk of it, and W1 corroboration is available for all but ~0.2% of W2 candidates. Good question to force the check on, though — if W2 had been the deeper band, the whole approach would've needed rethinking.
+
+### 🧑 Tonio
+
+If we grade each set according to its own cohort that seems like a good first approach anyway.
+
+### 🤖 Claude
+
+Exactly right — and that's precisely what the pipeline already does. Each band gets its **own** empirical null: W1 is graded against the W1 cohort (its own δ₀, σ₀, threshold) and W2 against the W2 cohort, separately. You saw it in the numbers — W1 recentred at δ₀≈+3.1 with z*≈18.4, W2 at δ₀≈+4.4 with z*≈23.3. So the W2 catalogue offset is *already* baked into W2's own baseline; a W2 excess means "unusual relative to other W2 measurements," and a shift that lifts all of W2 equally just rides along in W2's δ₀ and cancels. Per-cohort grading isn't an extra step we'd add — it's the default, and it's the right first approach for exactly the reason you give.
+
+So you've correctly identified that the offset is mostly a non-issue. The one place per-cohort grading is *imperfect* is the bit I flagged in the cross-cal: the W2 offset looked a little **brightness-dependent** (+0.17 mag across all sources vs +0.04 for the bright ones). A single cohort-median is one number, so it can't perfectly recentre both the bright and faint ends if the offset itself slides with brightness — it leaves a small residual structure. The clean fix, if it ever mattered, is to grade within magnitude bins (a per-brightness empirical null) rather than one global W2 cohort — but that's a refinement, not a first pass.
+
+And that reframes W1-corroboration correctly, which I think is the useful distinction: it's **not** a patch for the W2 calibration (the W2 cohort handles that). It's an *independent physical* check — a genuine dust excess radiates in a consistent way across bands, so showing up in both W1 and W2 is evidence it's real astrophysics rather than a per-band quirk. It's cheap, we have it for 99.4% of W2 candidates, and it costs nothing to keep — so it's a free second opinion, not a crutch.
+
+Net: per-cohort grading (which we already do) handles the uniform offset; binning by brightness would handle the residual slope if we ever needed it; and W1 agreement is a bonus reality check on top. Your "good first approach anyway" is the right read.
+
+### 🧑 Tonio
+
+Ok then let’s proceed as you suggested. This entire conversation is part of the record in any event.
+
+### 🤖 Claude
+
+Agreed on both counts — let's proceed, and yes, the whole methodological back-and-forth (W2 offset, per-cohort grading, the W1-corroboration logic) is now in the archived transcript, which is exactly the point of the radical-transparency setup. Onward to **(a): the f_max warm-edge recompute** with the deeper CatWISE2020 W1/W2 depth.
+
+First let me derive the CatWISE2020 5σ depths empirically from the data in hand (the magnitude where SNR≈5), per the frozen plan:
+
+
+_[tools: Bash]_
+
+Deeper by **1.75 mag (W1)** and **1.42 mag (W2)** — substantial. Now the v2 f_max recompute, comparing v1 (AllWISE) vs v2 (CatWISE2020 W1/W2 + unchanged W3/W4):
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+The f_max recompute is done, and it's a clean, pre-registered confirmation — let me commit it, then run the battery:
+
+
+_[tools: Bash]_
+
+f_max committed (`428dfbc`) — confirms with data what we predicted: **deeper W1/W2 doesn't move the cold-anomaly limit** (it's W3/W4-limited; only far-IR helps), tightening only the >300 K natural-disk regime by ~2×. Now step (b), the battery on the flagged excesses — with the **W1+W2 corroboration** we discussed as the discriminator:
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+The v2 picture is now complete and clean. The **W1+W2 corroboration cut 5,035 single-band flags down to 866 robust warm excesses** — dominated by known WD+main-sequence binaries, CVs, and AllWISE disks, with 774 warm-disk/companion candidates extending the census. And critically: every one is **warm by construction** (W1/W2 can't detect cold dust), so the deeper search *cannot* produce a cold-anomaly candidate — consistent with the unchanged cold f_max. Let me commit and document the v2 result:
+
+
+_[tools: Edit]_

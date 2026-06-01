@@ -205,7 +205,40 @@ corroborating-only registration anticipates — while leaving a useful byproduct
 characterised polluted-WD / clean-inner-zone catalogue
 (`data/derived/channel_c_clean_zone.parquet`).
 
-## Caveats (this is a v1)
+## v2 amendment — deeper W1/W2 (CatWISE2020)
+
+A pre-registered extension ([`preregistration_v2_unwise.md`](preregistration_v2_unwise.md),
+frozen before the data) deepening the W1/W2 excess search and the warm-regime `f_max` with
+**CatWISE2020** (Marocco et al. 2021), ~1.4–1.75 mag deeper than AllWISE in W1/W2.
+
+**Cross-match.** 91,197 WDs have CatWISE2020 W1/W2 — **5.4× the AllWISE sample, 75,060 of
+them new** — with W2 reaching ~20.5. After the frozen cuts (nearest <2″; reject if a second
+source <3″; SNR≥5): 60,446 WDs.
+
+**Empirical null.** The deeper, cooler sample's photosphere-prediction scatter is even larger
+(genomic-control λ ≈ 19 in W1, 29 in W2, vs v1's 10.6) — re-confirming the empirical-null
+calibration as a structural necessity. W1 cross-calibrates cleanly to AllWISE (+0.004 mag);
+W2 carries a small catalogue offset (+0.04…+0.17) that the per-band empirical null absorbs and
+W1 corroboration cross-checks (W1 is the clean ruler; 99.4% of W2 detections have a W1).
+
+**Excess census.** Requiring **W1+W2 corroboration** reduces 5,035 single-band W1 flags to
+**866 robust warm excesses** — 51 already-known AllWISE disks/companions, 44 SDSS binaries/CVs
+(WD+MS, cataclysmic variables), and 774 warm debris-disk/companion candidates. **By
+construction every W1/W2 excess is warm** (a cold 50–150 K excess does not emit detectably at
+3.4/4.6 µm), so the deeper search extends the warm-disk/companion census but **cannot** surface
+a cold-anomaly candidate.
+
+**Upper limit.** Recomputing `f_max` with the deeper W1/W2 depths (W3/W4 unchanged), the
+**cold-anomaly window (50–300 K) is W3/W4-limited and unchanged** (1.0–1.2×); only the >300 K
+natural-disk regime tightens (~2×). This confirms *with data* that the headline cold limit is
+W4-limited and that **far-IR (JWST/Herschel), not deeper W1/W2, is the only path** to improving
+it. Figure: `figures/f_max_v2.png`.
+
+**v2 bottom line:** a clean, pre-registered confirmation — no cold anomaly (impossible by
+wavelength), the headline limit unchanged, and a 5.4× larger warm-excess census (all natural)
+as a byproduct.
+
+## Caveats
 
 - **Nominal, uniform WISE depths** for `f_max`; position-dependent depths would refine it.
 - **AllWISE detections only** for the excess search; the non-detected majority enters the
