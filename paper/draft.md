@@ -300,10 +300,16 @@ than by the detected subset alone.
 probed, neighbourhood-weighted* population, not the full Galactic WD census; beyond geometry,
 the local sample may also differ physically (local ISM, recent cloud passages affecting
 accretion, age gradients), which we flag as a caveat on the natural baseline itself. (ii)
-WISE cannot see genuinely cold ($\lesssim$50 K) excess; that regime requires far-infrared
-data (Herschel, JWST/MIRI) and is honestly outside our reach. (iii) Channel B is secondary
-and bright-limited; a calibrated, fainter, all-sector transit search is a natural extension.
-(iv) Most fundamentally, the search is a *defined, falsifiable slice*: a disequilibrium
+The excess search uses AllWISE *detections*, so the non-detected majority of WDs enters the
+upper limit only through the nominal survey depth; **forced photometry on the deeper
+unWISE/CatWISE W1/W2 coadds** — providing an actual measurement or deeper limit at every
+position — is the most pressing near-term improvement, and would tighten the bound in the
+warm, W1/W2-sensitive regime. We register it as the priority v2 amendment (to be
+pre-registered before the deeper data are examined). (iii) WISE cannot see genuinely cold
+($\lesssim$50 K) excess; that regime requires far-infrared data (Herschel, JWST/MIRI) and is
+honestly outside our reach. (iv) Channel B is secondary and bright-limited; a calibrated,
+fainter, all-sector transit search is a natural extension. (v) Most fundamentally, the search
+is a *defined, falsifiable slice*: a disequilibrium
 expressed only through channels we do not survey (e.g. narrow-band, polarimetric, or
 radio signatures, or signatures that look like noise to current models) is invisible to it.
 We claim no completeness — only a concrete, reproducible constraint.

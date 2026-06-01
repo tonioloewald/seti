@@ -4768,3 +4768,85 @@ Now let me add a short pointer in the paper directory and commit:
 
 
 _[tools: Write]_
+
+
+_[tools: Bash]_
+
+Done — the draft is written and committed (`4d3b2fd`), live at `paper/draft.md` in the repo.
+
+**What it is:** a complete methods + null-result + catalogue manuscript, accurate to everything the pipeline actually did. Structure:
+
+- **Abstract** — mechanism-agnostic, pre-registered, three channels, clean nulls, the f_max ceiling, validated machinery + reusable pipeline.
+- **Introduction** — why mechanism-agnostic, why white dwarfs, and the two integrity guards (pre-registration + "specify thresholds independently of findings").
+- **Sample & data**, **Methods** (the three channels, the empirical-null/genomic-control statistics, the natural-explanation battery, the upper-limit construction).
+- **Results** — validation first (536 disks at 511 K, WD 1856 b, GD 56, CVs), then the channel-by-channel nulls, the f_max regimes, the expanded bare-WD variability, and a **Robustness** section covering the DA-atmosphere checks and the float64 `source_id` hazard.
+- **Discussion** — "a defended null is a measurement," honest scope/limitations, and the pipeline-as-instrument argument.
+- **Conclusions, data/code availability, provenance** (the human–AI collaboration statement + the note that an independent AI review's three points are addressed), and a **References** list.
+
+A few deliberate choices for you to weigh in on:
+- **Author line** — I put you as sole human author of record with the AI-provenance statement, mirroring the registration. Add co-authors / affiliation as needed.
+- **Format** — Markdown, so reviewers can read and comment easily. When the science clears review, I can convert to **MNRAS LaTeX** (the natural venue, since the parent catalogue is MNRAS) and render a PDF.
+- **§9** explicitly invites reviewers to scrutinise the empirical-null calibration, cirrus/centroid vetting, the upper limit, and the local-baseline caveats — the places real pushback should land.
+
+Two things I'd flag before you send it out: every *number* in the draft traces to a committed pipeline output, but the **prose interpretation** is mine and deserves your read; and the references are standard citations I've stated from memory — worth a quick verification pass (volumes/years) before circulation. Want me to do that reference-check now, or produce the LaTeX/PDF version?
+
+### 🧑 Tonio
+
+Before we finalize the draft I ran the results past Gemini for review:
+
+This is a rigorous first pass. The pipeline executed exactly as registered: it surfaced candidates, subjected them to the natural-explanation battery, and successfully whittled them down to a clean, explained null. It's particularly a strong validation that the pipeline cleanly recovered the known natural populations (e.g., the 536 natural debris disks and companions, and the known transiter WD 1856+534 b).
+Here is a draft for an accessible "Initial Results" section, formatted to drop directly into your project Wiki alongside the previous glossary and methodology sections.
+# Phase 1 Results: A Calibrated Null
+We have completed the first end-to-end run of the pipeline on archival data, covering over 359,000 high-confidence white dwarfs. As expected and predicted in the project's pre-registration, the result is a clean, fully explained **null**.
+While a "null result" is sometimes seen as a failure in other fields, here it is a scientific success. It proves our "explain-away" machinery works—successfully recovering hundreds of known natural debris disks and companions—and allows us to set a hard, mathematical boundary on how common true anomalies actually are.
+Below is a breakdown of the findings across our three detection channels.
+## Channel A: Infrared Excess & Time-Variability
+**Static Excess:** We searched for white dwarfs emitting more infrared heat than they should.
+ * **The initial flags:** The pipeline flagged 104 candidates showing a "cold" infrared excess (under 300 Kelvin)—the temperature regime most likely to host a true anomaly.
+ * **The explanation:** All 104 candidates were successfully explained away by the natural-explanation battery. The vast majority were simply looking through background galactic cirrus clouds, or were telescope artifacts.
+ * **Result:** Zero unexplained static anomalies.
+**Time-Variability:** We also looked for infrared signals that fluctuate over time—the highest-value signature of an active anomaly.
+ * **The initial flags:** Scanning over 800 white dwarfs, the pipeline flagged 35 with highly fluctuating signals.
+ * **The explanation:** Every single one was a known natural phenomenon. Most were cataclysmic variables (accreting binary stars), natural variable dust disks, or blended background stars.
+ * **Result:** Zero unexplained dynamic anomalies.
+## Channel B: Transit Morphology
+We searched the light curves of the 157 brightest white dwarfs in the sample for anomalous transits (unusual dips in brightness).
+ * **The initial flags:** The pipeline found 3 stars with transit-like dips.
+ * **The explanation:** Because white dwarfs are tiny, a true planetary transit should cause a massive dip in light. These dips were shallow (~1%). Using difference-image centroiding, we proved that the light was actually dropping on faint background stars located in the same telescope pixel, not on the white dwarfs themselves.
+ * **Result:** Zero unexplained transits.
+## Channel C: Accretion Clean-Zone
+We looked at 112 "polluted" white dwarfs (stars actively consuming rocky debris) that had good infrared data. We found that 107 of them have a completely clean inner zone with no detectable dust.
+ * **Result:** Because a clean inner zone is only treated as an anomaly if it corroborates a survivor from Channel A or B—and there are zero survivors—this channel yields no anomalies. It does, however, leave us with a highly useful catalog of naturally clean-zoned, polluted white dwarfs for standard astrophysical study.
+## The Bottom Line: The f_{max} Upper Limit
+Because we found zero anomalies, we can mathematically calculate an upper limit on their existence within our data's reach.
+Our results show that **fewer than 0.01% to 0.1% of white dwarfs in the local stellar neighborhood host an unexplained cold (50–300 K) infrared excess.** *(Note: Anomalies colder than 50 K are currently invisible to the WISE telescope data used in this pass, remaining unconstrained until far-infrared data from telescopes like JWST or Herschel can be integrated.)*
+### A candid note on methodology and next steps
+Your decision to re-run the Channel A variability search on the bright, *bare* white dwarf population (removing the selection bias of only looking at stars that already had a static excess) was a critical catch. Leaving that bias in place would have severely compromised the integrity of the null result in the dynamic regime.
+Looking ahead to your v2 amendments, your caveat regarding **CatWISE/unWISE forced photometry** is the most pressing limitation to address. Relying strictly on AllWISE detections for the excess search means the non-detected majority is currently entering your upper limit strictly through nominal survey depth. Pushing deeper into W1/W2 with unWISE will be necessary to definitively tighten your boundaries on the warm-variable regime, just as JWST/Herschel data will be required to say anything meaningful about the sub-50 K regime.
+
+### 🤖 Claude
+
+Useful — and Gemini's accessible write-up is a nice complement to the technical RESULTS and the formal paper. But before I drop it into the repo, two of its statements overstate the cleanliness, and the project's whole credibility rests on *not* doing that. I'll add the summary, but corrected:
+
+1. **Channel A cold candidates** — Gemini says "the vast majority were cirrus or artifacts." Actually most (85 of 104) failed **W3/W4 detection reliability** (marginal/low-S/N); 12 were cirrus, 7 contamination. The "all in cirrus" applies only to the 12 that reached the final filter.
+2. **Variability** — Gemini says "*every single one* was a known natural phenomenon." Not true: **28 natural, 7 residual** (low-significance, isolated — the statistical tail). We report the residuals honestly in RESULTS and the paper; the accessible version must too.
+
+Let me check the amendments file so I can register the unWISE follow-up properly (Gemini's "most pressing limitation"):
+
+
+_[tools: Read]_
+
+Now I'll add the accessible summary to `docs/` (corrected against the actual pipeline outputs, credited as drafted with Gemini), sharpen the draft's future-work to prioritize unWISE per Gemini, and register the unWISE deepening as the planned next amendment.
+
+
+_[tools: Write]_
+
+Now sharpen the paper's limitations to prioritize unWISE forced photometry per Gemini's main point:
+
+
+_[tools: Edit]_
+
+Now register the unWISE deepening as the planned next amendment (preserving the pre-data discipline), and log the channels-B/C/variability execution in the amendments companion:
+
+
+_[tools: Edit]_
