@@ -1,0 +1,379 @@
+<!doctype html><html><head><meta charset='utf-8'><style>
+@page { size: A4; margin: 2.2cm 2.0cm 2.0cm 2.0cm;
+        @bottom-center { content: counter(page); font: 9pt "DejaVu Serif"; color: #666; } }
+body { font-family: "DejaVu Serif", Georgia, serif; font-size: 10.5pt; line-height: 1.45;
+       text-align: justify; hyphens: auto; color: #111; }
+h1 { font-size: 17pt; text-align: center; line-height: 1.25; margin: 0 0 0.3em; }
+h2 { font-size: 12.5pt; margin: 1.3em 0 0.4em; padding-bottom: 2px;
+     border-bottom: 1px solid #bbb; }
+h3 { font-size: 10.8pt; margin: 1.0em 0 0.3em; color: #222; }
+p { margin: 0 0 0.55em; }
+a { color: #1a4b8c; text-decoration: none; }
+code, tt { font-family: "DejaVu Sans Mono", monospace; font-size: 0.88em; background: #f4f4f4;
+           padding: 0 2px; border-radius: 2px; }
+strong { font-weight: bold; }
+em { font-style: italic; }
+blockquote { border-left: 3px solid #bbb; margin: 0.6em 0; padding: 0.1em 0 0.1em 1em;
+             color: #333; }
+hr { border: none; border-top: 1px solid #999; margin: 1.1em 0; }
+table { border-collapse: collapse; width: 100%; font-size: 9.6pt; margin: 0.5em 0; }
+th, td { border: 1px solid #ccc; padding: 3px 6px; text-align: left; vertical-align: top; }
+th { background: #f0f0f0; }
+ul, ol { margin: 0.2em 0 0.6em 1.2em; padding: 0; }
+li { margin: 0.15em 0; }
+h2, h3 { page-break-after: avoid; }
+</style></head><body><h1>An Anomaly-Residual Search for Unexplained Thermal and Photometric Signatures Around White Dwarfs</h1>
+<p><strong>Tonio Loewald</strong>¹ <em>(corresponding; human author of record)</em></p>
+<p>¹ Independent researcher. Contact: tloewald [at] gmail.com</p>
+<p><em>Draft for expert review — not yet submitted. This work was carried out as an openly
+documented human–AI collaboration; see §10 (Provenance) and the public repository. The
+analysis plan was pre-registered on the Open Science Framework before any data were
+examined (OSF DOI <a href="https://doi.org/10.17605/OSF.IO/6YH7R">10.17605/OSF.IO/6YH7R</a>).</em></p>
+<hr />
+<h2>Abstract</h2>
+<p>We present a pre-registered, mechanism-agnostic search for anomalous infrared and
+photometric signatures around white dwarfs (WDs). Rather than assume a particular
+engineered structure, we define the search target as the <em>observable anomaly itself</em>: a
+departure from the natural cooling-remnant-plus-debris model that survives a fixed battery
+of natural-explanation tests. Working from the Gaia EDR3 white-dwarf catalogue of Gentile
+Fusillo et al. (2021; 359,073 objects at P_WD &gt; 0.75), we run three pre-registered
+channels: (A) a calibrated infrared-excess and time-variability search using AllWISE and
+NEOWISE; (B) a transit-morphology search with TESS; and (C) an accretion-state (&ldquo;clean
+inner zone&rdquo;) corroborating flag using SDSS spectral classifications. Detection thresholds
+are set by a genomics-style <em>empirical null</em> with genomic-control inflation, not by
+inspecting candidates. The pipeline reproduces known astrophysics — it recovers ~536 WD
+debris disks/companions (median dust temperature ≈ 511 K), the transiting giant
+planet WD 1856+534 b, the variable-dust-disk WD GD 56, and a population of cataclysmic
+variables — which licenses interpretation of its non-detections. We find <strong>no unexplained
+anomaly</strong> in any channel: every flagged candidate resolves to a concrete natural cause —
+Galactic cirrus, marginal detections, accreting binaries, or stellar variability — and every
+transit-shaped candidate resolves to a background eclipsing binary once constrained by
+difference-image centroiding (a 16–33 arcsecond offset from the white dwarf in TESS&rsquo;s 21
+arcsecond pixels). For cold (~50–300 K) infrared excesses we place a zero-detection upper
+limit of f_max ≈ 10⁻³–10⁻⁴ on the fraction of (predominantly solar-neighbourhood) WDs hosting
+such an excess (fewer than one in a thousand to one in ten thousand), and show this limit is
+robust to the photospheric-atmosphere assumption. We release the full reproducible pipeline
+as a general-purpose tool for principled anomaly assessment of white-dwarf observations.</p>
+<p><strong>Key words:</strong> white dwarfs — circumstellar matter — infrared: stars — methods:
+statistical — astrobiology — techniques: photometric</p>
+<hr />
+<h2>1. Introduction</h2>
+<p>Searches for technosignatures have historically been organised around <em>specific</em> assumed
+mechanisms — most prominently the Dyson sphere and its waste-heat infrared signature. Such
+searches are powerful where the assumption holds and blind where it does not: they
+presuppose both the engineering and the motivation of an unknown agent. A civilization
+persisting over astrophysical timescales need not optimise for thermodynamic efficiency,
+build megastructures we would recognise, or emit in channels we happen to model. Anchoring
+a search to one mechanism therefore risks measuring our own assumptions rather than the sky.</p>
+<p>We take the opposite stance. The object of this search is not a hypothesised structure but
+an <strong>observable anomaly</strong>: a persistent or time-varying departure from the natural
+white-dwarf model that we cannot explain away. White dwarfs are attractive targets for a
+mechanism-agnostic search precisely because their natural behaviour is unusually
+well-understood — a cooling blackbody photosphere, occasionally accompanied by a tidally
+disrupted debris disk and metal pollution — so departures are comparatively clean to define
+and to test. Crucially, our deliverable does not depend on a positive detection: a rigorously
+defended null is itself a measurement (a quantitative ceiling on anomaly prevalence), and the
+machinery built to obtain it is a reusable instrument.</p>
+<p>The central methodological risk in any anomaly search is post-hoc reasoning — the &ldquo;god of
+the gaps&rdquo; failure in which <em>unexplained</em> silently becomes <em>the current limit of our models</em>,
+and thresholds drift to admit a favoured candidate. We guard against this in two ways.
+First, the entire analysis plan — sample, channels, statistics, natural-explanation battery,
+and stopping rule — was <strong>pre-registered</strong> on the Open Science Framework before any data were
+examined, via an unmoderated Open-Ended Registration that is permanent and tamper-evident.
+Second, we adopt a strict integrity invariant: <em>procedures and thresholds are specified
+independently of the findings and are never tuned to include or exclude particular objects.</em>
+Detection thresholds come from an empirical null and injection–recovery, not from inspecting
+the candidate list.</p>
+<p>This paper reports the first end-to-end execution of that registered plan on real archival
+data. §2 describes the sample and data. §3 gives the methods for the three channels and the
+statistical framework. §4 reports the validation and the channel-by-channel results,
+including a quantitative upper limit and a set of robustness checks. §5 discusses
+interpretation and limitations, and §6 concludes. All code, queries, and the full
+human–AI working transcript are public (§9–§10).</p>
+<h2>2. Sample and data</h2>
+<p><strong>Parent sample.</strong> We adopt the Gaia EDR3 white-dwarf catalogue of Gentile Fusillo et al.
+(2021) and select the <strong>359,073</strong> sources with white-dwarf probability P_WD &gt; 0.75,
+the catalogue&rsquo;s high-confidence threshold. We deliberately apply <strong>no distance cut</strong>: a WD
+is not excluded merely for being far away. The data-sufficiency requirements (a usable
+optical/near-IR SED; at least one informative infrared band) nonetheless preferentially
+admit nearby, bright, and/or hot WDs — a Malmquist-type bias toward the local volume that we
+treat statistically (§3.5) and flag explicitly in interpreting the upper limit (§5).
+Pure-hydrogen effective temperatures and surface gravities are available for <strong>295,406</strong>
+objects (median T_eff ≈ 10,900 K).</p>
+<p><strong>Photometry and spectroscopy.</strong> Optical photometry (Gaia G, G_BP,
+G_RP) is taken from the same catalogue. Mid-infrared photometry is obtained from
+AllWISE (Cutri et al. 2013) via the Gaia archive&rsquo;s precomputed, <code>source_id</code>-keyed
+cross-match (deterministic, not fuzzy positional matching): <strong>16,924</strong> WDs (4.7%) have an
+AllWISE counterpart, with per-band detections W1 16,897 / W2 9,081 / W3 650 / W4 339.
+Multi-epoch infrared light curves come from NEOWISE-R (Mainzer et al. 2011) single-exposure
+photometry, retrieved by bulk positional cross-match on the IRSA TAP service. Time-series
+optical photometry comes from TESS (Ricker et al. 2015) via MAST. Spectral classifications
+for the accretion-state channel are taken from the <em>same</em> pinned Gentile Fusillo et al.
+(2021) release — its <code>sdssspec.dat</code> table of SDSS DR16 visual classifications (41,820
+spectra of 32,169 unique WDs). Synthetic photospheric photometry uses the Montreal
+(Bergeron/Bédard et al. 2020) DA and DB model-atmosphere grids.</p>
+<p><strong>Reproducibility.</strong> No survey data are stored in the repository. Instead we store a
+deterministic <em>recipe</em>: pinned dataset releases, exact query text, frozen target-identifier
+manifests, and SHA-256 checksums; bulk products are fetched on demand and verified against
+the committed checksums. All data work post-dates the OSF registration; the registered
+version is tagged in the public Git history.</p>
+<p><strong>Identifier integrity (a data-handling caution for Gaia-based pipelines).</strong> We flag a
+silent data-corruption hazard that we encountered and that we believe is broadly relevant to
+anyone building a Python/pandas pipeline against the Gaia archive. A 19-digit Gaia
+<code>source_id</code> exceeds the exact-integer range of IEEE-754 double precision (2⁵³ ≈ 9×10¹⁵).
+pandas will <em>silently</em> cast an integer column to floating point whenever it is combined with
+floats in an all-numeric context (for example, when a row is materialised by
+<code>DataFrame.iterrows</code>), which truncates the trailing digits and can map several distinct stars
+onto a single corrupted identifier. The failure is invisible — it raises no error and
+produces only quietly wrong cross-matches. In an intermediate step of this work it corrupted
+99 of 157 identifiers before we caught it, via a routine &ldquo;do all flagged candidates trace
+back to the parent sample?&rdquo; sanity check; because the corruption affected only the <em>labels</em>
+and never the coordinate-based measurements, repair was exact and a full re-run reproduced
+every science result identically. Two practical rules prevent it: <strong>(i)</strong> carry Gaia
+identifiers as strings (or explicit 64-bit integers) throughout, and never allow them to be
+coerced to floating point; and <strong>(ii)</strong> when uploading identifiers to VOTable/TAP services —
+which reject unicode-string columns — send them as 64-bit integers, which round-trip exactly.
+We state this prominently rather than as a footnote precisely because the error is silent: a
+replicator who reuses naïve identifier handling would inherit corrupted cross-matches with no
+warning.</p>
+<h2>3. Methods</h2>
+<h3>3.1 Integrity invariant and the natural-explanation battery</h3>
+<p>For every candidate, the question asked is not &ldquo;could this be artificial?&rdquo; but &ldquo;<em>can we
+explain this naturally?</em>&rdquo;. An object is a residual only if it survives a fixed battery of
+natural-explanation tests at procedure-frozen thresholds. The battery spans: photospheric
+mismodelling; debris disks (Jura 2003) and substellar/stellar companions; Galactic cirrus
+and background contamination; detection reliability; eclipsing-binary and ringed-planet
+transit geometries (Arnold 2005); stellar pulsation and instrumental systematics;
+disintegrating planetesimals; background eclipsing binaries / aperture blends; and, for
+the accretion channel, natural dynamical clearing and sensitivity effects. The stopping rule
+is pre-committed: &ldquo;unexplained&rdquo; means &ldquo;survives the registered battery,&rdquo; nothing more, and
+the <em>full</em> ranked residual list is reported rather than a hand-picked top.</p>
+<h3>3.2 Channel A — calibrated infrared excess (primary)</h3>
+<p>For each WD we predict the photospheric W1–W4 flux from the DA atmosphere grid evaluated at
+the catalogue (T_eff,H, log g_H), anchored on the observed Gaia G via
+the distance-independent model colour (W_n - G_3). In the WISE bands the photosphere lies
+on the Rayleigh–Jeans tail, so its predicted flux is stiff and low-uncertainty. The per-band
+excess significance is χ_n = (f_n,obs - f_n,pred) / σ_n,
+computed only where AllWISE reports a real detection.</p>
+<p>For sources detected in the cooler W3/W4 bands — where the photosphere is negligible, so any
+detection is a genuine excess — we fit a free-temperature blackbody (temperature T_x and
+solid angle both free) to the excess SED. An excess whose T_x falls in a natural regime
+(debris disk, ~300–1500 K; cool/substellar companion, ~1500–4000 K) is classified
+natural; a <em>cold</em> excess (T_x &lt; 300 K) or one with no acceptable fit is a residual to vet
+further through the cirrus and reliability filters.</p>
+<h3>3.3 Channel A — time variability</h3>
+<p>A <em>fluctuating</em> excess is the highest-value signature: a static disk cannot fake it. From
+NEOWISE-R we build W1/W2 light curves and compute, per source, the reduced χ²
+(amplitude) and the Stetson (1996) J index (correlated two-band variability — robust to
+single-band noise). Both are calibrated against an empirical null (§3.5). We initially ran
+this on the IR-excess set; following review we re-ran it on a <strong>brightness-limited</strong> sample
+— all AllWISE WDs reaching the NEOWISE single-exposure detection floor (W1 &lt; 15.5),
+<em>regardless</em> of excess — so that transient or sporadic events on otherwise-bare WDs are not
+missed (§4.4).</p>
+<h3>3.4 Channels B and C</h3>
+<p><strong>Channel B (transits).</strong> TESS is photon-starved on faint WDs, so this channel is registered
+as <em>secondary and candidate-generating</em> and is run on the bright subset (G &lt; 14). We run Box
+Least Squares (Kovács et al. 2002) on each SPOC/TESS-SPOC/QLP light curve and assess
+morphology (duty cycle; sinusoid-versus-box). Any transit-shaped candidate is then subjected
+to the mandatory <strong>difference-image centroid (BEB) test</strong>: TESS pixels are ~21″, so the
+flux dip must be localised to the WD&rsquo;s coordinates, not an offset background source.</p>
+<p><strong>Channel C (clean inner zone).</strong> Polluted (actively accreting) WDs are identified as SDSS
+classes containing &lsquo;Z&rsquo; (Ca H&amp;K metal lines). &ldquo;Accreting but no detectable inner dust&rdquo; is
+common and natural, so Channel C is registered as an <em>ordinal corroborating flag with no
+standalone threshold</em>: a clean inner zone elevates an object only when it coincides with a
+Channel-A or -B survivor.</p>
+<h3>3.5 Statistical framework</h3>
+<p>White-dwarf photospheric prediction carries scatter that the formal photometric errors
+underestimate. We therefore calibrate thresholds against an <strong>empirical null</strong> (Efron 2004):
+the bulk of the test-statistic distribution defines the null, and a <strong>genomic-control</strong>
+inflation factor λ (Devlin &amp; Roeder 1999) rescales it. We measure λ ≈ 10.6 in W1 — i.e. the
+textbook errors understate the true scatter roughly threefold — which
+<em>validates the empirical-null approach</em>: using formal errors would manufacture thousands of
+false flags. Multiplicity is controlled with the Benjamini–Hochberg/Storey false-discovery
+rate, and the staged look-elsewhere effect (Gross &amp; Vitells 2010) is carried through to the
+detection bar (cf. the 7.1σ Kepler threshold; Jenkins et al. 2002). The channels are
+kept <em>separate</em>: we deliberately avoid a single tunable weighted scalar in which arbitrary
+weights could creep in.</p>
+<h3>3.6 Upper limit</h3>
+<p>With zero unexplained excesses, we compute the registered zero-detection bound
+f_max(T_x, f) = 3.0 / Σ_i C_i(T_x, f) (95% one-sided), where C_i is unity if
+an excess of temperature T_x carrying a bolometric-luminosity fraction f around WD i
+would have exceeded the AllWISE 5σ depth in some band (survey-depth injection–
+recovery), and the sum runs over all 295,406 WDs with a usable photosphere — the
+non-detected majority included.</p>
+<h2>4. Results</h2>
+<h3>4.1 Validation: the pipeline recovers known astrophysics</h3>
+<p>Fitting blackbodies to the <strong>923</strong> W3/W4-excess SEDs yields, for the 705 with ≥ 2 excess
+bands, <strong>536 natural sources</strong> — 426 warm debris disks plus 110 cool/substellar companions —
+with <strong>median T_x ≈ 511 K</strong>, exactly the textbook white-dwarf debris-disk regime. The
+transit machinery recovers the known transiting giant planet <strong>WD 1856+534 b</strong> at
+P = 1.4080 d (truth 1.4079 d). The variability search recovers the textbook variable-dust-
+disk WD <strong>GD 56</strong> and a population of cataclysmic variables. The accretion channel reproduces
+the literature&rsquo;s small WD dust-disk fraction (a few percent). A pipeline that demonstrably
+finds what it should is the precondition for trusting its non-detections.</p>
+<h3>4.2 Channel A — a clean, explained null, and the upper limit</h3>
+<p><strong>104</strong> objects fit a cold (T_x &lt; 300 K) blackbody — the potentially interesting regime.
+Each was passed through the registered battery: 7 fail contamination flags; 85 fail W3/W4
+detection reliability (marginal/low-S/N); and the remaining <strong>12 all lie in high-cirrus
+fields</strong> (SFD E(B-V) 0.30–1.22, every one well above any plausible ceiling, so the
+conclusion is threshold-independent). <strong>Zero survive.</strong> Channel A&rsquo;s static-excess branch
+finds <strong>no unexplained infrared excess</strong> at any temperature, while correctly recovering the
+known debris-disk population — a null reached by <em>explanation</em>, not assertion.</p>
+<p>The resulting upper limit (Figure 1) has three regimes. Below ~50 K the search is
+WISE-blind (the reddest band is 22 µm). In the <strong>50–300 K cold-anomaly window</strong>, where a cold
+excess is both WISE-detectable and distinguishable from a warm disk, with zero unexplained
+excesses we obtain f_max ≈ few×10⁻³ to 10⁻⁴; e.g. at
+T_x = 100 K reprocessing 10% of the WD&rsquo;s light (f = 0.1), f_max ≈ 3×10⁻⁴. Above 300 K any
+excess is classified as a natural disk, so the tight numbers there
+are a generic IR-excess limit, not an anomaly limit. In plain terms: <strong>fewer than one in a
+thousand to one in ten thousand (predominantly solar-neighbourhood) white dwarfs host an
+unexplained cold (50–300 K) infrared excess</strong>, with the colder regime beyond WISE&rsquo;s reach.</p>
+<h3>4.3 Channel B — no transit of a white dwarf</h3>
+<p>Of the 157 bright (G &lt; 14) WDs, 136 have usable TESS light curves. The strongest periodic
+signals are <strong>stellar variability, not transits</strong>: of the top nine by BLS signal-to-noise,
+six are smooth sinusoidal modulations (ellipsoidal/reflection/pulsation), most already
+catalogued (e.g. the known WD+dM pair HZ 43, the planetary-nebula central star SH 2-216).
+Three signals are genuinely transit-shaped but <strong>shallow (0.7–1.2%)</strong>; since a planet
+transiting an Earth-sized white dwarf would produce a deep or total eclipse, a ~1% dip
+cannot be a transit <em>of the WD</em>. The mandatory difference-image centroid test confirms this:
+all three flux-dip centroids are offset from the white dwarf by <strong>0.76–1.56 px (16–33″)</strong>,
+toward field neighbours — they are <strong>background/blended eclipsing binaries</strong>. Channel B is a
+clean, fully-vetted null.</p>
+<h3>4.4 Channel A — variability, including the bare-WD population</h3>
+<p>The initial variability search (540 WDs with ≥ 10 epochs) flagged 17 variables, all
+natural (disk variability or brown-dwarf weather). Because that search required a static
+excess to trigger — a selection bias blind to transient events on bare WDs — we re-ran it on
+the brightness-limited sample: <strong>271,520 clean epochs for 861 WDs</strong>. The empirical null
+self-recalibrates (reduced-χ² δ_0 = 1.75; bright-source NEOWISE errors are mildly
+underestimated), and <strong>35</strong> WDs pass the correlated-variability threshold. Vetting each by
+SDSS class, SIMBAD type, Gaia-neighbour blend in the ~6″ NEOWISE beam, and IR excess:
+<strong>28 are natural</strong> — cataclysmic variables (EF Eri, IW Eri, BW Scl, …), aperture blends, and
+IR-excess systems (unresolved companions or variable dust disks, including GD 56); <strong>7 are
+residual</strong>, all low-significance (Stetson J ≤ 1.9), isolated, and without IR excess —
+consistent with the empirical-null statistical tail and instrumental systematics (some are
+ROSAT X-ray WDs, hence likely magnetic/accreting). <strong>No anomalous fluctuating bare WD.</strong>
+Removing the selection bias leaves the highest-value-signal null intact (Figure 2).</p>
+<h3>4.5 Channel C — no coincident anomaly</h3>
+<p>We identify <strong>894 unique</strong> metal-polluted (Z-class) WDs in the sample. Of the 112 with
+AllWISE coverage, <strong>5 (4.5%) are disk-bearing and 107 (95.5%) have a clean inner zone</strong> —
+consistent with the literature&rsquo;s small disk fraction (the WISE-covered polluted subset is
+bright/nearby-biased). With <strong>zero</strong> Channel-A residual survivors and <strong>zero</strong> Channel-B
+on-target survivors, the clean-zone set coincides with the A∪B survivors in <strong>zero objects</strong>.
+Channel C therefore elevates nothing — exactly as its corroborating-only registration
+anticipates — while leaving a characterised polluted-WD / clean-zone catalogue as a
+byproduct.</p>
+<h3>4.6 Robustness checks</h3>
+<p><em>Photospheric atmosphere.</em> The pipeline uses a DA (pure-H) grid for all WDs. Re-predicting
+the 25 spectroscopically helium-atmosphere W3/W4-excess WDs with the DB grid at the
+catalogue&rsquo;s (T_eff,He, log g_He) shifts predicted W1/W2 by only
+~0.06 mag; in W3/W4 — where the cold candidates are defined — the predicted photosphere
+is <strong>&lt;0.6% of the observed flux under both DA and DB</strong>, so the cold classification is
+photosphere-model-independent. For the upper limit, excluding the spectroscopically-confirmed
+non-DA WDs (~1.6% of the sample) leaves f_max unchanged (3.4×10⁻⁴ at
+T_x = 100 K, f = 0.1, versus 3.4×10⁻⁴ for the full sample); a confirmed-DA-only limit
+is weaker only because N is ~18× smaller, not because the physics shifts. The cold null
+and the limit are robust to the atmosphere assumption.</p>
+<p>(A separate, software-level identifier-integrity hazard and its fix are described in §2 under
+<em>Identifier integrity</em>, where they belong — they concern data handling, not the statistical
+robustness of the result.)</p>
+<h2>5. Discussion</h2>
+<p><strong>A defended null is a measurement.</strong> Every channel returns a null, and in every case the
+null is reached by chasing each candidate to a concrete natural cause — Galactic cirrus in
+the WISE beam, a marginal detection, a background eclipsing binary localised off-target by
+difference imaging, an accreting binary, or known stellar variability — rather than by
+asserting that anomalies are noise. The quantitative product is the cold-excess ceiling,
+f_max ≈ 10⁻³–10⁻⁴ over 50–300 K, which we have shown is insensitive to
+the atmosphere assumption and is set by survey depth over the whole photosphere sample rather
+than by the detected subset alone.</p>
+<p><strong>Scope and limitations.</strong> (i) The limit constrains prevalence among the <em>effectively
+probed, neighbourhood-weighted</em> population, not the full Galactic WD census; beyond geometry,
+the local sample may also differ physically (local ISM, recent cloud passages affecting
+accretion, age gradients), which we flag as a caveat on the natural baseline itself. (ii)
+The excess search uses AllWISE <em>detections</em>, so the non-detected majority of WDs enters the
+upper limit only through the nominal survey depth; <strong>forced photometry on the deeper
+unWISE/CatWISE W1/W2 coadds</strong> — providing an actual measurement or deeper limit at every
+position — is the most pressing near-term improvement, and would tighten the bound in the
+warm, W1/W2-sensitive regime. We register it as the priority v2 amendment (to be
+pre-registered before the deeper data are examined). (iii) WISE cannot see genuinely cold
+(≲50 K) excess; that regime requires far-infrared data (Herschel, JWST/MIRI) and is
+honestly outside our reach. (iv) Channel B is secondary and bright-limited; a calibrated,
+fainter, all-sector transit search is a natural extension. (v) Most fundamentally, the search
+is a <em>defined, falsifiable slice</em>: a disequilibrium
+expressed only through channels we do not survey (e.g. narrow-band, polarimetric, or
+radio signatures, or signatures that look like noise to current models) is invisible to it.
+We claim no completeness — only a concrete, reproducible constraint.</p>
+<p><strong>The instrument outlasts the result.</strong> Independent of the technosignature framing, this
+work yields a reusable white-dwarf inspection pipeline: calibrated SED-excess testing against
+an empirical null with genomic-control inflation, free-temperature blackbody fitting,
+two-band correlated-variability detection, BLS plus difference-image centroiding, and cirrus
+vetting — applicable to any current or future white-dwarf data release for principled
+anomaly assessment — together with byproduct catalogues of debris disks, variable disks, and
+polluted/clean-inner-zone systems.</p>
+<h2>6. Conclusions</h2>
+<p>A pre-registered, mechanism-agnostic, three-channel search of 359,073 Gaia EDR3 white dwarfs
+finds no unexplained thermal or photometric anomaly. The pipeline validates against known
+astrophysics (debris disks at 511 K, WD 1856+534 b, GD 56, cataclysmic variables) and then
+returns clean, explained nulls in static infrared excess, time variability (including the
+previously-omitted bare-WD population), transit morphology, and accretion state. We place a
+quantitative, atmosphere-robust ceiling of f_max ≈ 10⁻³–10⁻⁴ on the
+fraction of solar-neighbourhood white dwarfs hosting an unexplained 50–300 K infrared excess.
+We release the registered plan, the reproducible pipeline, and the complete working record,
+and we invite the community to second-guess the null at their leisure.</p>
+<h2>7. Data and code availability</h2>
+<p>The complete pipeline, query recipes, frozen manifests, checksums, figures, this manuscript,
+and the full human–AI working transcript are public at the project repository. Bulk survey
+data are not redistributed; they are fetched deterministically from their archival sources
+(Gaia, IRSA/AllWISE, IRSA/NEOWISE, MAST/TESS, VizieR) per the committed recipe. The analysis
+plan is permanently registered on OSF (DOI 10.17605/OSF.IO/6YH7R); the registered code
+version is tagged in the Git history.</p>
+<h2>8. Acknowledgements</h2>
+<p>This research used the Gaia mission archive (ESA), the NASA/IPAC Infrared Science Archive
+(AllWISE, NEOWISE), the Barbara A. Mikulski Archive for Space Telescopes (TESS), the
+VizieR and SIMBAD services (CDS, Strasbourg), and the Montreal White Dwarf Database model
+grids. We thank the white-dwarf and exoplanet communities whose catalogues make a search
+like this possible.</p>
+<h2>9. Author contributions and reviewer note</h2>
+<p>The human author is accountable for the scientific content, the integrity of the
+pre-registration, and all claims herein. <em>Draft status:</em> this manuscript is circulated for
+expert review prior to submission; quantitative results are reproducible from the public
+pipeline at the tagged commit. Reviewers are specifically invited to scrutinise the empirical-
+null calibration, the cirrus and centroid vetting, the upper-limit construction, and the
+local-environment caveats on the natural baseline.</p>
+<h2>10. Provenance (human–AI collaboration)</h2>
+<p>In the spirit of radical transparency, we record that this project was executed as an
+openly-documented collaboration between the human author and two AI systems (Google Gemini
+and Anthropic Claude), which contributed to methodology design, implementation, and
+adversarial review. The human author retains full accountability for every claim; the AI
+systems are credited as co-designers, and the complete, lightly-redacted working transcripts
+are archived in the public repository. The first-pass results were additionally subjected to
+an independent AI critical review, whose substantive points (a float64 identifier hazard, the
+DA-atmosphere assumption, and a variability selection bias) are addressed in §4.4 and §4.6.</p>
+<h2>References</h2>
+<ul>
+<li>Arnold, L. F. A. 2005, <em>ApJ</em>, 627, 534 — detectability of artificial/ringed transit signatures.</li>
+<li>Bédard, A., Bergeron, P., Brassard, P., &amp; Fontaine, G. 2020, <em>ApJ</em>, 901, 93 — white-dwarf synthetic photometry grids.</li>
+<li>Benjamini, Y., &amp; Hochberg, Y. 1995, <em>J. R. Stat. Soc. B</em>, 57, 289 — false-discovery rate.</li>
+<li>Cutri, R. M., et al. 2013, <em>AllWISE Source Catalog</em> (IPAC/Caltech).</li>
+<li>Devlin, B., &amp; Roeder, K. 1999, <em>Biometrics</em>, 55, 997 — genomic control.</li>
+<li>Efron, B. 2004, <em>J. Am. Stat. Assoc.</em>, 99, 96 — empirical null / local false-discovery rate.</li>
+<li>Farihi, J. 2016, <em>New Astronomy Reviews</em>, 71, 9 — circumstellar debris and pollution at white dwarfs.</li>
+<li>Gentile Fusillo, N. P., et al. 2021, <em>MNRAS</em>, 508, 3877 — Gaia EDR3 white-dwarf catalogue.</li>
+<li>Gross, E., &amp; Vitells, O. 2010, <em>Eur. Phys. J. C</em>, 70, 525 — look-elsewhere effect.</li>
+<li>Jenkins, J. M., et al. 2002, <em>ApJ</em>, 564, 495 — matched-filter transit detection (Kepler threshold).</li>
+<li>Jura, M. 2003, <em>ApJ</em>, 584, L91 — flat opaque dust-disk model.</li>
+<li>Kovács, G., Zucker, S., &amp; Mazeh, T. 2002, <em>A&amp;A</em>, 391, 369 — Box Least Squares.</li>
+<li>Mainzer, A., et al. 2011, <em>ApJ</em>, 731, 53 — NEOWISE.</li>
+<li>Ricker, G. R., et al. 2015, <em>J. Astron. Telesc. Instrum. Syst.</em>, 1, 014003 — TESS.</li>
+<li>Schlegel, D. J., Finkbeiner, D. P., &amp; Davis, M. 1998, <em>ApJ</em>, 500, 525 — Galactic dust/reddening map.</li>
+<li>Stetson, P. B. 1996, <em>PASP</em>, 108, 851 — variability index J.</li>
+<li>Storey, J. D. 2002, <em>J. R. Stat. Soc. B</em>, 64, 479 — q-value / false-discovery control.</li>
+<li>Vanderburg, A., et al. 2020, <em>Nature</em>, 585, 363 — a giant planet transiting WD 1856+534.</li>
+<li>Wright, E. L., et al. 2010, <em>AJ</em>, 140, 1868 — Wide-field Infrared Survey Explorer (WISE).</li>
+</ul>
+<hr />
+<p><em>Figures.</em> <strong>Figure 1</strong> — cold-excess upper limit f_max(T_x, f) with the three
+regimes (<code>figures/f_max.png</code>). <strong>Figure 2</strong> — NEOWISE W1 light curves of the strongest
+flagged variables from the bare-WD-inclusive search, all natural
+(<code>figures/variability_bright.png</code>). Supporting figures: QQ-plot of the excess empirical null
+(<code>figures/qq_excess.png</code>), folded transit candidates (<code>figures/transit_candidates.png</code>), and
+difference-image centroid vetting (<code>figures/centroid_vet.png</code>).</p></body></html>

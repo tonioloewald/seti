@@ -5155,3 +5155,57 @@ All clean now (0 LaTeX anywhere — the wrapped spans are fixed). Let me commit 
 
 
 _[tools: Bash]_
+
+All three revisions are in and committed (`ce6c0cf`), and a side benefit: the leftover-LaTeX hunt caught **three spans my earlier conversion missed** because they wrapped across line breaks — all three docs are now provably 100% LaTeX-free (verified newline-agnostic this time).
+
+Summary of what changed:
+- **Float64 elevated** out of §4.6 into a prominent **§2 "Identifier integrity"** data-handling caution — expanded into a real warning (the two rules; the 99/157 corruption it actually caused; why it's silent). It now reads as the community warning sign it deserves to be, not a buried statistics footnote.
+- **Abstract** now states the centroiding result inline (16–33″ offset in TESS's 21″ pixels) so the BEB resolution lands immediately.
+- **Notation** cleaned: f_max stays in scientific notation, plain-language is now "fewer than one in a thousand to one in ten thousand" — no more bouncing between 10⁻³ and 0.1%.
+- **Provenance left exactly as you decided.** "Co-designers" stays.
+
+On the **venue question** — my recommendation, with the independent-author realities front of mind:
+
+**Primary target: MNRAS.** It's the natural home (the parent catalogue is itself MNRAS), it takes methods + null + catalogue papers, technosignature framing is accepted there now, and — practically important for you — **it has no page charges**, unlike the AAS journals (AJ/ApJ, ~$1.5–3k). Its review is rigorous, which is exactly the external credibility you want.
+
+**Strong alternative if you'd rather foreground the *methods/software*: PASP or RASTI** (RAS Techniques & Instruments). Your empirical-null/genomic-control architecture, the reusable pipeline, and the identifier-integrity hazard are genuine methods contributions that those venues value highly — RASTI is open-access and built for exactly this.
+
+**arXiv first, but mind the hurdle:** arXiv astro-ph requires an *endorser* for someone without an academic-institution email. That's the one friction point — and it ties directly to the thread you and Gemini were on: **the domain expert you recruit can solve three things at once** — substantive review, the arXiv endorsement, and (if they come aboard as co-author) the CRediT firewall that lets the provenance statement stand while isolating their institutional liability.
+
+So the sequence I'd suggest: (1) finish expert review → (2) if that yields a willing academic collaborator, they endorse + co-author under a CRediT split → (3) arXiv preprint → (4) MNRAS submission. The v2 unWISE deepening proceeds on its own track and folds into a stronger revision or a follow-up.
+
+What's left to make it submission-ready is mechanical whenever you give the word: DOIs/arXiv IDs in the reference list, and the MNRAS LaTeX conversion + PDF. Want me to queue those, or pivot to pre-registering v2?
+
+### 🧑 Tonio
+
+What should I do w.r.t. OSF? Should I upload more documents? How do I generate a PDF for expert review?
+
+### 🤖 Claude
+
+Good practical questions — let me handle the PDF concretely (I can generate it for you), then give you clear OSF guidance. First, let me see what's installed:
+
+
+_[tools: Bash]_
+
+No PDF tooling is installed. Let me try to install a lightweight Unicode-capable path and generate the PDF for you directly:
+
+
+_[tools: Bash]_
+
+Both installed and importing. Now let me generate the PDF — with one careful detail: our subscript underscores (`f_max`, `T_x`) must not be misread as markdown italics. Let me generate, check for that artifact, then render:
+
+
+_[tools: Bash]_
+
+Clean — 0 subscript artifacts (Python-Markdown correctly left `f_max`, `T_x` alone; all 40 italics are legitimate). Let me build a proper styled PDF with a reusable script:
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+PDF generated (72 KB). Let me verify it rendered correctly (Unicode, layout) before sending:
+
+
+_[tools: Read]_
