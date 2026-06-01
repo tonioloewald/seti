@@ -61,6 +61,14 @@ An SED is a graph showing how much energy an object emits across different wavel
 **The concept:** The standard algorithms used by astronomers to comb through millions of light curves looking for the tiny, periodic dips of a transit.
 **Why it matters:** BLS is mathematically optimized to find square-shaped dips (like a solid block passing in front of a star). TLS is optimized to find U-shaped dips (like a spherical planet). Channel B uses these to flag initial events before checking if their morphology is completely weird.
 [Read more about Box Least Squares](https://docs.astropy.org/en/stable/timeseries/bls.html)
+* **The Stetson J Index**
+**The concept:** A statistical formula for finding stars that are genuinely varying in brightness, as opposed to merely suffering random measurement noise.
+**Why it matters:** Stetson J looks for *correlated* variability across two bands at once: if a star genuinely brightens, it should brighten in W1 and W2 simultaneously. A spike in only one band is probably an instrument glitch. The index suppresses single-band noise and flags the structured, physical changes a dynamic anomaly would produce.
+[Read more (Stetson 1996, ADS)](https://ui.adsabs.harvard.edu/abs/1996PASP..108..851S/abstract)
+* **CatWISE2020**
+**The concept:** An updated catalogue of infrared sky-survey data built from the *same* WISE satellite imaging as AllWISE, but processed differently to detect significantly fainter objects — it "looks deeper," though only in the two shortest infrared bands (W1 and W2; 3.4 and 4.6 µm).
+**Why it matters:** The v1 search used AllWISE. Pre-registering a second pass with CatWISE2020 proved that finding no cold anomalies was not simply a matter of insufficient depth: the cold limit stayed unchanged because a genuinely cold anomaly emits essentially no light at W1/W2 at all. The binding limitation is the *colour* (wavelength) of light the telescope can see, not its sensitivity.
+[Read more about the CatWISE2020 Catalog (ADS)](https://ui.adsabs.harvard.edu/abs/2021ApJS..253....8M/abstract)
 
 ## 2. Astrophysical Environments & Physics
 
@@ -82,6 +90,10 @@ An SED is a graph showing how much energy an object emits across different wavel
 **The concept:** Every warm object emits a spectrum of light (a blackbody curve) that peaks at a certain wavelength and trails off on either side. The "Wien tail" is the short-wavelength (higher-energy) slope of this curve.
 **Why it matters:** If an anomaly is extremely cold (e.g., 30 Kelvin), almost all of its light is emitted in the far-infrared. The WISE telescope's longest wavelength band (W4) can only just barely catch the very edge — the Wien tail — of that cold light, making cold anomalies notoriously difficult to detect with current data.
 [Read more about Wien's Displacement Law](https://en.wikipedia.org/wiki/Wien%27s_displacement_law)
+* **Cataclysmic Variables (CVs)**
+**The concept:** A binary system in which a white dwarf and a normal companion star orbit so closely that the white dwarf's intense gravity actively tears gas off the companion.
+**Why it matters:** The stolen gas forms a superheated accretion disk that periodically ignites or shifts, producing large, violent brightness spikes. In the v2 time-variability search these natural systems account for the loudest, most dramatic fluctuations the pipeline detects — the signals that look most anomalous until they are identified.
+[Read more about Cataclysmic Variables](https://en.wikipedia.org/wiki/Cataclysmic_variable_star)
 
 ## 3. Statistical & Analytical Methods
 
@@ -109,10 +121,23 @@ A mathematical way to state an upper limit when you find absolutely nothing. If 
 * **Quantile-Quantile (Q-Q) Plot**
 A visual diagnostic tool. It plots your actual observed data distribution against the expected theoretical distribution. If your data is well-behaved, it tracks a straight diagonal line. True anomalies will visually peel away from the line at the extreme upper right.
 [Read more about Q-Q Plots](https://en.wikipedia.org/wiki/Q%E2%80%93Q_plot)
+* **Selection Bias & the Brightness-Limited Sample**
+**The concept:** Selection bias occurs when the rules for including an object in a test accidentally filter out the very thing you are looking for.
+**Why it matters:** The v1 time-variability search looked only at white dwarfs that *already* showed a static infrared excess — a blind spot, because a bare white dwarf with a brief, massive infrared flare (a highly anomalous transient) would average out over a decade, leave no static excess, and never be checked. The v2 update removed this prerequisite, testing *all* white dwarfs bright enough to measure reliably (a "brightness-limited" sample), so transient events on otherwise-bare stars could not slip through. (Distinct from *Malmquist bias*, which is about distance/faintness completeness.)
+[Read more about Selection Bias](https://en.wikipedia.org/wiki/Selection_bias)
 
 ---
 
-## 4. Cited Literature & Papers
+## 4. Data-Handling & Computational Hazards
+
+* **IEEE-754 Double Precision (the pandas float64 hazard)**
+**The concept:** Computers store ordinary decimal numbers ("floats") in a format that holds only a limited number of *exact* digits before it begins rounding.
+**Why it matters:** Gaia assigns every star a 19-digit identification number. Standard analysis software (e.g. Python's pandas) will silently convert integer columns to floating-point during routine operations — and because a 64-bit float holds only ~15–17 exact decimal digits, it silently truncates the end of a Gaia ID, **merging completely different stars into a single corrupted identifier**. The error raises no warning; it just produces quietly wrong cross-matches. This project flags it as a severe, invisible trap for anyone building automated astronomical pipelines, fixable by forcing the software to carry identifiers strictly as text strings (and as 64-bit integers, never floats, for catalogue uploads).
+[Read more about Double-Precision Floating-Point](https://en.wikipedia.org/wiki/Double-precision_floating-point_format)
+
+---
+
+## 5. Cited Literature & Papers
 
 ### The "Assumed Mechanism" SETI Baseline
 

@@ -5971,3 +5971,124 @@ Now regenerate the PDF and verify it's clean:
 
 
 _[tools: Bash]_
+
+Clean — 0 LaTeX, now 6 figures, 1.6 MB. Let me commit and send you the updated PDF:
+
+
+_[tools: Bash]_
+
+
+_[tools: SendUserFile]_
+
+Done — v2 is folded into the manuscript and the updated PDF is on its way (`90851bd`).
+
+**What's in the paper now:**
+- **§4.7** — the pre-registered CatWISE2020 extension: 5.4× deeper census, the recalibrated empirical null (λ 19–29, re-confirming the method), the 866 W1+W2-corroborated warm excesses (all warm by construction), and the f_max recompute.
+- **Figure 6** — v1 vs v2 f_max, showing the curves coincide across the cold window.
+- **Abstract** — one clause on the deepening leaving the cold limit unchanged.
+- **§5** — the old "AllWISE-detections-only" limitation now reads as *resolved*: the binding constraint is wavelength, not depth.
+- **CatWISE2020 reference** added.
+
+The nice thing is this *strengthens* the paper rather than just lengthening it: it pre-empts the most obvious reviewer question — "why not just go deeper in WISE?" — with a definitive, data-backed answer (you can't; it's W3/W4-limited; only far-IR helps). That's a question Neustroev or any referee would otherwise raise.
+
+**Where the project stands — genuinely complete for this phase:**
+- v1: three channels, all clean explained nulls, validated machinery, quantitative f_max.
+- v2: deeper W1/W2 confirms the limit is wavelength-limited; warm-excess census byproduct.
+- Manuscript: 6 figures, review-ready PDF, all references verified.
+- Provenance: pre-registered (OSF + git), amendments logged, transcripts archived.
+
+The remaining moves are all *external*: Neustroev's reply (whenever it comes), and — only when you decide to submit — the MNRAS LaTeX conversion + DOIs. The far-IR follow-up is genuine future work (targeted JWST/Herschel, not a survey pass). Nothing else needs doing on my end right now; this is a clean resting point. Congratulations — you've got a complete, defended, reproducible study and a review-ready paper.
+
+### 🧑 Tonio
+
+So what’s involved in adding JWST/Herschel data?
+
+### 🤖 Claude
+
+Good question, and the honest answer is that far-IR is *fundamentally different* from what we did with WISE — different enough that it's not really "add another dataset," it's "a different kind of science with much harder constraints." Let me lay out why, because it changes what's actually possible.
+
+**The crux: survey vs. pointed.** AllWISE/CatWISE are *all-sky surveys* — every one of our 359k WDs has coverage, which is exactly what makes a population limit (f_max) meaningful: you're sampling blindly. **JWST and Herschel are *pointed* observatories** — they only ever looked at specific targets someone proposed. There is no all-sky JWST or Herschel survey of white dwarfs to cross-match against. So the WISE-style "match the whole sample, compute a blind limit" move simply isn't available.
+
+**Also, JWST and Herschel aren't the same tool** (the paper's shorthand glosses this):
+- **JWST/MIRI** is *deep mid-IR*, ~5–25 µm — barely past WISE's W4 (22 µm). Its superpower is **sensitivity**, not wavelength reach: it could detect a tiny excess WISE misses, in the ~100–300 K range. It does **not** reach the genuinely cold (<50 K) regime, which peaks beyond 60 µm.
+- **Herschel** was the actual far-IR (70–500 µm) — the right wavelengths for <50 K dust — but it ran out of coolant and was **decommissioned in 2013**. So it's archival-only, pointed, and was never very sensitive to faint WD dust.
+
+**So the realistic modes, and their honest value:**
+
+1. **Archival cross-match (tractable, but tiny and biased).** Query MAST (JWST/Spitzer) and the Herschel Science Archive for which of *our* WDs have *any* existing far-IR pointing. You'd get maybe dozens — overwhelmingly the already-famous dusty/polluted WDs that people chose to observe. Useful for *characterising individual objects*, useless for a population limit (target-selected ≠ blind, so f_max breaks).
+
+2. **All-sky far-IR surveys that *do* exist (AKARI FIS at 65–160 µm; IRAS).** These are blindly cross-matchable — but they're *far* too shallow. Their detection limits are ~0.5–1 Jy; a white-dwarf dust disk at 90 µm is µJy–mJy level, thousands of times fainter. So an AKARI/IRAS cross-match would detect essentially **zero** WD dust and yield a far-IR f_max that's effectively *unconstrained* — it would formally extend the curve into the <50 K regime and honestly show "still blind, even with all-sky far-IR."
+
+3. **New JWST proposals (targeted, slow, candidate-driven).** The right tool to *confirm* a specific candidate — but proposals are competitive, ~yearly cycles, and you observe a handful of objects. And critically: **we have no surviving candidate to point it at** (the null is clean). You don't burn JWST time on a non-detection.
+
+**The honest bottom line:** there is no existing or near-term dataset that gives a meaningful *blind population* limit below ~50 K. The deep facilities are pointed; the all-sky far-IR surveys can't see WD-level dust; Herschel is gone and SPICA was cancelled (PRIMA is only a proposed concept). So the <50 K core is genuinely beyond reach for a *survey* constraint — and the far-IR's real role is **targeted follow-up of a specific candidate**, which a null result doesn't hand us.
+
+That reframes the amendment we registered: "far-IR follow-up" is honestly *conditional future work* — it activates only if a candidate emerges (from the variability channel, a future survey, or someone else's data), not something we can run now to tighten the limit.
+
+**The one thing I *could* do tractably**, if you want completeness in the paper, is the AKARI-FIS/IRAS all-sky cross-match — a few hours' work — purely to extend the f_max figure into the far-IR and *demonstrate* (rather than assert) that even all-sky far-IR leaves the <50 K regime unconstrained. Modest scientific value, but it closes the "what about far-IR?" question with data instead of a verbal argument. Worth it, or over-engineering? I'd lean over-engineering unless a reviewer pushes — but happy to do it if you'd like the figure to be airtight.
+
+### 🧑 Tonio
+
+Let’s remember that as a possible step. 
+
+Gemini suggests the following new glossary entries:
+
+Got it. Here is the next batch of accessible descriptions covering the new concepts, methodological shifts, and data hazards introduced in your v2 amendments. These are formatted to drop directly into your existing project Wiki.
+## 4. The v2 Methodological Updates
+ * **CatWISE2020**
+   **The Concept:** An updated catalog of infrared sky survey data that uses the same WISE satellite data as AllWISE, but processes it differently to detect significantly fainter objects. It effectively "looks deeper" into the sky, but only in the two shortest infrared wavelengths (the W1 and W2 bands).
+   **Why it matters:** The v1 search relied on AllWISE. By pre-registering a second pass using CatWISE2020, the project proved that finding no cold anomalies wasn't simply a matter of the data not being "deep" enough. The cold limit remained unchanged because a genuinely cold anomaly does not emit light at W1/W2 wavelengths at all; the limitation is the *color* (wavelength) of the light the telescope can see, not just its sensitivity.
+ * **Selection Bias & The Brightness-Limited Sample**
+   **The Concept:** Selection bias occurs when the rules for including an object in a test accidentally filter out the exact thing you are looking for.
+   **Why it matters:** In the v1 time-variability search, the pipeline only looked at white dwarfs that *already* showed a static infrared excess. This created a blind spot: if a bare white dwarf had a massive, temporary infrared flare (a highly anomalous transient event), it would average out over ten years, leave no static excess, and never be checked. The v2 update stripped away this prerequisite, testing *all* white dwarfs bright enough for the telescope to see.
+ * **The Stetson J Index**
+   **The Concept:** A statistical formula used to find stars that are genuinely varying in brightness, rather than just suffering from random camera noise.
+   **Why it matters:** The Stetson J index looks for *correlated* variability. If a star genuinely gets brighter in the W1 band, it should simultaneously get brighter in the W2 band. If only one band spikes, it's likely just an instrument glitch. This index filters out single-band noise and flags the structured, physical changes that could indicate an active anomaly.
+## 5. Additional Astrophysical Terms
+ * **Cataclysmic Variables (CVs)**
+   **The Concept:** A binary star system consisting of a white dwarf and a normal companion star orbiting so closely that the white dwarf's intense gravity actively tears gas off the companion.
+   **Why it matters:** This stolen gas forms a superheated accretion disk that periodically ignites or shifts, causing massive, violent spikes in brightness. In the v2 variability search, these natural systems account for the loudest, most dramatic fluctuations detected by the pipeline.
+   Read more about Cataclysmic Variables
+## 6. Data-Handling & Computational Hazards
+ * **IEEE-754 Double Precision (The pandas Float64 Bug)**
+   **The Concept:** Computers store standard decimal numbers (floats) using a specific architecture that can only hold a certain number of exact digits before it starts rounding them off.
+   **Why it matters:** The Gaia space telescope assigns every star a 19-digit identification number. Standard data-analysis software (like Python's pandas library) will often silently convert integer columns into floating-point numbers during routine operations. Because a 64-bit float can only hold about 15 to 17 exact decimal digits, the software silently chops off the end of the Gaia ID, merging completely different stars into a single corrupted ID. This project highlights this as a severe, invisible trap for astronomers building automated pipelines, fixable by strictly forcing the software to handle IDs as text strings.
+   Read more about Double-precision floating-point format
+
+### 🤖 Claude
+
+Will do on the far-IR — let me note it concretely so it's not just in the transcript, then fold in the glossary entries. First, let me record the AKARI/IRAS option in the planned-amendments log:
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Recorded. Now the glossary — let me read the current one to integrate Gemini's entries into the right sections (and avoid duplicating any that already exist):
+
+
+_[tools: Read]_
+
+All three sections are clear. Let me fold the entries into the right places (matching the glossary's style and resolving the numbering clash, since it already has a §4). First, **CatWISE2020** and **Stetson J** into §1 (Measurement):
+
+
+_[tools: Edit]_
+
+Now **Cataclysmic Variables** into §2 (Astrophysical):
+
+
+_[tools: Edit]_
+
+Now **Selection Bias** into §3, plus a new **§4 Data-Handling & Computational Hazards** section for the float64 hazard (renumbering Literature to §5):
+
+
+_[tools: Edit]_
+
+Let me verify the section numbering is now consistent, then commit:
+
+
+_[tools: Bash]_

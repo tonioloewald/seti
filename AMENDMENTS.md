@@ -36,7 +36,15 @@ formal OSF Registration Update (by the human author) before execution.
   [`preregistration_v2_unwise.md`](preregistration_v2_unwise.md) (the v2 row above). Fetch and
   analysis proceed *after* that freeze.
 - **Far-infrared (Herschel / JWST-MIRI).** Required to constrain the sub-50 K regime that WISE
-  cannot reach; targeted follow-up of any future candidate, not a survey-wide pass.
+  cannot reach. Two distinct, limited modes: (a) deep facilities (JWST/MIRI mid-IR; Herschel
+  far-IR, archival/decommissioned) are **pointed**, so they characterise *individual* candidates
+  but cannot give a blind *population* limit; (b) all-sky far-IR surveys that *could* be
+  cross-matched (**AKARI-FIS 65–160 µm, IRAS**) are far too shallow (~Jy vs the µJy–mJy of WD
+  dust) to detect WD-level excess. **Possible tractable step (noted 2026-06-01):** an
+  AKARI-FIS/IRAS all-sky cross-match purely to *extend the f_max figure into the far-IR and
+  demonstrate* (rather than assert) that the <50 K regime stays unconstrained even with all-sky
+  far-IR. Modest value; do only if a reviewer presses. Genuine sub-50 K progress needs a deep
+  far-IR *survey* facility that does not currently exist (SPICA cancelled; PRIMA only proposed).
 
 ---
 
