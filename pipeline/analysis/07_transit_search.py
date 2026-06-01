@@ -24,7 +24,10 @@ OB = os.path.join(ROOT, "data", "derived", "optical_baseline.parquet")
 MAN = os.path.join(ROOT, "data", "manifests", "wd_sample.csv.gz")
 OUT = os.path.join(ROOT, "data", "derived", "transit_search.parquet")
 GMAX = 14.0
-PERIODS = np.arange(0.1, 13.0, 0.0008)
+PERIODS = np.arange(0.2, 13.0, 0.0008)
+# WDs are Earth-sized, so transits are short (minutes to ~2 hr). Explicit duration
+# grid in days; all must be < min(PERIODS) or astropy BLS raises.
+DURATIONS = np.array([0.005, 0.01, 0.02, 0.04, 0.08])
 
 
 def process(coord):
@@ -40,7 +43,7 @@ def process(coord):
         return {"status": "no_usable_author"}
     lc = sub[0].download().remove_nans().normalize()
     flat = lc.flatten(window_length=401).remove_outliers(sigma=5)
-    pg = flat.to_periodogram(method="bls", period=PERIODS)
+    pg = flat.to_periodogram(method="bls", period=PERIODS, duration=DURATIONS)
     pw = np.asarray(pg.power.value)
     snr = float((pg.max_power.value - np.median(pw)) / (np.std(pw) + 1e-12))
     return {"status": "ok", "author": sub.table["author"][0],

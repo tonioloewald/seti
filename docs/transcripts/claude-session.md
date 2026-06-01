@@ -3670,3 +3670,8 @@ _[tools: Write]_
 
 
 _[tools: Bash]_
+
+The Channel-B search is running in the background (`b67603yp8`) over the 157 bright WDs — download + BLS per target, ~20–40 min, resumable. Let me commit the validated machinery and give you the status.
+
+
+_[tools: Bash]_
