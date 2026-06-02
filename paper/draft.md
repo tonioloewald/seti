@@ -445,10 +445,10 @@ version is tagged in the Git history.
 
 ## 8. Acknowledgements
 
-We thank Terhi Loewald for her critical review and for the cross-disciplinary insight —
-bringing the population-level statistical standards of epidemiology and genome-wide association
-studies to bear on an astrophysical problem — that directly motivated the empirical-null
-calibration and genomic-control (λ-inflation) framework on which this search's statistics rest.
+We are grateful for cross-disciplinary input that proved decisive for the statistical design:
+bringing the population-level standards of epidemiology and genome-wide association studies to
+bear on this problem directly motivated the empirical-null calibration and genomic-control
+(λ-inflation) framework on which this search's statistics rest.
 
 This research used the Gaia mission archive (ESA), the NASA/IPAC Infrared Science Archive
 (AllWISE, CatWISE2020, NEOWISE), the Barbara A. Mikulski Archive for Space Telescopes (TESS),
