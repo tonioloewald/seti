@@ -27,6 +27,7 @@ def scrub(s):
     s = re.sub(r"</?command-[a-z-]+>", "", s)
     s = s.replace("/home/tonio", "~")
     s = re.sub(r"[\w.+-]+@[\w.-]+\.\w+", "[email]", s)
+    s = re.sub(r"\bTerhi\b", "[a collaborator]", s)   # redact a name at the person's request
     return s.strip()
 
 def parse_content(content):
