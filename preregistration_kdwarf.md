@@ -75,16 +75,36 @@ and injection-recovery, never by inspecting candidates.
 - **Data-quality / channel requirement.** A usable TESS and/or Kepler light curve (the transit
   instrument). The Kepler-field subset (4-year continuous photometry) is the morphology gold
   standard and is treated as a distinct, deepest tier.
-- **Old / quiet weighting (the life-prior + the cleanliness criterion).** A pre-specified
-  selection toward old, magnetically-quiet stars, via rotation-period gyrochronology where
-  available, low flare rate, low photometric activity amplitude, and thick-disk-leaning
-  kinematics. Exact thresholds are fixed from the *activity/rotation distributions of the parent
-  sample*, before any transit search — never tuned to candidates.
+- **The goal is the whole population; staging is a resource constraint, not a scientific one.** We
+  impose no scientific exclusion beyond the minimal *youth floor* below and the data-quality
+  requirement above. Which stars have been *analysed* at any moment is set by available compute;
+  the asymptotic target is the entire K-dwarf census.
+- **Youth floor (the one real cut — soft and pre-specified).** We exclude only genuinely young,
+  active stars, for two reasons that point the same way: the *life prior* (a star must have
+  *existed* long enough for life to have originated, regardless of how long it will ultimately
+  live) and *data quality* (young K dwarfs are magnetically active — the worst photometric noise).
+  Applied in two pre-specified stages: a coarse Gaia-only proxy in the manifest (kinematics; Gaia
+  photometric-variability amplitude), refined before the transit search by rotation-period
+  gyrochronology and activity indicators (GALEX, ROSAT/eROSITA, Ca II) where catalogued. Thresholds
+  are fixed from the parent-sample distributions, never tuned to candidates.
+- **No hard "quiet" cut — noisy stars self-weight.** Rather than excluding active stars, we include
+  every star above the youth floor and let the per-star injection-recovery completeness C_i (§5) do
+  the work: a transit is harder to recover in an active light curve, so a noisy star earns a low
+  C_i and contributes little to `f_max` automatically (the Phase-1 self-weighting principle —
+  under-probed objects weight toward zero). The limit stays honest over whatever has been analysed.
+- **Resource-triggered, nested, staged analysis order (so iteration stays confirmatory).** Because
+  the goal is everything and the binding constraint is compute, we pre-register a *nested* sequence
+  of tiers (cleanest/brightest first: T₁ ⊂ T₂ ⊂ … ⊂ the full sample), analysed in that fixed order,
+  with the expansion trigger being *available resources*, declared in advance — never the result of
+  a prior tier. The survey-wide trial-factor / family-wise threshold (§5) is recomputed for each
+  expanded sample (alpha-spending across stages). Growing the sample is therefore a pre-registered
+  confirmatory extension (cf. the Phase-1 variability expansion), not a post-hoc tweak; what is
+  forbidden is loosening any boundary *in reaction to a result* or to rescue a candidate.
 - No assumption that an anomaly orbits in a habitable zone; all periods the data permit are
   searched.
 - **Stated selection biases:** brightness-limited (toward nearby), the TESS/Kepler footprint, and
-  the old/quiet cut. `f_max` is interpreted as a prevalence among the *effectively probed,
-  old-quiet-weighted, solar-neighbourhood* K-dwarf population.
+  the youth floor. `f_max` is interpreted as a prevalence among the *effectively probed,
+  solar-neighbourhood* K-dwarf population, self-weighted by per-star completeness.
 
 ## 4. Channels
 

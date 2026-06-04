@@ -6886,3 +6886,45 @@ Yes on the IR reframe — let me write it in. This is the version of Channel A t
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Channel A reframe committed (`9c024be`). Now the old/quiet question — and your reframe is right, and it actually makes the whole thing cleaner. Let me take the two separately, because they're doing different jobs.
+
+**"Old" → really a youth *floor*, not an age target.** You're right: we don't prefer a 10 Gyr K-dwarf over a 3 Gyr one — we just want to exclude the genuinely young. And there are *two* reasons to exclude young, which conveniently point the same way:
+- *The life prior:* a 0.5 Gyr star, however long it'll *live*, has only *existed* 0.5 Gyr — life hasn't had time yet. The prior is a floor on elapsed age, and young stars fail it.
+- *Data quality:* young K-dwarfs are magnetically active (fast rotation, spots, flares), which is exactly the photometric noise that hurts the transit channel.
+
+Operationally it's a two-stage floor:
+- *Manifest stage (Gaia-only, frozen):* coarse youth proxies available for the whole sample — kinematics (kinematically-cold/thin-disk-young vs. older populations) and the Gaia photometric-variability amplitude.
+- *Light-curve / cross-match stage (pre-unblind):* the finer cut — rotation period → gyrochronology age, plus activity indicators where catalogued (GALEX UV, ROSAT/eROSITA X-ray, Ca II). Set the threshold (~exclude the youngest few-hundred-Myr-to-~1-Gyr-equivalent fast rotators) *before* the transit search.
+
+**"Quiet" → and here's the bigger point: you may not need a quiet *cut* at all.** Phase 1's self-weighting `C_i` framework does the work for free. The per-star completeness comes from injection-recovery — and a synthetic transit is *harder to recover* in a noisy active light curve, so an active star gets a *low* `C_i` and contributes little to the limit automatically. Include everyone above the youth floor; the noisy stars self-weight toward zero; the `f_max` stays honest. "Quiet" then stops being a *science* threshold and becomes purely a **compute-ordering** choice — which is exactly your "manage the sample size, change it iteratively" instinct, done without an arbitrary cut.
+
+**The one place I have to be the careful one — the iteration must be resource-driven and pre-declared, never results-driven.** This is the single most dangerous knob in the whole plan, because "loosen the cut to grow the sample" is one short step from "loosen the cut because we found nothing" or "loosen it to include this tantalizing candidate just outside it" — and that's the garden of forking paths that destroys confirmatory status. The fix is the precedent we already set (Phase-1's variability expansion was registered *as* a future extension, so executing it later was confirmatory): pre-register a **nested, ordered, staged plan** —
+
+> Tier 1 = quietest/brightest N₁ → analyze. As *compute/resources* permit, proceed to Tier 2 (N₂ ⊃ N₁) → … with the tiers, their order, and the **resource-based** trigger all frozen before data, and the family-wise/trial-factor threshold **recomputed for each expanded sample** (alpha-spending across stages).
+
+The trigger is "we have more compute," declared in advance — *not* "we didn't like the result." Then growing the sample is a pre-registered confirmatory step, not a tweak.
+
+So the clean §3 formulation is: **(a)** a soft, pre-specified *youth floor* (kinematics + activity); **(b)** *no hard quiet cut* — include everything above the floor and let per-star `C_i` self-weight the noisy ones; **(c)** a pre-registered, resource-triggered, nested *staged analysis order* (cleanest first), with per-stage trial-factor — so iterating the sample stays confirmatory by construction.
+
+That replaces the vague "old/quiet weighting" placeholder in the draft with something both rigorous and exactly as flexible as you wanted. Want me to write it into §3 that way?
+
+### 🧑 Tonio
+
+Yes. I think our goal should ultimately be to look at everything, we just lack resources to do so.
+
+### 🤖 Claude
+
+Yes — and "ultimately everything, resource-limited" is the cleanest possible statement of the stance; it makes the staging unambiguously resource-driven (and therefore confirmatory). Let me write that into §3:
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
