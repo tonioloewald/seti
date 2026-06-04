@@ -6757,3 +6757,77 @@ Good — let's draft it the way the WD plan was built: a complete first version 
 
 
 _[tools: Write]_
+
+Drafted — let me commit it (as a clear draft, not registered) and then flag what's genuinely yours to decide:
+
+
+_[tools: Bash]_
+
+Draft committed (`233ec6d`) at [`preregistration_kdwarf.md`](preregistration_kdwarf.md) — a complete first pass, structured like the registered WD plan, with all our reasoning baked in. It's marked **draft / not registered**; the point now is to react to it, the way the WD plan evolved.
+
+The genuinely consequential decisions I made defaults on — these are yours to confirm or change:
+
+1. **The old/quiet cut (§3) is the most important and least-pinned choice.** I specified *what* (gyrochronology from rotation periods, low flare rate, low activity amplitude, thick-disk kinematics) but left the *thresholds* to be "fixed from the parent-sample distributions before the transit search." How aggressively to cut here is a real methodological lever: tight old/quiet → cleaner baseline, smaller sample, stronger per-star sensitivity; loose → bigger sample, noisier null. This is the knob most worth your judgment, and it directly trades sample size against baseline cleanliness.
+
+2. **Channel scope.** I made transit *primary*, kept photometric-departure *secondary*, and IR-excess *tertiary/weak*. The honest question: do you want the weak channels in at all? Including the IR-excess channel for completeness invites false-positive load for a channel we've already said is degraded on cool stars. Transit-only would be tighter and more defensible; the others are arguably scope creep.
+
+3. **How self-critical to be in §1.** I wrote the scope honestly — "the transit channel is well-trodden; our differentiator is the discipline, not the channel" and "IR-excess loses its contrast on a living host." That's true and it pre-empts a referee, but it's unusually candid for a registration. You may want to keep it (it's the project's whole ethos) or soften it. Your call on how much to lead with the limitation.
+
+4. **The battery (§5)** — six items (EB, blend/centroid, activity, bona-fide planet, disintegrating body, instrumental). Confirm that's the right natural-explanation set for K-dwarf transits, or flag anything missing.
+
+The structural good news: because this rides the **validated core + plugin**, the implementation risk is low — the transit/centroid machinery (`07–09`) is already regression-tested, and it's exactly the channel that ports cleanly to K dwarfs. So unlike Phase 1, we're not also debugging a pipeline while designing the science.
+
+Want to start with the old/quiet selection (decision #1) since it cascades into the sample size and everything downstream — or read the whole draft first and come back with reactions? I can also render it to PDF if that's easier to mark up.
+
+### 🧑 Tonio
+
+Let me give you Gemini’s input. It’s nothing earthshaking but might be helpful:
+
+That leap from N=157 to tens of thousands structurally upgrades the entire project.
+In Phase 1, Channel B (transit morphology) was registered strictly as "secondary and candidate-generating" because you simply didn't have the statistical weight to do anything else. With tens of thousands of high-quality, quiet K-dwarfs, **Channel B graduates to a primary, calibrated channel.** You can now derive a rigorous population-level upper limit (f_{max}) for structural transit anomalies, exactly as you did for infrared excesses in Phase 1.
+However, scaling the sample by two orders of magnitude immediately changes the mathematical reality of your pipeline. Here are the three structural shifts you and Claude need to lock down before running the data:
+### 1. The Trial Factor Shift (The Look-Elsewhere Penalty)
+In Phase 1, with only 157 white dwarfs, a relatively low-significance dip could survive the math. With tens of thousands of K-dwarfs, you are running millions of Box-Least-Squares (BLS) period/phase combinations.
+If you use a standard 3\sigma or 4\sigma threshold, you will be buried in thousands of statistical false alarms. You must implement a strict look-elsewhere correction across the entire survey. This is the exact math that forced the Kepler mission to set its famous 7.1\sigma threshold to keep false alarms below 1 across its \sim 150,000 stars. For your sample size, you will likely need to pre-register a BLS detection threshold in the 6\sigma to 7\sigma range to maintain family-wise error control.
+### 2. An Empirical Null for Transits
+Just as you built an empirical null for the WISE infrared excesses to handle the reality that the textbook errors were underestimated (\lambda \approx 10.6), you must do the same for your TESS light curves.
+TESS is remarkably precise, but it suffers from momentum dumps, scattered Earth/Moon light, and minor stellar jitter that traditional BLS/TLS algorithms interpret as noise. You should fit an empirical null to the bulk distribution of your BLS signal-to-noise ratios. If the real TESS data is noisier than a perfect Gaussian distribution, your genomic-control inflation factor (\lambda) will seamlessly rescale your detection thresholds, preventing instrumental artifacts from flooding your residual catalog.
+### 3. Automating the Centroid Guillotine
+In Phase 1, you only had 3 transit-shaped candidates. You ran difference-image centroiding (checking if the dip was actually a background eclipsing binary off-target) and easily killed all 3.
+With tens of thousands of TESS targets, you are guaranteed to hit hundreds of background eclipsing binaries blended into TESS's massive 21-arcsecond pixels. You can no longer vet these by hand. The difference-image centroiding test—measuring the flux-weighted center of the out-of-transit image minus the in-transit image—must be fully automated and placed at the *front* of your Channel B natural-explanation battery. If the centroid shifts by more than \sim 1 pixel during the dip, the pipeline must autonomously kill the candidate.
+If Claude already has the sample isolated, the next step is to run the injection-recovery simulations on a small subset of those K-dwarfs. That will establish your baseline sensitivity and let you freeze the exact \sigma threshold for Channel B before you unblind the full survey.
+
+And re pre registration:
+
+That is exactly the right move. The absolute integrity of the Phase 1 result rested on the fact that the thresholds and the natural-explanation battery were locked in before the data could tempt you into tuning them.
+Scaling up from 157 targets to tens of thousands exponentially increases the risk of post-hoc reasoning. With a sample this large, you are mathematically guaranteed to find bizarre, highly structured light curves—whether from unmodeled stellar physics, complex multi-star eclipses, or rare instrumental artifacts. If the rules aren't frozen beforehand, the temptation to tweak a parameter to either save a fascinating outlier or kill a frustrating false positive will be immense.
+To lock down Phase 2 as tightly as Phase 1, the new pre-registration amendment will need to freeze the parameters that are unique to this scaled-up K-dwarf run:
+ * **The Exact Sample Boundaries:** The precise Gaia constraints (the absolute G vs. G_{BP}-G_{RP} box, the strict RUWE cutoff, and the hard volume or magnitude limits) must be committed to as an immutable manifest.
+ * **The Automated Pipeline Architecture:** Specifically, the transition of the Channel B difference-image centroid test from a manual, post-hoc check into an automated, mandatory gate in the natural-explanation battery.
+ * **The Statistical Thresholds:** The procedure for calculating the empirical null for the TESS Box-Least-Squares (BLS) results, and the specific trial-factor correction that will govern the ultimate detection threshold.
+ * **The f_{max} Calculation for Transits:** The explicit mathematical formula for how the upper limit will be computed for Channel B, relying strictly on synthetic injection-recovery to determine per-object sensitivity.
+Freezing this amendment on OSF now ensures that when the K-dwarf data inevitably surfaces strange signals, the pipeline remains a rigid, objective analytical instrument.
+
+### 🤖 Claude
+
+This is good, concrete input — the substantive kind, not the press-release kind. Gemini is right on all three structural shifts, and the core insight is the important one: **at this sample size Channel B graduates from "secondary/candidate-generating" to a primary, *calibrated* channel** — which is exactly the upgrade the draft should make explicit. Let me fold these in, with one correction of my own.
+
+First, the Channel B framing:
+
+
+_[tools: Edit]_
+
+Now the §5 battery (automated centroid as the first gate) and the statistics (empirical null on BLS S/N + the trial-factor threshold + the calibrated f_max):
+
+
+_[tools: Edit]_
+
+Now §3 — the immutable-manifest commitment (Gemini's right that the exact Gaia boundaries must be frozen as a checksummed manifest):
+
+
+_[tools: Edit]_
+
+And §6 — make the threshold-freeze-before-unblinding ordering explicit (the integrity crux at scale):
+
+
+_[tools: Edit]_

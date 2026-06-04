@@ -65,9 +65,13 @@ and injection-recovery, never by inspecting candidates.
 ## 3. Sample and inclusion
 
 - **Parent sample.** Main-sequence K dwarfs from Gaia DR3: Teff 3900–5300 K, log g > 4.3 (dwarf,
-  excluding subgiants/giants), with clean astrometry (RUWE < 1.4, parallax_over_error > 10).
-  *Scale (this repository, sized pre-data):* ~12,600 at G < 11; ~22,000 within 100 pc; ~178,000
-  at G < 13. Target finding is not the binding constraint.
+  excluding subgiants/giants), with clean astrometry (RUWE < 1.4, parallax_over_error > 10), plus
+  the equivalent absolute-G versus (G_BP − G_RP) main-sequence box. *Scale (this repository, sized
+  pre-data):* ~12,600 at G < 11; ~22,000 within 100 pc; ~178,000 at G < 13. Target finding is not
+  the binding constraint. The exact constraints (the colour–magnitude box, the RUWE and parallax
+  cuts, and the hard magnitude/volume limit) are committed as an **immutable, checksummed
+  manifest** of source_ids before any light curve is pulled — the frozen sample against which all
+  later results are reproducible, identical in spirit to the Phase-1 `wd_sample` manifest.
 - **Data-quality / channel requirement.** A usable TESS and/or Kepler light curve (the transit
   instrument). The Kepler-field subset (4-year continuous photometry) is the morphology gold
   standard and is treated as a distinct, deepest tier.
@@ -84,12 +88,16 @@ and injection-recovery, never by inspecting candidates.
 
 ## 4. Channels
 
-- **Channel B — transit morphology (PRIMARY).** BLS/TLS detection; morphology metrics (asymmetry,
-  flat-bottom fraction, box-vs-U, duty cycle); and **mandatory difference-image centroid /
-  background-eclipsing-binary vetting**. The Phase-1 machinery transfers directly: K dwarfs are
+- **Channel B — transit morphology (PRIMARY, CALIBRATED).** BLS/TLS detection; morphology metrics
+  (asymmetry, flat-bottom fraction, box-vs-U, duty cycle); and a **mandatory automated
+  difference-image centroid gate** (§5). The Phase-1 machinery transfers directly: K dwarfs are
   point sources with clean Gaia astrometry, and a real occulter gives a *deep* transit, so the
   "deep ⇒ on-target real; shallow-and-offset ⇒ background blend, confirmed by centroiding" logic
-  applies (the same code validated for white dwarfs, `pipeline/analysis/07–09`).
+  applies (the same code validated for white dwarfs, `pipeline/analysis/07–09`). Crucially, the
+  sample size — tens of thousands versus Phase 1's 157 — **graduates this from a secondary,
+  candidate-generating channel into a primary, calibrated one**: it now supports a rigorous
+  population-level upper limit on structural transit anomalies (RQ3, §5), the transit analogue of
+  Phase 1's IR-excess `f_max`.
 - **Channel P — photometric departure (SECONDARY).** Departures from the natural
   rotation/granulation/activity model; correlated/structured variability; same empirical-null
   calibration as Phase 1.
@@ -99,29 +107,48 @@ and injection-recovery, never by inspecting candidates.
 
 ## 5. Natural-explanation battery, statistics, and stopping rule
 
-A flagged candidate becomes a residual only if it survives every applicable test:
+A flagged candidate becomes a residual only if it survives every applicable test. The order is
+deliberate: the cheapest, highest-yield contaminant filter runs *first and automatically*,
+because at this sample size nothing can be vetted by hand.
 
-1. **Eclipsing binary** (the dominant transit false positive) — fit EB models; check for a
-   secondary eclipse, odd–even depth differences, ellipsoidal/reflection modulation; radial
-   velocities where available.
-2. **Background eclipsing binary / aperture blend** — mandatory difference-image centroiding: the
-   flux dip must localise to the K dwarf, not an offset source in the aperture.
-3. **Stellar activity** — starspot rotational modulation, flares, faculae; cross-check against the
+0. **Background eclipsing binary / aperture blend — automated centroid gate (FIRST, mandatory).**
+   TESS's ~21″ pixels guarantee that *hundreds* of off-target eclipsing binaries blend into
+   K-dwarf apertures — the dominant transit false positive at scale. Difference-image
+   centroiding (the flux-weighted centroid of the out-of-transit minus in-transit image) is run
+   **automatically as the first gate**: a candidate whose dip centroid sits more than a pre-set
+   tolerance (≈1 TESS pixel) from the target is killed with no human inspection. In Phase 1 this
+   was a manual check on 3 candidates; here it is a mandatory, automated guillotine at the front
+   of the battery.
+1. **Eclipsing binary (on-target)** — fit EB models; check for a secondary eclipse, odd–even
+   depth differences, ellipsoidal/reflection modulation; radial velocities where available.
+2. **Stellar activity** — starspot rotational modulation, flares, faculae; cross-check against the
    star's rotation period and activity indicators.
-4. **Bona-fide planet** — a real planet transit is *natural*; we flag only morphologies
+3. **Bona-fide planet** — a real planet transit is *natural*; we flag only morphologies
    inconsistent with a spherical or ringed planet (noting the ringed-planet ambiguity of Arnold
    2005).
-5. **Disintegrating planetesimal / dust tail** — tested by recurrence, depth evolution, and an
+4. **Disintegrating planetesimal / dust tail** — tested by recurrence, depth evolution, and an
    explicit asymmetric dust-tail template (cf. WD 1145+017, KIC 12557548).
-6. **Instrumental / systematic** — TESS/Kepler systematics, momentum dumps, scattered light,
+5. **Instrumental / systematic** — TESS/Kepler systematics, momentum dumps, scattered light,
    aperture contamination.
 
-- **Thresholds** come from the empirical null (Efron 2004) with genomic-control inflation
-  (Devlin & Roeder 1999), FDR control (Benjamini–Hochberg / Storey), and a staged look-elsewhere
-  correction (Gross & Vitells 2010) carried to a Kepler-style high-significance bar (Jenkins et
-  al. 2002) — all set by **injection-recovery, not candidate inspection**.
-- **Upper limit:** the Poisson zero-detection bound `f_max = 3 / Σ_i C_i`, with per-star
-  completeness C_i from injection-recovery of anomalous occulters across depth and period.
+- **Detection threshold and the trial factor.** With tens of thousands of stars × ~10⁶ BLS
+  period/phase trials each, a 3–4σ bar would bury the residual list in noise. We therefore
+  compose two corrections, both pre-specified as *procedures* (the resulting numbers come from the
+  data via those procedures, never from inspecting candidates): **(a)** an **empirical null on the
+  bulk distribution of the per-star BLS detection statistic** (which already folds the within-star
+  period search), with genomic-control inflation λ rescaling for the non-Gaussian reality of
+  TESS/Kepler systematics — exactly as the WISE-excess null did (λ≈10.6 in Phase 1); and **(b)** a
+  **survey-wide family-wise / look-elsewhere correction** (Gross & Vitells 2010; FDR, Benjamini–
+  Hochberg / Storey) such that the expected number of pure-noise false alarms across the *entire
+  frozen sample* is < 1. The resulting threshold is expected to land in the **≈6–7σ regime** (cf.
+  the Kepler 7.1σ bar, Jenkins et al. 2002, for ~150k stars) — but it is **derived from our own
+  injection-recovery on the frozen sample, not borrowed from Kepler**, since it depends on our
+  sample size, cadence, and period range. It is frozen before the real candidate tail is unblinded.
+- **Upper limit (Channel B, now calibrated).** The Poisson zero-detection bound
+  `f_max(depth, period) = 3 / Σ_i C_i`, with per-star completeness C_i(depth, period) measured by
+  **injection-recovery of synthetic anomalous transits into the real light curves** — the same
+  logic as Phase 1's IR-excess limit, now yielding a population constraint on structural transit
+  anomalies as a function of depth and period.
 - **Stopping rule (unchanged from Phase 1):** "unexplained" means "survives the registered
   battery at procedure-frozen thresholds," nothing more. We report the *full ranked residual
   list*, and the standing interpretation is that a residual is a target for conventional
@@ -130,9 +157,21 @@ A flagged candidate becomes a residual only if it survives every applicable test
 
 ## 6. Analysis plan
 
-Freeze sample + manifest → pull TESS/Kepler light curves (deterministic recipe) → detrend →
-BLS/TLS search → morphology metrics → natural-explanation battery → empirical-null calibration →
-`f_max`. Same recipe-in-repo, checksum, gitignored-bulk discipline as Phase 1.
+1. Freeze the sample → the immutable checksummed manifest (§3).
+2. Pull TESS/Kepler light curves (deterministic recipe); detrend.
+3. **Calibrate and freeze the thresholds before unblinding** — run the empirical-null calibration
+   on the bulk BLS-statistic distribution (the noise floor, not the candidate tail) and the
+   injection-recovery on the frozen sample to fix the family-wise-controlled detection threshold
+   and the per-star completeness C_i. *This step touches only the noise floor and synthetic
+   injections — never the real candidate tail.*
+4. **Unblind:** run the BLS/TLS search, apply the frozen threshold, compute morphology metrics,
+   and pass survivors through the natural-explanation battery (automated centroid gate first).
+5. Report the full ranked residual list and the calibrated `f_max(depth, period)`.
+
+Same recipe-in-repo, checksum, gitignored-bulk discipline as Phase 1. The split between steps 3
+(noise-floor/synthetic calibration, thresholds frozen) and 4 (real candidates unblinded against
+the frozen thresholds) is the integrity crux at this sample size: it is what prevents a strange
+real signal from tempting a threshold tweak.
 
 ## 7. Outcomes and interpretation
 
