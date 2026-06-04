@@ -6831,3 +6831,58 @@ And §6 — make the threshold-freeze-before-unblinding ordering explicit (the i
 
 
 _[tools: Edit]_
+
+Let me commit and report what changed:
+
+
+_[tools: Bash]_
+
+Folded in and committed (`cbacf11`). Gemini's input was the substantive kind — the central observation is genuinely important: the jump to tens of thousands of targets is what **promotes Channel B from "candidate-generating" to a primary, *calibrated* channel** with its own population f_max. That's a real structural upgrade, and the draft now leads with it.
+
+What I incorporated:
+- **Channel B → primary + calibrated**, yielding `f_max(depth, period)` — the transit analogue of the Phase-1 IR-excess limit.
+- **Automated centroid gate, first and mandatory** in the battery — the difference-imaging that we ran by hand on 3 candidates becomes the automated front-line guillotine, since TESS's 21″ pixels will blend in hundreds of background EBs that no one can vet manually. ~1-pixel auto-kill tolerance.
+- **The threshold math**: an empirical null on the per-star BLS statistic (λ-inflation for TESS's non-Gaussian systematics) *composed with* a survey-wide family-wise/look-elsewhere correction so expected false alarms < 1.
+- **Immutable checksummed manifest** of the exact Gaia boundaries.
+- **The ordering made explicit** in §6: calibrate-and-freeze thresholds on the noise floor + synthetic injections, *then* unblind the real candidate tail — which is the integrity crux at scale.
+
+One **correction** I made to Gemini's framing, in the careful-one spirit: it leaned toward *adopting* a ~6–7σ / Kepler-7.1σ threshold. That's the right ballpark, but 7.1σ was specific to Kepler's ~150k stars, cadence, and baseline — our threshold has to be **derived from our own injection-recovery on the frozen sample** (our sample size, period range, and TESS cadence), which *lands* in that regime rather than borrowing it. The prereg now says exactly that. (Also a small precision: the empirical null and the trial-factor are two *composing* corrections — the null handles per-star noise inflation + the within-star period search, the family-wise handles the across-star multiplicity — not one threshold.)
+
+And Gemini's suggested next concrete step — injection-recovery on a subset to freeze the σ threshold before unblinding — is now §6 step 3, framed as exactly that: a pre-data calibration that touches only the noise floor and synthetic injections, never the real candidate tail.
+
+The draft is meaningfully stronger for it, but still **draft**. The earlier open decisions are unchanged and still yours: the **old/quiet selection thresholds** (the highest-leverage knob), whether to keep the weak IR-excess channel in at all, and how candid to be in §1. Those are where your judgment matters most before this freezes. Want to take the old/quiet cut next, or read the revised draft end-to-end first?
+
+### 🧑 Tonio
+
+Wrt to the IR / weak signal question… is there any anomaly of this kind that couldn’t have some reasonable explanation given it’s an active star? Maybe if it’s a crazy anomaly (and wouldn’t someone else have noticed that—but we could kind of have a strong weak signal check if that makes sense).
+
+### 🤖 Claude
+
+It makes sense — and I think it actually *resolves* the "keep the weak channel?" question rather than just answering it. But let me first untangle one physics point, because it changes the shape of the answer.
+
+**Activity isn't what explains an IR excess.** Stellar activity (spots, flares, chromosphere) lives in the UV/X-ray/optical and in *variability* — it doesn't produce a static infrared *excess*. An IR excess around a K-dwarf has the same natural explanation it has around any star: **circumstellar dust (a debris disk)**, or a companion, or a blend. So the channel's weakness for K-dwarfs isn't "an active star explains everything" — it's two different things: (a) the cool photosphere swamps the *contrast* (a detection problem), and (b) debris disks are *common and expected* around K-dwarfs, so a run-of-the-mill excess is unremarkable (a base-rate problem). Both push the same way: the channel is toothless for *marginal* signals.
+
+**And that's exactly why your "strong weak-signal check" is the right instinct.** If marginal signals are hopeless, don't chase them — set a *high bar* and only hunt the extreme tail. And we already have the machinery that does this automatically: the **empirical null**. Calibrate it against the disk-rich bulk, and it flags only the objects in the *far* tail — an excess so far outside the normal debris-disk distribution that the common explanation doesn't reach it. The residual then is an excess **outside any natural disk/companion regime** (anomalous temperature, anomalous SED shape, implausible fractional luminosity) or — the strongest possible — a **fluctuating** excess, which a static disk physically cannot fake (the same §1.1 highest-value signature from Phase 1). So a "crazy anomaly that an active star can't explain" is a real, definable category; it's just rare, which is the point.
+
+**On "wouldn't someone have noticed" — it's half a good idea and half a trap, and both halves are useful:**
+- *The good half is a concrete battery item.* Every extreme flag gets cross-checked against SIMBAD, the literature, and known debris-disk catalogues, and the known/explained ones are killed. That's "explain away," using prior knowledge as a filter — exactly what we did with SIMBAD in Phase 1's variability and transit vetting.
+- *The trap half is assuming the tail is empty because it isn't famous.* "Surely someone would have noticed" is precisely how genuine anomalies stay un-checked — the literature isn't exhaustive, surveys have selection effects, and **nobody has applied *our* uniform battery to this sample.** So we use the literature as a *filter*, never as an excuse to skip the channel.
+
+**The clean way to register this — and we have the precedent:** in Phase 1, Channel C (clean inner zone) was registered as an *ordinal corroborating flag with no standalone threshold* that only elevated an object when it coincided with a primary survivor. The K-dwarf IR channel should be **exactly that**: no calibrated `f_max` (the contrast and base-rate problems make a population limit weak and its interpretation muddy), but a **corroborating extreme-outlier flag, with literature cross-check, that gains real weight only when it coincides with a Channel-B transit anomaly on the same star.** An extreme, otherwise-inexplicable IR excess *and* a weird transit morphology on the *same* K-dwarf — that coincidence is a far stronger residual than either channel alone, and it costs us nothing in false positives because the bar is high and the corroboration is required.
+
+So the decision resolves cleanly: **keep the IR channel, but reframe it from "tertiary/weak" to "corroborating extreme-outlier, Channel-C-style" — high-threshold, literature-filtered, no standalone limit, weight on coincidence with the transit channel.** That's both honest about its weakness and a real extraction of its value, and it's a structure we've already registered once.
+
+Want me to write that reframing into the prereg (replacing the current "Channel A — tertiary/weak" with this corroborating-extreme-outlier version)?
+
+### 🧑 Tonio
+
+Yes you’ve taken my idea and made it stronger and rigorous. 
+
+Can you expand on old / quiet selection threshold? I think old only matters if we want to avoid really young stars while quiet would simply be a choice based on managing the sample size which we could change iteratively to increase sample size if there seemed a good reason to do so and/or more compute budget.
+
+### 🤖 Claude
+
+Yes on the IR reframe — let me write it in. This is the version of Channel A that's honest about its weakness while extracting the real value:
+
+
+_[tools: Edit]_

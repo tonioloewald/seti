@@ -101,9 +101,19 @@ and injection-recovery, never by inspecting candidates.
 - **Channel P — photometric departure (SECONDARY).** Departures from the natural
   rotation/granulation/activity model; correlated/structured variability; same empirical-null
   calibration as Phase 1.
-- **Channel A — infrared excess (TERTIARY, weak).** Retained for completeness (WISE/CatWISE), but
-  with the explicit caveat that a K dwarf's cool IR photosphere suppresses excess contrast; this
-  is *not* the primary instrument here.
+- **Channel A — infrared excess (CORROBORATING; extreme-outlier only, no standalone limit).** A
+  K dwarf's cool IR photosphere suppresses excess contrast, and debris disks are a common,
+  *expected* natural explanation — so this channel is toothless for *marginal* signals and carries
+  **no calibrated `f_max`**. Following the Phase-1 Channel-C precedent (an ordinal corroborating
+  flag with no standalone threshold), it is registered as a **high-bar extreme-outlier flag**: the
+  empirical null, calibrated against the disk-rich bulk, flags only the *far tail* — an excess
+  outside any natural disk/companion regime, an anomalous SED shape, or (highest value) a
+  *fluctuating* excess that a static disk cannot fake. Every flag is cross-checked against SIMBAD /
+  the literature / known debris-disk catalogues and the already-explained ones killed (prior
+  knowledge used as a *filter*, never as an assumption that the tail is empty). A surviving extreme
+  excess **elevates an object only when it coincides with a Channel-B transit anomaly on the same
+  star** — that coincidence (an otherwise-inexplicable IR excess *and* an anomalous transit on one
+  K dwarf) is the high-value residual, far stronger than either channel alone.
 
 ## 5. Natural-explanation battery, statistics, and stopping rule
 
