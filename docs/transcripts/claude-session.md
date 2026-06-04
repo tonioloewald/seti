@@ -6335,3 +6335,258 @@ Let me verify the name is gone from both the prereg and its rendered HTML, then 
 
 
 _[tools: Bash]_
+
+Clean — no "[a collaborator]" anywhere in the repo now (md or html). Let me commit the prereg redaction:
+
+
+_[tools: Bash]_
+
+All done — committed (`96da16d`). Final state of the redaction:
+
+- **Paper** — unnamed acknowledgment; the epidemiology/GWAS contribution is still fully credited, just not by name.
+- **Transcripts** — all scrubbed to "[a collaborator]," with the rule baked into the scrubber so future regenerations stay clean automatically.
+- **Pre-registration (repo copy)** — name replaced with the unnamed credit, plus a short dated editorial note that documents the redaction and points to the immutable OSF snapshot — so the divergence reads as a transparent privacy redaction, not silent tampering.
+
+The one thing genuinely outside our control: the **OSF-registered snapshot is immutable**, so it retains the original wording. As you say, that's on the record either way, and the redaction note acknowledges it honestly rather than pretending otherwise.
+
+Net effect: her *name* is gone from every surface we control, while the *contribution* — which is load-bearing for the paper's whole statistical defense — stays properly credited. That's the right balance, and it keeps the methodological history intact for any future reader without putting her name on it.
+
+Nothing else outstanding. Back to the same resting point: manuscript complete (now through three rounds of review plus this), v2 folded in, provenance clean, and the next real signal is whatever comes back from Neustroev.
+
+### 🧑 Tonio
+
+osf.io has been spamming me like crazy. Any idea why?
+
+### 🤖 Claude
+
+I can't see your inbox or OSF account, so I'm inferring — but the timing points to a clear culprit. Let me verify the specifics rather than guess (I steered you wrong on the OSF update button earlier, so I'd rather check):
+
+
+_[tools: WebSearch]_
+
+Found it, and the timing makes total sense: **it's the linked GitHub repo plus our very high commit rate.** OSF sends activity notifications **instantly by default**, and every push to a connected GitHub repo registers as project activity → one instant email each. We've pushed *dozens* of commits over the last stretch (each redaction, each v2 step, each draft tweak), so OSF has been faithfully emailing you for every one. It's not a malfunction — it's the default settings meeting an unusually active project.
+
+**The fix — and the key gotcha:** there are two notification settings, and only one will actually stop the current flood:
+
+1. **Per-project (this is the one that matters):** open the project → **Settings** tab → **Email Notifications** in the left sidebar → set frequency to **None** (or **Daily** if you want a once-a-day digest instead). This is what silences the existing project.
+2. **Global (for the future):** your name (top right) → **Settings** → **Notifications** (or [osf.io/settings/notifications](https://osf.io/settings/notifications)) → deselect the boxes. **Important:** OSF explicitly notes that the global setting only applies to *new* projects going forward — it will **not** retroactively quiet your existing project. So you must do step 1 for this one.
+
+Set the project to **None** and the spam stops immediately, without un-linking the repo (so the provenance link stays intact). If you'd rather keep a heartbeat, **Daily** collapses it to a single digest.
+
+Worth knowing for the road: as long as the repo stays linked and we keep committing, instant notifications would keep coming — so **None** or **Daily** on that project is the right standing setting for an actively-developed repo.
+
+Sources: [OSF — Configure project notifications](https://help.osf.io/article/284-configure-notifications) · [OSF — Email & notification preferences](https://help.osf.io/article/235-configure-email-and-notification-preferences)
+
+### 🧑 Tonio
+
+I can just create a filter, it's no biggy.
+
+### 🤖 Claude
+
+Fair enough — a filter's probably the cleaner move anyway, since it keeps your inbox quiet without touching the OSF side at all (the activity log stays intact there if you ever want it). Filtering on the OSF sender domain will catch the lot.
+
+Nothing else pending on my end — shout when the next thing comes up (or when Neustroev surfaces).
+
+### 🧑 Tonio
+
+I think we should start looking at stars that are likely in their last N years of normal life (where we pick N based on our ability to discern it and how big a search population we're looking at)
+
+### 🤖 Claude
+
+Interesting pivot — and I like the underlying logic, but let me push on it, because there's a real tension hiding in your two criteria that I think is the whole design problem.
+
+**The appeal (genuine):** it's a *forcing-function* argument. A dying star puts a civilization on a clock it can't ignore — so if engineering is ever going to be visible, the run-up to stellar death is where motivation is highest and action is compelled. It's also a clean complement to the white-dwarf work: the WD search asks *"did anyone survive the death?"*; this asks *"can we catch anyone in the act of facing it?"* Bookends.
+
+**The tension in "N based on discernibility AND population":** those two pull in opposite directions, hard.
+
+| Phase | "N" (time left) | Discernible at small N? | Population | Natural baseline |
+|---|---|---|---|---|
+| Main-seq turnoff / subgiants | ~10⁸–10⁹ yr | No — can't tell a Sun-like star is in its "last years" | millions (Gaia) | clean |
+| Red-giant branch | ~10⁸ yr | partially | millions | fairly clean |
+| AGB | ~10⁵–10⁶ yr | yes (luminous, dusty, variable) | ~10⁴–10⁵ catalogued | **chaotic** |
+| Post-AGB / proto-planetary-nebula | ~10³–10⁴ yr | yes, sharply | **~hundreds** (Toruń ~400) | chaotic |
+| Planetary-nebula central stars / red supergiants pre-SN | ~10⁴ yr / imminent | yes | ~few thousand / hundreds | chaotic |
+
+The pattern: **the smaller the N you can actually pin down, the rarer and messier the star.** You can identify "this object has ~10³ years left" only for post-AGB/PNe/pre-SN stars — and there are only hundreds of them, drowning in natural dust and pulsation. Conversely, the huge populations (subgiants) are exactly the stars you *can't* date to small N, and which show no forcing yet.
+
+**And here's the methodological catch I'd flag hardest:** we deliberately chose white dwarfs because their natural baseline is *clean and predictable* — that's what let "departure from the model" mean something. Dying stars are the **exact opposite**: AGB/post-AGB/PNe are the galaxy's natural anomaly factories — enormous IR excesses (dust shells), huge pulsational variability (Miras), bipolar/asymmetric structures — *all natural, and all poorly modeled.* The "explain away the departure" method partly breaks there, because the natural model itself is a chaotic mess. You'd be hunting a weird signal against the weirdest possible background.
+
+So I think the real design axis isn't just N-vs-population — it's a **three-way trade between imminence (small N), baseline-cleanliness, and population size**, and you can have at most two:
+
+- **Imminence + discernibility** → post-AGB/PNe → tiny, chaotic. (Best "really dying," worst signal environment.)
+- **Population + cleanliness** → subgiants/RGB → millions, modelable, but N is huge and nothing's forced yet. (Best signal environment, weakest "on a clock.")
+
+Before I size any of these in Gaia (which is the obvious next step, and legitimate pre-registration scoping), the steer I need from you: **which corner of that triangle are you actually drawn to?** Concretely —
+
+1. Are you betting on *catching active engineering in progress* (→ imminence, accept the chaos)?
+2. Or on *a structure built in anticipation* that would stand out even against a clean baseline (→ cleanliness, accept the large N)?
+3. And what's the *signature* you imagine — a fluctuation the natural death-throes can't produce, a thermal/structural feature, something else?
+
+Your answer collapses the triangle and tells me which population to go count and characterize.
+
+### 🧑 Tonio
+
+I assume for one thing we have very little precision in determining when a star is about to go, and we probably want to set a reasonably big time (like 1My or more). The other thing we can use to keep our sample size manageable is focus on stars we have the best data for (for white dwarfs this quickly cut us down to hundreds, I assume we could easily handle thousands or possibly hundreds of thousands).
+
+### 🤖 Claude
+
+Two good moves, and they actually sharpen the choice in a useful way. Let me take them in turn, because the second one has a counterintuitive twist.
+
+**On big N (~1 Myr+):** agreed that precision is poor — but it's worth being precise about *how* poor, because it pins the target. Here's the thing: "1 Myr left" is **only discernible via the AGB.** You can't tell a main-sequence or even subgiant star is in its last 1 Myr — the remaining lifetime there is ±hundreds of Myr even with the best modeling. The *only* way you get to "≲1 Myr to go" is by catching a star actually *on* the thermally-pulsing AGB, because the phase itself is ≲1 Myr — identifying the phase *is* the clock. So a literal N≈1 Myr commits you to AGB stars. If you take your "or more" seriously and relax to N ~ 10–100 Myr, you open up the far cleaner red-giant and early-AGB populations.
+
+**On "best data" — here's the twist:** for white dwarfs, "best data" meant bright + pristine Gaia astrometry (they're tiny, rock-steady points), and that cut us to hundreds. For dying stars it **inverts**: the most-dying stars have the *worst* data. AGB stars are enormous, pulsating, with convective photocenters that jitter — so Gaia gives them bad parallaxes, high RUWE, unreliable everything. The stars with the *best* data are precisely the *less* extreme giants. So "best data" and "closest to death" are pulling against each other, which is the opposite of the WD case.
+
+**The reframe that I think rescues your instinct:** the single best instrument for "how close to the end is this star?" isn't Gaia — it's **asteroseismology** (Kepler/TESS). Oscillation modes read the core directly and place a giant on its evolutionary track far better than any photometric cut. And it comes with a bonus: the data product *is* a long, precise time series — exactly what our existing variability and transit channels already consume. So the population where you have the best handle on remaining life is also the population where you have the best data to search for a dynamic anomaly. That's the corner of the triangle that's actually buildable.
+
+So my read is that your two constraints, followed honestly, land you on **well-characterized luminous giants (RGB through early-AGB) with asteroseismic + Gaia data** — large population (Kepler/TESS/APOGEE give ~10⁵–10⁶ giants, data-quality-cuttable to whatever's manageable), best-in-class evolutionary-state determination, a tractable-ish baseline, and N in the 10⁷–10⁸ yr range (big, as you accept) rather than the un-measurable 1 Myr. The cost is you give up strict imminence — but you couldn't measure imminence at 1 Myr for anything *except* the messy AGB anyway.
+
+The concrete next step, if this framing works for you, is the same thing we did for white dwarfs: **go count the real populations and their data quality** — Gaia evolved-star samples crossed with the Kepler/TESS asteroseismic catalogues — so we have hard numbers ("X giants with detected oscillations and good astrometry at magnitude Y") to set the sample, before any pre-registration.
+
+So: do you want me to size the **asteroseismic-giant** population (cleaner, best-characterized, big-N), or are you specifically after the **AGB "actively dying"** drama (small-N, but poor data and a chaotic natural baseline)? I can pull numbers for either — but they're genuinely different searches.
+
+### 🧑 Tonio
+
+I think the cleanliness filter is a good idea too ... a very good idea. I think we need to be agnostic about engineering vs. mere existence. We have no idea what either will look like and shouldn't assume survival is a 1000y plan or a 1My plan
+
+### 🤖 Claude
+
+Yes — and I think that principle, taken seriously, quietly rewrites the *motivation* for the whole thing, in a good way. Let me trace it, because it has a sharp consequence.
+
+**Timescale-agnosticism mostly means: assume the signature is *static*.** Here's the uncomfortable arithmetic. Our observational baselines are ~decade-scale — WISE/NEOWISE ~14 years, Kepler ~4, TESS ~6, Gaia a few. If a survival strategy plays out over even 1,000 years (your short end), then over our window we see ~1% of it — effectively a frozen frame. Over 1 Myr, utterly frozen. So *any* persistence operating on the timescales you (rightly) refuse to assume away will look **static** to us. That means timescale-agnosticism actually *forbids* privileging variability — which walks back the "fluctuating disequilibrium is the highest-value signal" line we leaned on earlier. Fluctuation is still the most *unambiguous* signal (it's the hardest to explain naturally and it proves *current* activity), but it's also the *least probable a priori*, because it requires the activity to be both fast and happening right now. The realistic main channel is a steady, unexplained departure — exactly the static-excess work, not the variability work.
+
+**"Engineering vs. existence" collapses, at the detection level, to "don't interpret the departure."** Honestly, at stellar-observation scale we can only ever detect *effects on the star's light* — so "mere existence" that doesn't perturb the star is simply invisible to any method like this, and "engineering" and "unknown-but-real perturbation" are indistinguishable in the data. So the agnosticism lives in two places that we can actually honor: (1) don't optimize the *search* for one signature (no privileging waste-heat, or transits, or any single channel — look for departure across all observables), and (2) don't *label* a surviving residual (which is already the §-stance: "most likely new natural physics, never a claim of intelligence"). You're extending that from "agnostic about mechanism" to "agnostic about whether there's a mechanism at all" — and the pipeline already supports that, because it only ever asserts "unexplained departure," never a cause.
+
+**The thing it kills is the "forcing-function" framing** — and that's correct, because that framing was smuggling a timescale assumption ("death compels visible action *on a timescale we'd catch*"). If we're agnostic about timescale, dying stars aren't special because "that's when they'd act." They're worth examining for a more honest reason: they're a **distinct, under-searched evolutionary population with a baseline we can model exceptionally well.** Which reframes the entire program: not "where would aliens be," but **a systematic, assumption-free anomaly census across well-characterized stellar populations** — white dwarfs were phase 1 (the remnants), evolved giants are a natural phase 2 (the precursors), and together they bracket stellar death without betting on any scenario or clock.
+
+That's why your cleanliness filter is more than convenient — it's *load-bearing* for this stance. Agnosticism is expensive: "any unexplained departure, on any timescale, in any observable" flags *everything*, so the only thing standing between you and god-of-the-gaps is a clean, well-modeled baseline plus the registered battery, empirical null, and FDR doing brutal work. Asteroseismic giants are the rare evolved population where the baseline is clean enough to make "departure" mean something — which is exactly why they survive the agnosticism where the AGB doesn't.
+
+So the synthesis I'd propose: **drop "dying stars because they'd act," keep "evolved giants because we can model them cleanly and we're completing the census," weight static departures as the primary channel, and keep variability as a high-value-but-low-prior bonus.** If that lands, the concrete next step is unchanged — go size the clean, asteroseismically-characterized giant population — but now we'd be sizing it as "phase 2 of an agnostic census," not as a bet on stellar eschatology. Want me to go get those numbers?
+
+### 🧑 Tonio
+
+Do these giants last long enough for life to evolve?
+
+### 🤖 Claude
+
+Sharp question — and the answer flips on a distinction that turns out to *help* the design.
+
+**The brevity of the giant phase is the wrong clock.** A red giant isn't a different object from its main-sequence self — it's the same star in its final chapter. So life around a giant didn't have to evolve *during* the giant phase; it had the star's entire **prior main sequence** to do so, and the giant is just the crisis at the end. For the persistence framing — life that arose over gigayears and now faces its star dying — the short giant phase is irrelevant. The clock that matters is the **progenitor's main-sequence lifetime.**
+
+**And that clock is set by mass, which is exactly where it gets useful:**
+
+| Progenitor mass | Main-sequence lifetime | Time for life? |
+|---|---|---|
+| ~1 M☉ | ~10 Gyr | ample — Earth-like |
+| ~1.5 M☉ | ~2–3 Gyr | enough for simple, marginal for complex |
+| ~2 M☉ | ~1 Gyr | simple life maybe, complex no |
+| 3–8 M☉ (the bright AGB/PNe makers) | ~10–300 Myr | **too short by Earth's clock** |
+
+So the punchline: the **brightest, most dramatic giants — the luminous AGB stars — descend from intermediate-mass progenitors whose main sequences were too short for life to have plausibly evolved.** The life-relevant giants are the *low-mass* ones (~0.9–1.5 M☉, Sun-like descendants) — old stars that spent ~10 Gyr on the main sequence and have only recently climbed the giant branch.
+
+**Here's why that's the satisfying part:** that's the *same population the cleanliness and data-quality criteria already pointed at.* Low-mass red giants are the well-behaved, modelable, asteroseismically-tractable ones; the extreme AGB stars are the messy, life-implausible ones. Three independent criteria — clean baseline, best data, and *time-for-life* — all converge on the **low-mass, Sun-like-progenitor red giant**. And crucially, **asteroseismology measures the mass**, so the very dataset that gives us the cleanest baseline also lets us *select the life-plausible subset directly* — favor the ≲1.5 M☉ progenitors, deweight the rest. The habitability prior isn't a separate filter we bolt on; it falls out of the seismic mass we're already getting.
+
+One honesty note on the prior itself: this *is* an assumption — "life needs gigayears, as on Earth" is an N=1 inference. But it's the **one** prior I'd argue we keep even under your full agnosticism, because it's not about *mechanism* (what life does) or *timescale* (when it acts) — it's about the precondition for there being anything to find at all: life has to *originate*, and origination needs time. So it's a soft weighting (favor long-prior-MS giants), not a hard cut. Agnostic about everything life *does*; minimally committed only to it having had time to exist.
+
+(And the de-novo case — life originating *during* the giant phase, in the briefly-warmed outer system — I'd set aside: the transient giant habitable zone lasts ~10⁸–10⁹ yr at best, plausibly enough to start something but far too short for the gigayear road to complexity. Not a regime to premise the search on.)
+
+So your question doesn't undercut the giants — it adds the selection axis (progenitor mass) that makes the sample *more* defensible, and it happens to point the same way everything else did. Want me to fold "favor ≲1.5 M☉ progenitors" into the population sizing when I go count the asteroseismic giants?
+
+### 🧑 Tonio
+
+I think hundreds of millions of years is needed just for planets to stabilize but of course why assume life needs planets. The point is our cutoff is not arbitrary and gives us a dataset. Theres also the question of whether red stars preclude photosynthesis which is a whole other pile of assumptions.
+
+### 🤖 Claude
+
+Right on all counts, and I think you've actually located the clean exit from the rabbit hole. Let me separate two things that keep getting tangled:
+
+**Habitability assumptions only ever enter as *target-selection priors* — never as part of the *detection*.** Our method doesn't look for planets, or photosynthesis, or a habitable zone, or a vegetation red-edge. It looks for an *unexplained departure in the star's integrated light* against a clean model. So whether life needs planets, whether red-star spectra preclude photosynthesis, whether the biochemistry is anything like ours — **none of it touches what we measure.** Those questions would only matter if we were doing surface-reflectance biosignatures of a specific planet, which we explicitly aren't. So we get to decline the entire photosynthesis pile-up not because we've resolved it, but because it's *orthogonal* to the instrument. (For what it's worth, the real answer there is "not precluded, just shifted" — cool giants peak in the red/near-IR, and Earth has far-red photosynthesizers using chlorophyll d/f out past 750 nm — but we don't need a position on it.)
+
+**Which means the only assumption with any actual *load* is the one you keep landing on: time.** And your instinct about it is exactly the right one — its job isn't to be *correct* about the unknowable, it's to be **principled, stateable, and reproducible**, and to bound the sample. "Favor progenitors with main-sequence lifetimes long enough that *something* could have arisen" is precisely that: physically motivated, one free parameter (the cutoff), pre-registerable, and it hands us a finite dataset. Whether the true number is 1 Gyr or 100 Myr or "doesn't need planets so subtract less for formation" just slides the knob — it doesn't make the selection arbitrary. A selection function in a rigorous search only has to be *honest and fixed in advance*, not *right about biology*. You've got that.
+
+And notice the agnosticism is still clean: we're committed to *time-to-exist* (a precondition for there being anything at all), and to *nothing else* — not planets, not photosynthesis, not a mechanism, not a timescale of action. That's the minimal floor, and it's the floor *because* it's the one assumption that's about existence rather than nature.
+
+So where this leaves us is genuinely tidy: a defensible, non-arbitrary selection (clean low-mass evolved giants, weighted by asteroseismic progenitor mass) feeding the same agnostic departure-hunt we already built — with the planets/photosynthesis questions consciously *set aside as orthogonal* rather than unresolved. That's a pre-registerable design.
+
+Whenever you want to turn it from philosophy into numbers, the next concrete move is still the same: go count that asteroseismic-giant population and its data quality, the way we sized the white dwarfs. No rush — but that's the door from "this is a coherent search" to "here's the actual sample."
+
+### 🧑 Tonio
+
+This would basically just be the same pipeline with different sources and parameters.
+
+### 🤖 Claude
+
+You're right at the level that matters most — the **architecture, the statistics, the reproducibility scaffolding, and the code skeleton all transfer**, and that's exactly the payoff of having built a general pipeline instead of a one-off WD script. The empirical-null/λ-inflation/FDR machinery is population statistics; it doesn't care what the population is. The fetch→baseline→excess/variability/transit→battery→limit flow is the same. The Gaia/WISE/TESS access patterns and the pinned-data/checksum/transcript discipline are all reusable. That's genuinely most of the value, and it's free.
+
+But let me be the careful one, because "just different parameters" undersells three places where it's new *science*, not new config:
+
+1. **The baseline flips from easy to hard.** The entire reason the WD search worked is that a white dwarf's natural model is a clean cooling blackbody on the Rayleigh–Jeans tail — stiff and low-uncertainty. A giant's photosphere is a *cool, molecular-band-riddled atmosphere* (TiO, H₂O, CO), which needs MARCS/PHOENIX-class models, not the Bergeron grids — and giants are *intrinsically variable and frequently dusty all by themselves.* So "departure from the model" is defined against a much noisier, less stiff baseline. The partial offset: giants are luminous, so spectroscopic surveys (APOGEE/GALAH/LAMOST) hand you Teff/logg/[Fe/H] for *millions* of them — far better per-star characterization than the mostly-spectrum-less WDs. Net: harder to model, better constrained. Not a reparametrization — a different baseline.
+
+2. **Asteroseismic selection is a genuinely new layer.** The whole defensibility of the sample (the progenitor-mass cut) rests on seismic ν_max/Δν → mass/evolutionary state, from Kepler/TESS. We never touched seismology for WDs. That's a new data source *and* a new analysis component, and it's the part that makes "favor ≲1.5 M☉ progenitors" real rather than hand-wavy.
+
+3. **Two of the three channels shift or invert.** Transits *invert*: a giant is enormous, so a planet transit is ~10⁻⁵ shallow, and the WD logic ("shallow ⇒ blend, not a real transit of the star") is exactly backwards — Channel B as built is near-useless for giants and would need a rethink. Variability gets *harder*: giants oscillate and pulsate naturally, so the variability null is dominated by real stellar signal, not noise. The channel that transfers *cleanest* is the **static SED-excess** one — which is the happy part, because that's precisely where our timescale-agnostic reasoning already said the primary signal lives (steady departures, not fluctuations). So the channel emphasis lands where the philosophy already pointed.
+
+The honest framing, then: **same framework, new instrument head.** Call it ~60–70% reuse — a massive running start that vindicates building it general — and the remaining ~30% (giant-atmosphere baseline, seismic mass-selection, a reworked battery for winds/pulsation/molecular-bands/binarity) is the actual new work. It's a real project, not a knob-turn, but it's the cheapest possible version of a real project because the spine already exists and is tested.
+
+And usefully, none of that changes the *next* step — sizing the asteroseismic-giant sample — it just tells us what we're signing up for past it. Say the word and I'll go get the numbers.
+
+### 🧑 Tonio
+
+We should try to reuse the old pipeline and turn the unique parts into plugins and then validate our previous results. This will make the tool better and might reveal logic flaws we’ve made and improve the reusability of the pipeline.
+
+### 🤖 Claude
+
+This is a genuinely good move — refactor with a regression test is the right way to generalize, and re-implementing forces every buried assumption into the open (which is exactly when bugs like the float64 one surface). It also turns "we have a WD pipeline" into "we have a *tool*." Let me design the seam and start, validating against the committed results as I go.
+
+First let me read the exact logic I need to extract faithfully (so the validation is meaningful — if numbers drift, that's signal, not a transcription error):
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+Both functions match what I remembered. Now let me build the seam. The design: a **population-agnostic `core/`** (the statistics, excess, SED, limit math — none of which cares what kind of star it is) and a **`populations/` plugin** that supplies only the two things that *are* star-specific: the natural baseline (how to predict the bare star's photometry) and the natural regimes (what counts as a disk/companion vs. a residual). Then a **runner** wires them together — and the first runner is a regression test against the committed WD results.
+
+Let me write the core modules:
+
+
+_[tools: Write]_
+
+
+_[tools: Write]_
+
+
+_[tools: Write]_
+
+
+_[tools: Write]_
+
+
+_[tools: Write]_
+
+
+_[tools: Write]_
+
+Now the plugin layer — the interface and the white-dwarf implementation (the *only* star-specific parts):
+
+
+_[tools: Write]_
+
+
+_[tools: Write]_
+
+
+_[tools: Write]_
+
+Now the regression-test runner — wires core + WD plugin together and diffs against the committed v1 outputs:
+
+
+_[tools: Write]_
+
+
+_[tools: Write]_
+
+Now run the regression test:
+
+
+_[tools: Bash]_
