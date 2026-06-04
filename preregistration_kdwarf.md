@@ -122,7 +122,15 @@ and injection-recovery, never by inspecting candidates.
 - **Channel B — transit morphology (PRIMARY, CALIBRATED).** Detection by BLS/TLS for periodic
   box/U transits, **plus a parallel variable-depth / aperiodic-dip detector**, then morphology
   metrics (asymmetry, flat-bottom fraction, box-vs-U, duty cycle) and a **mandatory automated
-  difference-image centroid gate** (§5). The Phase-1 machinery transfers directly: K dwarfs are
+  difference-image centroid gate** (§5). **Detection does not depend on morphology.** BLS/TLS (and
+  the variable-depth detector) are the gate: any sufficiently deep dip is *caught as a candidate*
+  regardless of its shape — a smooth, U-shaped occulter (e.g. an end-on cylinder) is detected
+  exactly as a planet is. The morphology and depth-variability metrics are *parallel safety nets*
+  that run **after** detection to flag the non-planetary minority; they are never required to
+  trigger a detection. This is deliberate: when the baseline is a rigorous null, an unexplained
+  anomaly is already the extreme tail, and demanding it *also* cast a diagnostically asymmetric
+  shadow would be asking for the tail of the tail. We do not — detection sensitivity (the `f_max`
+  in §5) rests on the depth/period reach of BLS, not on resolving exotic morphology. The Phase-1 machinery transfers directly: K dwarfs are
   point sources with clean Gaia astrometry, and a real occulter gives a *deep* transit, so the
   "deep ⇒ on-target real; shallow-and-offset ⇒ background blend, confirmed by centroiding" logic
   applies (the same code validated for white dwarfs, `pipeline/analysis/07–09`). Crucially, the
