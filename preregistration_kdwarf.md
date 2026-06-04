@@ -165,9 +165,14 @@ because at this sample size nothing can be vetted by hand.
   period/phase trials each, a 3–4σ bar would bury the residual list in noise. We therefore
   compose two corrections, both pre-specified as *procedures* (the resulting numbers come from the
   data via those procedures, never from inspecting candidates): **(a)** an **empirical null on the
-  bulk distribution of the per-star BLS detection statistic** (which already folds the within-star
-  period search), with genomic-control inflation λ rescaling for the non-Gaussian reality of
-  TESS/Kepler systematics — exactly as the WISE-excess null did (λ≈10.6 in Phase 1); and **(b)** a
+  per-star BLS detection statistic, computed *within noise/activity cohorts*** (binned by each
+  light curve's photometric scatter / CDPP / activity level) rather than globally — so a quiet star
+  is judged against other quiet stars and the active stars' heavy-tailed noise (spots, flares,
+  rotation) does **not** inflate the threshold for the clean ones. This per-cohort grading (the
+  lesson from the v2 W2-offset handling, generalised) is what lets us keep every star above the
+  youth floor without a hard activity cut: within each cohort, genomic-control inflation λ rescales
+  for the non-Gaussian reality of TESS/Kepler systematics — as the WISE-excess null did (λ≈10.6 in
+  Phase 1). And **(b)** a
   **survey-wide family-wise / look-elsewhere correction** (Gross & Vitells 2010; FDR, Benjamini–
   Hochberg / Storey) such that the expected number of pure-noise false alarms across the *entire
   frozen sample* is < 1. The resulting threshold is expected to land in the **≈6–7σ regime** (cf.
