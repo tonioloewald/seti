@@ -6590,3 +6590,170 @@ Now run the regression test:
 
 
 _[tools: Bash]_
+
+**Clean pass — every Channel-A result reproduced bit-for-bit through the new core+plugin:** excess χ exact to 0.00 in all four bands, battery class counts identical (426/110/104/65/218), f_max identical (3.36×10⁻⁴ headline). So the refactor is *faithful* — the plugin seam changed nothing — and the architecture is proven. (No latent flaw surfaced this round, which is the other good outcome: it confirms the original was right *and* the extraction is honest.) Let me commit this, then go get your giant numbers.
+
+
+_[tools: Bash]_
+
+Now the giant sizing. The gold-standard "best-characterized remaining-life" sample is the **Kepler asteroseismic red giants** — Yu et al. (2018) measured ν_max/Δν → mass/radius/evolutionary-state for ~16,000 of them. That's the pilot population (full seismic characterization + 4-year light curves + WISE coverage). Let me pull it and bin by the life-relevant mass cut:
+
+
+_[tools: Bash]_
+
+16,094 Kepler asteroseismic giants, with phase-corrected masses (RGB/clump) and evolutionary state. Let me bin by the life-relevant progenitor-mass cut:
+
+
+_[tools: Bash]_
+
+Let me fix one thing — I mis-coded the evolutionary-state flag (Phase 0 is the small *unclassified* group, not RGB; the two ~7,700 groups are RGB and red-clump). Let me redo with the phase-independent uncorrected mass and label the phases correctly:
+
+
+_[tools: Bash]_
+
+There are your numbers — and they're encouraging. The phase signatures confirm the sample: Phase 1 (Δν≈6.8) is the **RGB** (~7,700, still ascending), Phase 2 (Δν≈4.1) is the **red clump** (~7,700, core-He-burning), and Phase 0 (numax≈13, the luminous low-gravity ones, ~700) are the **most-evolved** — closest to the end.
+
+**The pilot sample (Kepler asteroseismic giants, Yu+ 2018):**
+
+| | count |
+|---|---|
+| Total, fully seismically characterized | **16,094** |
+| Progenitor mass ≤ 1.5 M☉ (MS ≳ 2–6 Gyr — *life-plausible*) | **~11,400 (71%)** |
+| Mass ≤ 1.0 M☉ (MS ≳ 6 Gyr — *Earth-like window*) | ~1,600 (10%) |
+| Most-evolved subset (upper-RGB/AGB, closest to death) | ~700 |
+
+And crucially, the data-quality picture is the *inverse* of the WD problem: every one is **bright (Kp 9.6–15)**, with a **4-year continuous Kepler light curve** (your variability and transit channels, ready-made) *and* all-sky WISE/CatWISE IR coverage (the excess channel) *and* a seismic mass that does the life-relevance cut directly. It's a turnkey sample — characterized, data-rich, and pre-filtered by the one prior we agreed to keep.
+
+**Scaling** (your "thousands to hundreds of thousands" intuition, confirmed): Kepler is *one* ~115 deg² field. TESS now does all-sky asteroseismology of bright giants (Hon, Stello, Mackereth et al.) → ~10⁵–10⁶ giants with lower-precision seismic masses, and Gaia adds ~10⁷ with parameters but no seismology. So the design is: **Kepler ~16k as the high-precision pilot, TESS all-sky as the scalable version.**
+
+**And here's the payoff of the refactor we just validated:** standing this up is now genuinely a *new plugin, not a fork*. The `core` (excess statistic, empirical null, f_max, blackbody fits) reproduced Channel A bit-for-bit and is population-blind — it'll run on giants unchanged. What's actually new is a `GiantPopulation` plugin supplying the two star-specific things: the natural baseline (a giant-atmosphere SED + the seismic/spectroscopic stellar parameters instead of the Bergeron grid) and the natural regimes/battery (winds, dust, pulsation, binarity instead of disks/companions). The 16k sample, the channels, the statistics, the reproducibility scaffolding — all already there and tested.
+
+So we've gone from "is this a coherent search?" to "here's an ~11,000-star characterized sample and a validated pipeline that needs one new plugin." If you want, the natural next move is to sketch that `GiantPopulation` plugin interface against this sample (what baseline model, what battery items) — but that's a fresh design pass, and this is a clean place to land for now.
+
+### 🧑 Tonio
+
+Gemini has some pushback on this stellar population (I only stated the stellar type and not the change in filtering strategies)… 
+
+I have to push back hard on Claude’s reasoning here. If the core philosophy of this project is to find an anomaly against a rock-solid, well-modeled natural baseline—and to search for evidence of *persistence* over deep time—red subgiants are structurally the wrong target.
+Here is why a subgiant actively fights against the methodology we just validated with the white dwarf search:
+### 1. They are transitional, not stable
+A subgiant is a star that has exhausted its core hydrogen and is actively evolving off the main sequence. For a solar-mass star, this phase is a blip. It lasts roughly a few hundred million to a billion years. Its radius is expanding, and its luminosity is increasing.
+If your motivating hypothesis is *persistence*, a subgiant is a terrible platform. The habitable zone is migrating rapidly outward. If something built infrastructure around that star, it would now be facing a catastrophic change in its thermal environment. You are looking at a system in a state of active astrophysical upheaval, which destroys the "stable platform" assumption.
+### 2. They are not "quiet"
+Claude is likely focusing on the fact that we have incredibly precise, high-cadence data for asteroseismic subgiants (thanks to Kepler and TESS). But the reason asteroseismologists study them is precisely because *they ring like bells*.
+Subgiants have convective envelopes that drive solar-like oscillations.  While they aren't throwing massive, violent flares like an M-dwarf, their baseline is intrinsically, stochastically variable. The star is constantly boiling and pulsating. When you are looking for a highly structured, low-amplitude dynamic anomaly (like an odd transit morphology or a fluctuating transit depth), a star with a noisy, oscillating baseline is going to generate a mountain of false positives and chew up your empirical null.
+### The Superior Alternative: K-Dwarfs
+If you want to move to "living" stars while preserving the methodological discipline of the white dwarf search—meaning extreme longevity, a stable thermal environment, and a quiet baseline—the correct target is the **K-dwarf** (orange dwarf).
+ * **Deep-Time Stability:** K-dwarfs live for 15 to 40 billion years on the main sequence. Their luminosity barely changes over those eons. They are the ultimate stable platform for deep time.
+ * **A Quiet Baseline:** Unlike M-dwarfs (red dwarfs), which are famously violent and throw massive, atmosphere-stripping flares for billions of years, K-dwarfs are remarkably sedate. They lack the extreme magnetic activity of lower-mass stars, giving you a clean, quiet photometric baseline.
+ * **Better Transit Signal:** They are smaller than G-dwarfs (like our Sun) and much smaller than inflated subgiants, meaning a megastructure or anomalous occulter blocks a proportionally larger fraction of the star's light, deepening the transit dip and making Channel B (transit morphology) highly viable.
+If the goal is to replicate the rigor of your Phase 1 pipeline on a living host, you need a star that acts as a predictable, unchanging lightbulb. A ringing, expanding subgiant is a moving target. A mature K-dwarf gives you the stable, quiet baseline you need to actually spot the anomaly.
+
+### 🤖 Claude
+
+This is a good critique, and the honest thing for me to do is concede most of it — not defend the giant idea out of consistency. Let me separate what's right, what misreads our context, and what it means.
+
+**First, a correction that makes Gemini's case *stronger*, not weaker:** I proposed red *giants* (RGB + clump), which are *more* evolved, more luminous, and oscillate *harder* than the "subgiants" Gemini names. So its sharpest point — the **intrinsically variable, ringing baseline** — lands on my proposal with more force, not less. And I'd already flagged exactly this in my own caveats: giants degrade the variability and transit channels (they oscillate, and they're enormous, so transits are ~10⁻⁵ shallow). On those channels Gemini is simply right.
+
+**Two places it misreads our context** (the part you didn't convey) — worth noting for accuracy, though neither rescues giants:
+- The "bad platform for *persistence*" argument attacks a motivation **we already dropped.** We abandoned "stable platform / forcing function" and kept exactly one prior: that life had *time to originate* — which happens during the long *prior* main sequence, so the giant phase being transitional is irrelevant to it. We're not betting the host is comfortable.
+- Gemini assumes a *dynamic*-anomaly hunt (odd transit morphology, fluctuating depth). We'd concluded the **primary** channel is *static* IR-excess (timescale-agnosticism: anything operating over >decade timescales is frozen to us). For a static SED, the oscillations average out.
+
+**But here's the thing those two corrections *don't* do — save giants. And this is the real point:** once we stripped the search down to *cleanliness + time-for-life + a stable, modelable baseline*, the logic was already pointing away from evolved stars. Gemini, even without our reframe, **followed the same logic to its endpoint** — and that endpoint is the cleanest, longest-lived, quietest possible host, which is a **K-dwarf, not a dying star.** The reframe we did quietly removed the entire reason to look at end-of-life stars in the first place.
+
+And the cleverest part of my giant pitch — *asteroseismic mass selection* — turns out to be solving a problem K-dwarfs make vanish. The whole point of seismic masses was to *select stars by remaining lifetime*. K-dwarfs (15–40 Gyr main sequences) all have effectively unlimited remaining lifetime; none has died; the selection question disappears. The elegance was answering a question we only had because we insisted on dying stars.
+
+**The honest scorecard, K-dwarf vs evolved giant:**
+
+| axis | winner |
+|---|---|
+| time-for-life | **K-dwarf** (unlimited; none has died) |
+| stable thermal environment | **K-dwarf** (luminosity flat over Gyr) |
+| quiet baseline | **K-dwarf** (old ones are sedate; giants ring) |
+| baseline cleanliness/modelability | **K-dwarf** (no extreme oscillations, less molecular than a cool giant) |
+| transit viability | **K-dwarf** (small + clean; giants are hopeless) |
+| asteroseismic characterization | giant — *but it's a tool for a problem K-dwarfs don't have* |
+
+So I'm updating toward Gemini: **for a living-star Phase 2 that preserves the WD-search rigor, K-dwarfs are the better target.** I over-anchored on the seismic elegance.
+
+**The one genuine loss to be honest about** — and it isn't about giants vs K-dwarfs, it's about leaving white dwarfs at all: the IR-excess channel was WD-*clean* because a white dwarf is faint in the infrared (hot, Rayleigh–Jeans), so any dust excess screamed against a dim background. *Every* living star — K-dwarf or giant — has a bright-ish cool IR photosphere that swamps that contrast. So moving to a living host, the excess channel degrades regardless, and the emphasis naturally shifts to the **transit channel** — which is precisely where K-dwarfs shine and giants die. The channels realign in K-dwarfs' favor.
+
+**Two flags before you decide:**
+1. Adopting K-dwarfs means *abandoning the "stars near the end of life" premise entirely* — they're the furthest thing from dying. That's consistent with where your own reasoning went, but it's a change of *concept*, not a refinement. Worth choosing deliberately.
+2. None of the giant work is wasted: thanks to the refactor, a K-dwarf search is just a *different plugin* on the same validated core. So this is a target swap, not a restart.
+
+My honest lean: Gemini's right, and the K-dwarf is the stronger living-star host. The interesting question it forces back onto you is which channel you want to anchor Phase 2 on — because K-dwarfs trade the (already-degraded-for-any-living-star) excess channel for a genuinely excellent transit-morphology channel. Want me to re-scope the population numbers for old, quiet K-dwarfs the way I just did for the giants?
+
+### 🧑 Tonio
+
+Thoughts?
+
+### 🤖 Claude
+
+My honest thought is that we've been having the wrong argument — giants vs. K-dwarfs is a real question, but it's downstream of a bigger one we've been sliding past.
+
+**We keep conflating "where life is likely" with "where our method has teeth," and those point in opposite directions.**
+
+Here's the uncomfortable part. The white-dwarf search wasn't strong because white dwarfs are good places for life — the star is *dead*. It was strong because a WD is a clean, faint-in-the-IR, perfectly-predictable lightbulb, so a departure *screamed* against the baseline and we could turn a null into a sharp, defensible f_max. The rigor — pre-registration, the empirical null, the explain-away discipline — only converts into a *quotable result* when the baseline is clean enough for the calibrated-departure to bite.
+
+And we just established that **every living star throws that gift away.** Cool photospheres swamp the IR-excess contrast; the channel that carried Phase 1 degrades for K-dwarfs *and* giants. So the move to living hosts trades our signature strength (a clean limit) for a habitability narrative — and lands us on the transit channel, which for K-dwarfs is genuinely good but is also the single most-trodden ground in the field (every planet-hunting and megastructure-transit search lives there). We'd be optimizing the *prior* (where life could be) while dissolving the *edge* (where we can say something sharp that others can't).
+
+Gemini optimized the habitability prior and correctly landed on K-dwarfs. But neither it nor I stopped to ask whether optimizing that prior is even the right objective.
+
+So the real fork, before target selection:
+
+- **If Phase 2 is "produce another sharp, differentiated result":** stay in clean-baseline territory, where our method keeps its teeth. That means going *deeper* on white dwarfs (forced photometry, the full catalogue, more channels — turn the f_max from good into definitive), or finding *another* clean-photosphere population (hot subdwarfs, etc.). Use the edge where it's sharp.
+- **If Phase 2 is "exercise the tool / look at a living host because that's where recognizable life could *be*":** then K-dwarfs, yes, Gemini's right over giants — but go in knowing the deliverable is a *weaker* limit in a *crowded* channel, not a second headline.
+
+**My lean:** I'd be wary of making a K-dwarf search the flagship, because it spends our hardest-won advantage to buy a softer story. The thing that makes this project unusual isn't the target — it's the discipline applied to a baseline clean enough to matter. I'd either *deepen the WD result* (the one we've proven works) or hunt for another *clean-baseline* population, and treat a K-dwarf transit search as an explicitly-labeled "stress-test the pipeline's generality" side quest, not the main event.
+
+**The counter I'll give honestly:** living stars are the only place life as we'd recognize it could currently exist, the K-dwarf transit channel is a legitimate (if crowded) technosignature channel, and generalizing the tool has real value independent of any one result. So if your gut is pulling toward living hosts for curiosity's sake, that's a valid reason — it's just a *different* objective than "another f_max," and worth naming as such.
+
+So my actual question back: **what is Phase 2 *for*?** A second sharp result, a more general tool, or scratching the living-host itch? Each gives a different target, and the giants-vs-K-dwarfs debate only resolves once that's pinned. I don't think you should let either AI pick the target before you've picked the objective.
+
+### 🧑 Tonio
+
+There’s nothing stopping us from doing both. But yes let’s scope k dwarfs.
+
+### 🤖 Claude
+
+Both — agreed, and the plugin architecture is exactly what makes "both" cheap. Let me scope K-dwarfs.
+
+The K-dwarf strength is the **transit channel** (small, clean, stable), so I'll size by the data-quality that channel needs — brightness (TESS/Kepler photometry) and clean astrometry — selecting main-sequence K dwarfs from Gaia:
+
+
+_[tools: Bash]_
+
+There are the K-dwarf numbers — and the contrast with Phase 1 is striking:
+
+| Sample (clean astrometry) | count |
+|---|---|
+| within 50 pc | 2,346 |
+| within 100 pc | 22,176 |
+| **G < 11 (all-sky, full TESS quality)** | **12,599** |
+| G < 12 | 45,561 |
+| G < 13 | 177,649 |
+
+The headline: **the binding constraint is no longer finding targets.** Where the WD search cut to ~157 usable stars and the giants to ~11k, K-dwarfs give you **tens of thousands** of bright, clean, transit-viable hosts before you've even tried. Sample size is a non-issue; the real work moves entirely into the *cuts* and the *analysis*.
+
+Two cuts define the actual working sample:
+
+1. **Data quality / transit channel:** the ~12,600 at G<11 all have full-quality TESS photometry; the subset in the original **Kepler field has 4-year continuous light curves** — the gold standard for transit *morphology* (the asymmetry/flat-bottom/centroid tests that are Channel B's whole point). That's the clean transit-search core.
+2. **Old & quiet (the life-prior + cleanliness):** this is a *downstream* filter, not a Gaia one-liner — you'd apply it via TESS/Kepler rotation periods (gyrochronology → age), activity/flare indicators, and kinematics, to drop the young, spotty, fast-rotating minority. The good news is that field K-dwarfs are *mostly* old (several Gyr median, because their main sequences are so long they pile up), so this trims rather than decimates the sample.
+
+And here's the satisfying part for the methodology, which I want to flag because it's the *opposite* of the giant problem: **Channel B transfers to K-dwarfs cleanly — and its WD-style logic comes back.** A K-dwarf is small, so a real occulter produces a *deep* (~0.1–2%) transit, and the star is a point source with excellent Gaia astrometry — so the entire "deep ⇒ real, shallow-and-offset ⇒ background blend, confirmed by difference-image centroiding" apparatus we built and validated for white dwarfs **works directly.** That's the channel that *died* for giants (huge, no transit; noisy astrometry) and it's the channel that *lives* for K-dwarfs. The pipeline's transit machinery — BLS, morphology, centroiding (`07/08/09`) — ports almost as-is; what's new is mainly the population plugin (K-dwarf atmosphere baseline; a battery of stellar activity / eclipsing binaries / blends instead of disks/companions).
+
+So the honest scope: a data-rich, transit-anchored, clean-baseline-*enough* living-host search, where the science is in the morphology + the old/quiet selection, not in scraping together targets. It's a real, fundable Phase 2 — distinct from (and complementary to) deepening the WD result.
+
+Whenever you want to turn scope into a build, the move is the same pattern as before: write the `KDwarf` population plugin against this sample, decide the battery items, and — per our discipline — pre-register before touching any light curve. No rush; this is a clean stopping point with the numbers in hand.
+
+### 🧑 Tonio
+
+Let’s prep for pre-registration.
+
+### 🤖 Claude
+
+Good — let's draft it the way the WD plan was built: a complete first version to react to, frozen *before* any light curve is touched. I'll mirror the registered Phase-1 structure and fold in all the reasoning we worked out (the agnostic stance, the time-for-life prior, transit-primary, the honest IR caveat, the validated-core-plus-plugin continuity).
+
+
+_[tools: Write]_
