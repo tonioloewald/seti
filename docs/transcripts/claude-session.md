@@ -6285,3 +6285,53 @@ The scrubber already redacts paths and emails — a name-on-request fits the sam
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+`claude-session.md` is clean now (0), and the rescrub will keep it that way automatically going forward. The two **Gemini** transcripts aren't auto-generated, so they need a one-time scrub — let me do that, then I'll flag the one sensitive case:
+
+
+_[tools: Bash]_
+
+Committed the transcript scrubs; now only `preregistration.md` retains the name — and that one I want your explicit call on, because it's the sensitive case. Let me commit the scrubbing first:
+
+
+_[tools: Bash]_
+
+Done across the board except one file, and the last one needs your decision because it's the registered cornerstone:
+
+**Already handled** (committed `4fe8904`, `55b4538`):
+- **Paper** — name removed; the contribution is still credited, just unnamed.
+- **All transcripts** — scrubbed to "[a collaborator]," and I added the redaction to the transcript scrubber so the auto-generated one stays clean from here on (no manual step needed).
+
+**The one that needs your call — `preregistration.md`:** she's named in the "Human Accountability" paragraph. The complication is that this document is **registered on OSF (osf.io/6yh7r), and that snapshot is immutable** — her name is already permanently public there, and I can't change it (short of *withdrawing the entire registration*, which leaves a tombstone and is wildly disproportionate for this).
+
+So scrubbing the repo copy:
+- ✅ removes her name from the version people actually read on GitHub,
+- ❌ but diverges the repo prereg from the immutable OSF-registered version, and doesn't remove it from OSF.
+
+Two honest options:
+1. **Scrub the repo copy** (replace the named sentence with the same unnamed phrasing I used in the paper) **plus a one-line redaction note** — so the divergence from OSF is documented, not silent (important for a provenance project; otherwise it could look like tampering). Honors her preference on the main surface; the OSF snapshot quietly retains it.
+2. **Leave it** — keeps the repo consistent with the registered OSF version, accepting that the name stays visible in both. Defensible since OSF has it permanently anyway.
+
+I lean **option 1** — it honors her request where it matters most and the note keeps everything above-board — but it's your registered record, so I'll do whichever you prefer. Want me to apply option 1 (I'll show you the exact wording and the note before committing), or leave the prereg as-is?
+
+### 🧑 Tonio
+
+Option 1 is fine. All our changes are on the record. If someone wants to figure out who [a collaborator] is, I am quite publicly married to her.
+
+### 🤖 Claude
+
+Good — option 1 it is, and your point is well taken: this is about respecting a stated preference, not building a witness-protection program. Let me read the exact passage:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Let me verify the name is gone from both the prereg and its rendered HTML, then commit:
+
+
+_[tools: Bash]_
