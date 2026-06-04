@@ -6928,3 +6928,245 @@ _[tools: Read]_
 
 
 _[tools: Edit]_
+
+Written. Let me verify it's clean and commit:
+
+
+_[tools: Bash]_
+
+Committed (`eaf28c9`). That resolves the highest-leverage open decision, and your "ultimately everything" principle is now the backbone of §3: a soft youth floor as the *only* real cut, no quiet cut at all (noisy stars self-weight via per-star completeness), and a resource-triggered nested staging that makes "look at more" a pre-registered confirmatory move rather than a forking path. The plan is now both maximally inclusive *and* tamper-evident — which is exactly the combination that's usually hard to get.
+
+One small consistency flag that falls out of this: the **title and §0 still say "Old, Quiet K Dwarfs,"** which now slightly undersells the stance — the goal is the whole K-dwarf census, with old/quiet merely the *first tier* we can afford. You may want to retitle to something like *"…Around Main-Sequence K Dwarfs"* (with "old, quiet first" as the staging detail), so the document doesn't read as if we're scientifically excluding the rest. Minor, and your call on framing — flag it if you want me to adjust.
+
+Where the draft stands: the *design* is essentially complete and internally coherent. The genuinely remaining items are small:
+- **The youth-floor *values*** — correctly left as "set from the parent-sample distributions," i.e. a frozen *procedure*, not pre-chosen numbers (which is the right way to pre-register it).
+- **The §1 candor level** — how prominently to lead with "this channel is crowded / our edge is the discipline." Still your stylistic call.
+- **The title/framing** above.
+
+And the natural concrete next step, when you're ready to move from plan to execution-prep, is the one Gemini and §6 both point to: a **small injection-recovery pilot** on a tier-1 subset to actually *fix and freeze* the detection threshold and the per-star completeness before any unblinding. That's the last thing that has to be nailed down pre-registration, and it's a clean, self-contained piece I can run whenever you give the word.
+
+No rush — this is a strong stopping point with the hard design questions settled.
+
+### 🧑 Tonio
+
+From a logistical viewpoint the youth floor doesn’t do much (no more than 20% reduction of population size I would guess). But it might have a statistical impact.
+
+### 🤖 Claude
+
+Let me ground the logistical guess with a real number, then get to the statistical part, which is where the interesting effect lives. A quick proxy for "how much would an activity/youth floor remove" is the photometrically-variable (i.e. spotted/active) fraction of the sample:
+
+
+_[tools: Bash]_
+
+Archive threw a 500 (it's been flaky). Let me retry just the one count:
+
+
+_[tools: Bash]_
+
+Archive's down (persistent 500s — it's mid-DR4 migration), so let me answer from demographics, which is enough here — and the statistical part is the interesting bit anyway.
+
+**Logistically, your ~20% is about right, and it hinges on *how* we implement the floor:**
+- Field K-dwarf ages run roughly uniformly from ~0 to ~10 Gyr (the local disk's star-formation history), so a clean **age floor at ~1 Gyr removes ~10%**, at ~0.5 Gyr ~5%.
+- But if we implement it as an **activity cut** instead, it removes *more* — K dwarfs stay magnetically active longer than G dwarfs (activity persists to several Gyr), so cutting all detectably-active stars could take **~20–30%**. So your "no more than 20%" is the age-floor answer; the activity-floor answer brushes the top of your range.
+
+Either way you're right that it's a minor population hit. **But here's the part where your "statistical impact" hunch is correct — and it's not about sample size at all. It's about the empirical null.**
+
+The young/active stars are exactly the **heavy-tailed false-positive generators** — spots, flares, and rotational modulation throw spurious BLS peaks. And because the empirical null is calibrated from the *bulk* of the BLS-statistic distribution, including a population of active stars **inflates λ globally** — which raises the detection threshold for *everyone*, including the quiet stars that didn't cause the problem. So in the no-quiet-cut design we just adopted, the active stars would quietly tax the clean ones through a shared global null. *That's* the real statistical effect, and it's bigger than the 10–20% sample change.
+
+**The fix is the lesson we already learned on the W2 offset, generalized: don't use one global null — compute it per-cohort.** Bin the empirical null by each light curve's noise/activity level (photometric scatter / CDPP / measured activity), so a quiet star is judged against *other quiet stars* and an active star against *other active stars*. Then:
+- the active stars' noise stops bleeding into the quiet stars' threshold,
+- the self-weighting C_i already down-weights the active stars' contribution to f_max,
+- and you no longer need a hard activity cut at all to protect the quiet sample.
+
+Which neatly reframes what the youth floor is *for*: it's a **life-prior cut, not a statistical one**. Its statistical job shrinks to trimming the most extreme noise tail (a minor null-cleaning bonus); the real statistical work is done by the *per-cohort/noise-conditioned threshold* plus self-weighting. So keep the floor modest and age-based (~10%, principled by the life prior), and put the statistical effort into per-cohort thresholding.
+
+That's a genuine improvement to §5 that your observation surfaced — the threshold spec should say "empirical null computed within noise/activity cohorts," not a single global null. Want me to add that to the §5 detection-threshold section?
+
+### 🧑 Tonio
+
+Yes thanks and then let’s pass the preregistration draft to Gemini.
+
+### 🤖 Claude
+
+On it — let me add the per-cohort null to §5, then prep the draft for sharing. First the §5 edit:
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Committed-worthy. Let me commit and generate a clean PDF of the draft for you to hand to Gemini:
+
+
+_[tools: Bash]_
+
+Done — the per-cohort null is in §5 (committed `680dc28`), and the draft is rendered to a clean PDF (`b5166cd`, 0 LaTeX). Here it is to hand to Gemini:
+
+
+_[tools: SendUserFile]_
+
+That's the draft ready for review — `preregistration_kdwarf.pdf` (and `preregistration_kdwarf.md` in the repo). Everything we worked out is in it:
+
+- **Channel B** promoted to primary + *calibrated*, with a population `f_max(depth, period)`.
+- **Channel A (IR)** reframed as a corroborating extreme-outlier flag (Channel-C precedent), no standalone limit, elevated only by coincidence with a transit anomaly.
+- **Sample:** goal is the whole census; a soft youth floor as the only real cut (life prior); no hard quiet cut (self-weighting); resource-triggered nested staging.
+- **Statistics:** per-cohort (noise/activity-binned) empirical null, survey-wide family-wise threshold *derived from our own injection-recovery*, automated centroid-first battery, calibrated `f_max` via injection-recovery.
+
+One suggestion for getting *substance* back rather than another victory lap: point Gemini at the genuinely contestable seams, where a sharp reviewer should actually push. The ones I'd flag as most worth stress-testing:
+
+1. **The statistical composition** — does family-wise error control compose *correctly* across **both** the per-cohort thresholds **and** the staged-tier looks (alpha-spending)? That's the trickiest part and the easiest to get subtly wrong.
+2. **The IR coincidence rule** — "extreme IR excess + transit anomaly on the same star" is elegant, but does requiring coincidence introduce its *own* multiplicity that needs accounting?
+3. **The youth-floor circularity** — activity/rotation is measured from the *same* light curves we search; is the two-stage "calibrate-then-unblind" split airtight against that?
+4. **Whether "no IR `f_max`" is too conservative** — could a weak-but-real limit be salvaged, or is corroborating-only genuinely the honest call?
+
+If you frame the ask that way, you'll likely get the four-concrete-fixes flavor of feedback (which was genuinely useful last time) rather than the closing-paragraph hagiography. Send it over whenever — I'll fold in whatever comes back.
+
+### 🧑 Tonio
+
+Gemini’s unprompted feedback ie without that framing
+
+This is a highly rigorous, methodologically sound draft. Flipping Channel B to the primary, calibrated channel while demoting Channel A to an extreme-outlier corroborating flag is the correct structural adaptation for K-dwarfs.
+The standout architectural win here is the **empirical null computed within noise/activity cohorts** (§5). Grouping stars by photometric scatter before computing the genomic-control inflation factor (\lambda) is an elegant solution to the main-sequence activity problem. It completely bypasses the need for arbitrary "quietness" cutoffs and ensures that a genuinely quiet K-dwarf isn't penalized by the \lambda of its noisy, rotating neighbors.
+However, to make this pre-registration bulletproof against accusations of post-hoc tuning, there are four areas where the draft remains dangerously vague or risks fighting its own methodology.
+### 1. The "Alpha-Spending" Trap (§3)
+You state: *"The survey-wide trial-factor / family-wise threshold is recomputed for each expanded sample (alpha-spending across stages)."* If you are invoking alpha-spending (a concept from sequential analysis in clinical trials), you need to be mathematically explicit. In true alpha-spending, you penalize early looks at the data to preserve the global error rate \alpha. If your tiers (T_1 \subset T_2 \subset \dots) are determined strictly by "available compute," the sizes of those tiers are essentially random variables.
+If you do not freeze the exact alpha-spending function (e.g., O'Brien-Fleming, Pocock) or pre-define the exact subset sizes (N_1, N_2) before unblinding T_1, this becomes a tunable dial. A critic will argue you could stop computing new tiers the moment a favored candidate clears the localized threshold. You must pre-register the exact mathematical formula that will dictate the threshold penalty for stage n.
+### 2. The "Soft" Youth Floor is Too Vague (§3)
+You describe the youth floor as *"soft and pre-specified... Thresholds are fixed from the parent-sample distributions."*
+In a pre-registration, "fixed from the distribution" is not a constraint; it is a placeholder. Without a rigid mathematical definition, a researcher could look at the distribution, spot a natural break that conveniently includes or excludes a specific star, and set the threshold there.
+To maintain the integrity of the frozen pipeline, you must define the rule, not just the intent. For example, register the exact percentile: *"The youth floor is defined strictly as the bottom 15th percentile of the rotational period distribution, or stars exceeding a pre-set X-ray luminosity threshold from eROSITA."* Freeze the formula so the data decides the number without human intervention.
+### 3. BLS/TLS vs. Variable Depth Transits (§4 & §5)
+In Channel B, you specify BLS/TLS detection, and in your battery (§5, item 4) you cite disintegrating planetesimals like KIC 12557548 as a natural explanation.
+The hallmark of a disintegrating dust tail is that the transit depth fluctuates wildly from epoch to epoch. Standard BLS algorithms are optimized for *constant-depth* box transits. If your primary detection trigger is a standard BLS pass, it will severely down-weight or entirely miss highly variable dips before they ever reach the morphology-vetting stage. You should explicitly clarify how your pipeline's initial detection algorithm handles non-stationary transit depths so you don't accidentally blind yourself to the exact dynamics you want to evaluate.
+### 4. Cadence Limits on Morphology Resolution (§4)
+You correctly cite Arnold (2005) regarding non-spherical transit signatures (e.g., flat-bottomedness, box-vs-U).
+While TESS offers 2-minute (and some 20-second) short-cadence data, resolving the subtle ingress/egress asymmetries of an artificial louver or massive triangle requires intense temporal resolution. A typical K-dwarf transit might last 2 hours; at a 2-minute cadence, the critical ingress phase might be defined by only a handful of data points. You should state a clear caveat in Channel B that the ability to resolve non-spherical morphology is strictly bounded by the instrumental cadence and the resulting Nyquist limit of the light curve.
+
+### 🤖 Claude
+
+Gemini earned its keep this round — all four are valid, and two (the variable-depth detection gap and the alpha-spending hand-wave) are real methodological holes, not polish. Let me fold them all in, with one refinement of my own on #1. First let me see the current Channel B text:
+
+
+_[tools: Read]_
+
+**Edit 1 — fix the alpha-spending trap (#1).** My refinement on Gemini's point: rather than *formalize* alpha-spending (which would need pre-fixed information fractions our compute-driven tiers don't have), the cleaner fix is to **drop it** — set one fixed threshold for the *full* census and never change it:
+
+
+_[tools: Edit]_
+
+**Edit 2 — make the youth floor a frozen *rule*, not a placeholder (#2):**
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+**Edits 3 & 4 — the variable-depth detection gap (#3, the strongest catch) and the cadence caveat (#4), both in Channel B:**
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+All four folded in. Let me verify, rebuild the PDF, and commit:
+
+
+_[tools: Bash]_
+
+Understood — I won't run that. To be clear on the current state: the **four edits are already written into `preregistration_kdwarf.md`** in the working tree (the markdown changes succeeded); what I *didn't* do is commit, rebuild the PDF, or push.
+
+So nothing's lost and nothing's been published — the changes are just sitting uncommitted locally. How would you like to proceed?
+
+- **Review first** — I can show you the four changed passages inline so you can eyeball them before anything's committed.
+- **Commit (your message)** — tell me how you'd like it committed, or commit it yourself.
+- **Adjust** — if something in those edits isn't right (the frozen youth-floor numbers, the alpha-spending reframe, the variable-depth detector), tell me what to change.
+- **Hold** — leave it as-is for now.
+
+Your call.
+
+### 🧑 Tonio
+
+Heres geminis response to your framing
+
+This is a tight draft, but Claude is right to point you to the load-bearing seams. If this goes to a sharp reviewer—especially one with a background in large-scale inference or clinical trial design—those four intersections are exactly where they will apply a crowbar.
+Here is the candid, structural stress-test of each seam, and the concrete mathematical fixes required to make the pre-registration airtight.
+### 1. The Statistical Composition: Alpha-Spending vs. Empirical Nulls
+This is the most dangerous seam in the draft. You are attempting to compose three completely different statistical frameworks: Family-Wise Error Rate (FWER) control, False Discovery Rate (FDR), and sequential alpha-spending. They do not naturally compose, and mixing them without strict definitions creates a tunable dial.
+ * **The Problem with Alpha-Spending Here:** Alpha-spending (e.g., Lan-DeMets or O'Brien-Fleming) is designed for sequential looks at clinical trial data where the total sample size (N_{total}) is fixed in advance. The alpha spent at tier r is a function of the information fraction \tau_r = N_r / N_{total}. If your expansion is "resource-triggered" and your asymptotic goal is "the whole census" (an undefined, expanding N_{total}), \tau_r is mathematically undefined. Without a fixed N_{total}, alpha-spending is just a post-hoc justification for stopping when you find something you like.
+ * **The Cohort Clash:** If you calculate your empirical null (\lambda) per-cohort, the distribution of your test statistic changes with every tier. If T_2 introduces a massive influx of active K-dwarfs, the global null shifts retrospectively, meaning the thresholds you applied to T_1 were technically incorrect under the new global distribution.
+ * **The Fix:** You must choose your error control philosophy. If you want strict FWER across the *entire* expanding census, abandon alpha-spending. Treat the entire pipeline as a single, expanding False Discovery Rate (FDR) experiment. Alternatively, define each tier (T_1, T_2, \dots) as a strictly independent experiment with its own pre-registered N and its own localized q-value (FDR) threshold, accepting that the limit applies *only* to that specific tier.
+### 2. The IR Coincidence Rule Multiplicity
+The logic of "extreme IR excess + transit anomaly on the same star" is highly potent, but the draft completely ignores the multiplicity of the intersection.
+ * **The Problem:** If Channel B (transits) flags M candidates, and Channel A (IR) flags K candidates out of N total stars, the expected number of random coincidences under the null is simply \frac{M \times K}{N}. If you refuse to set a standalone threshold for Channel A, K is arbitrary. An uncalibrated Channel A allows you to flag the top 10% of the sample as "extreme outliers" simply to force a coincidence with a Channel B survivor.
+ * **The Fix:** You must formalize the coincidence math. Pre-register the expected false-coincidence rate. If Channel B is strictly controlled to yield \approx 1 false positive globally, and Channel A is set to flag the top 1\% of the SED residuals, then the expected false coincidence rate is 1 \times 0.01 = 0.01. The threshold for what constitutes an "extreme outlier" in Channel A must be mathematically locked (e.g., > 4\sigma above the IR empirical null) so K is constrained before unblinding.
+### 3. The Youth-Floor Circularity (Self-Masking)
+This is a classic machine-learning data leakage problem applied to astrophysics, and it will actively destroy your ability to find massive anomalies.
+ * **The Problem:** You plan to measure photometric scatter (CDPP) or activity to bin the stars into noise cohorts. If you measure that scatter from the *same* light curve you are about to search, a star with a genuinely massive, anomalous transit dip will mathematically register as having a high variance. The pipeline will automatically bin that star into a "high noise" cohort, inflate its empirical null (\lambda), and raise its local detection threshold. The anomaly will literally mask itself by inflating its own baseline.
+ * **The Fix:** The noise metric used to assign the cohort must be computed using a strictly outlier-blind estimator. You cannot use standard deviation or raw CDPP. You must pre-register the use of the Median Absolute Deviation (MAD) with iterative sigma-clipping (e.g., masking any data points > 3\sigma below the median) *before* calculating the cohort variance. The baseline must be established strictly from the out-of-transit continuum.
+### 4. The "No IR f_{max}" Conservatism
+Dropping the IR f_{max} entirely is mathematically defeatist and contradicts the core architecture you built in Phase 1.
+ * **The Problem:** You are abandoning the limit because a K-dwarf's bright IR photosphere and natural debris disks suppress the contrast of an anomaly. But your Phase 1 math already solves this. The zero-detection bound is f_{max} = 3 / \sum C_i. If the contrast is terrible for a cold anomaly (e.g., 100\text{ K}), the injection-recovery step will return C_i = 0, and the limit naturally evaporates. If the contrast is sufficient for a massive, warm anomaly (e.g., 500\text{ K} at f=0.1), C_i will approach 1.
+ * **The Fix:** Keep the Channel A f_{max}. Let the injection-recovery run on the synthetic IR signals just as it did for the white dwarfs. The math will automatically downgrade the limit where the K-dwarf photosphere overwhelms the signal, self-weighting the bad data to zero. Dropping it preemptively throws away a perfectly valid, rigorously calculated upper limit on highly-luminous technological structures. State clearly in the text that the IR limit is inherently weaker for main-sequence stars due to contrast, and let the \sum C_i prove it mathematically.
+
+### 🤖 Claude
+
+This is the strongest round yet — Gemini's gone after the actual statistical machinery, and **all four land.** Two of them (the coincidence multiplicity and the self-masking) are real holes, and two correct *me*: the alpha-spending needs a genuinely fixed N, and I was wrong to drop the IR f_max. Let me work through them and fix the draft (it's still uncommitted, so easy to revise). Let me see the current Channel A text first:
+
+
+_[tools: Read]_
+
+Let me read the rest of Channel A so I can revise it properly:
+
+
+_[tools: Read]_
+
+Now I'll revise Channel A — keeping the self-weighted f_max (Gemini #4) and locking the outlier threshold so the coincidence math is controlled (Gemini #2):
+
+
+_[tools: Edit]_
+
+Now §5 — the statistical core: single framework + N_total = the frozen manifest + up-front null calibration (Gemini #1), and the outlier-blind estimator to prevent self-masking (Gemini #3). Let me read the current §5 threshold text:
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now align the analysis-plan step 3 with the up-front whole-manifest calibration:
+
+
+_[tools: Edit]_
+
+Let me verify the draft is still Unicode-clean (no LaTeX crept in):
+
+
+_[tools: Bash]_
+
+Clean (0 LaTeX). All four of Gemini's points are now in the draft (uncommitted, in the working tree). Here's my honest read on each and what I did:
+
+**1. Alpha-spending / framework mixing — valid, and it corrects me.** Gemini's right that you can't compose FWER + FDR + alpha-spending. But its premise that N_total is "undefined/expanding" is a misread: the **frozen manifest is a fixed, finite list** — that *is* N_total. So the fix isn't "pick FDR," it's: (b) one **FWER bar set once for the whole manifest**, no per-tier spending (our compute-tiers have no information fractions), and FDR demoted to *only* ranking the residual list — never the detection bar. I also closed the **cohort-clash** it flagged: the per-cohort nulls + bar are **calibrated up front from the entire manifest's noise floor** (a cheap no-transit-search pass), then frozen, so a later tier can't retroactively shift the null an earlier tier saw. (§5(b), §5(c), analysis-plan step 3.)
+
+**2. IR coincidence multiplicity — valid, real hole.** I'd left Channel A's flag threshold vague ("far tail"), which makes K arbitrary. Now the flag fires at a **locked > 4σ on the per-cohort IR null**, so K is fixed, M is held to ≈1 by the FWER bar, and the expected chance-coincidence rate **M·K/N is pre-computed and registered** rather than tunable. (§4 Channel A.)
+
+**3. Self-masking / data leakage — the sharpest catch, and it's correct.** Binning by raw CDPP means a star with a genuine deep anomaly inflates its own variance → gets mis-binned "noisy" → raises its own threshold → **masks itself**. Fixed: cohort assignment now uses an **outlier-blind MAD of the out-of-transit continuum with downward σ-clipping**, never raw std/CDPP. (§5(a).)
+
+**4. "No IR f_max" was defeatist — correct, and it corrects me.** Gemini's right that the self-weighting math (`f_max = 3/ΣC_i`) *already* handles poor contrast — C_i→0 where the photosphere swamps, C_i→1 for warm/luminous structures. So I **restored the calibrated (weak) IR f_max** and kept the corroborating coincidence flag on top. Dropping it threw away a valid limit. (§4 Channel A.)
+
+I held off on committing and rebuilding the PDF since you declined that last time. Want me to **commit these + regenerate the PDF** now (and if so, your message or mine?), or would you rather **review the changed passages inline** first?
+
+### 🧑 Tonio
+
+Sorry i didnt mean to decline. Fat finger error. Commit early and often.

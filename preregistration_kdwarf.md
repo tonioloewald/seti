@@ -83,10 +83,15 @@ and injection-recovery, never by inspecting candidates.
   active stars, for two reasons that point the same way: the *life prior* (a star must have
   *existed* long enough for life to have originated, regardless of how long it will ultimately
   live) and *data quality* (young K dwarfs are magnetically active — the worst photometric noise).
-  Applied in two pre-specified stages: a coarse Gaia-only proxy in the manifest (kinematics; Gaia
-  photometric-variability amplitude), refined before the transit search by rotation-period
-  gyrochronology and activity indicators (GALEX, ROSAT/eROSITA, Ca II) where catalogued. Thresholds
-  are fixed from the parent-sample distributions, never tuned to candidates.
+  The floor is a **fixed rule, not a placeholder** (so the data decides *which* stars without any
+  human break-picking): a star is excluded iff **(i)** its gyrochronological age from a measured
+  rotation period, via the Angus et al. (2019) relation, is **< 1.0 Gyr**, **or (ii)** its
+  fractional X-ray luminosity (eROSITA/ROSAT) is **log(L_X/L_bol) > −4.0** (saturated/active), **or
+  (iii)** it lacks a rotation period *and* sits in the youngest decile of the Gaia
+  photometric-variability-amplitude distribution. Stars with no measurable rotation period and
+  normal activity are **retained** (absence of a period is not youth). These relations and the
+  three numeric cuts (1.0 Gyr, −4.0 dex, 10th percentile) are frozen here; rotation/activity are
+  measured pre-unblinding as noise characterisation, never from the transit candidates.
 - **No hard "quiet" cut — noisy stars self-weight.** Rather than excluding active stars, we include
   every star above the youth floor and let the per-star injection-recovery completeness C_i (§5) do
   the work: a transit is harder to recover in an active light curve, so a noisy star earns a low
@@ -96,10 +101,16 @@ and injection-recovery, never by inspecting candidates.
   the goal is everything and the binding constraint is compute, we pre-register a *nested* sequence
   of tiers (cleanest/brightest first: T₁ ⊂ T₂ ⊂ … ⊂ the full sample), analysed in that fixed order,
   with the expansion trigger being *available resources*, declared in advance — never the result of
-  a prior tier. The survey-wide trial-factor / family-wise threshold (§5) is recomputed for each
-  expanded sample (alpha-spending across stages). Growing the sample is therefore a pre-registered
-  confirmatory extension (cf. the Phase-1 variability expansion), not a post-hoc tweak; what is
-  forbidden is loosening any boundary *in reaction to a result* or to rescue a candidate.
+  a prior tier. **The detection threshold is *not* spent per stage** (our compute-determined tiers
+  have no pre-fixed information fractions, so a group-sequential alpha-spending function would not
+  apply): instead the survey-wide family-wise threshold (§5) is set **once, for control over the
+  entire intended census** — the full frozen sample size N_total declared in the manifest — and
+  applied **unchanged** to every tier. Expanding the analysed set can therefore only add confirmed
+  detections under the *same fixed bar*; it can never relax the threshold, so there is no dial to
+  tune by stopping at a convenient tier. This is deliberately conservative (we control as if the
+  whole census were analysed from the start). Growing the sample is a pre-registered confirmatory
+  extension (cf. the Phase-1 variability expansion); what is forbidden is loosening any boundary
+  *in reaction to a result* or to rescue a candidate.
 - No assumption that an anomaly orbits in a habitable zone; all periods the data permit are
   searched.
 - **Stated selection biases:** brightness-limited (toward nearby), the TESS/Kepler footprint, and
@@ -108,8 +119,9 @@ and injection-recovery, never by inspecting candidates.
 
 ## 4. Channels
 
-- **Channel B — transit morphology (PRIMARY, CALIBRATED).** BLS/TLS detection; morphology metrics
-  (asymmetry, flat-bottom fraction, box-vs-U, duty cycle); and a **mandatory automated
+- **Channel B — transit morphology (PRIMARY, CALIBRATED).** Detection by BLS/TLS for periodic
+  box/U transits, **plus a parallel variable-depth / aperiodic-dip detector**, then morphology
+  metrics (asymmetry, flat-bottom fraction, box-vs-U, duty cycle) and a **mandatory automated
   difference-image centroid gate** (§5). The Phase-1 machinery transfers directly: K dwarfs are
   point sources with clean Gaia astrometry, and a real occulter gives a *deep* transit, so the
   "deep ⇒ on-target real; shallow-and-offset ⇒ background blend, confirmed by centroiding" logic
@@ -118,22 +130,45 @@ and injection-recovery, never by inspecting candidates.
   candidate-generating channel into a primary, calibrated one**: it now supports a rigorous
   population-level upper limit on structural transit anomalies (RQ3, §5), the transit analogue of
   Phase 1's IR-excess `f_max`.
+  - **Variable-depth detection is not optional.** BLS/TLS are optimised for *constant-depth* periodic
+    boxes, but the highest-value signals (§1) — and a natural battery item, the disintegrating dust
+    tail (KIC 12557548) — have transit depths that *fluctuate epoch-to-epoch*. A BLS-only trigger
+    would down-weight or miss exactly the dynamic morphologies we most want to evaluate, blinding the
+    search to its own stated priority. Detection therefore runs the variable-depth/aperiodic pass
+    (single-event and depth-varying matched filters; cf. KIC 8462852) *alongside* BLS/TLS, with its
+    own empirical-null calibration (§5).
+  - **Morphology resolution is cadence-bounded (stated caveat).** Resolving Arnold-type ingress/egress
+    asymmetry requires fine sampling: at TESS 2-minute cadence a ~2-hour transit's ingress is only a
+    handful of points, so the subtlest non-spherical signatures are resolvable only for the brightest
+    targets with 20-second cadence, long-duration transits, or deep events. The morphology channel's
+    sensitivity is reported *as a function of cadence and transit duration*, not assumed uniform.
 - **Channel P — photometric departure (SECONDARY).** Departures from the natural
   rotation/granulation/activity model; correlated/structured variability; same empirical-null
   calibration as Phase 1.
-- **Channel A — infrared excess (CORROBORATING; extreme-outlier only, no standalone limit).** A
-  K dwarf's cool IR photosphere suppresses excess contrast, and debris disks are a common,
-  *expected* natural explanation — so this channel is toothless for *marginal* signals and carries
-  **no calibrated `f_max`**. Following the Phase-1 Channel-C precedent (an ordinal corroborating
-  flag with no standalone threshold), it is registered as a **high-bar extreme-outlier flag**: the
-  empirical null, calibrated against the disk-rich bulk, flags only the *far tail* — an excess
-  outside any natural disk/companion regime, an anomalous SED shape, or (highest value) a
-  *fluctuating* excess that a static disk cannot fake. Every flag is cross-checked against SIMBAD /
-  the literature / known debris-disk catalogues and the already-explained ones killed (prior
-  knowledge used as a *filter*, never as an assumption that the tail is empty). A surviving extreme
-  excess **elevates an object only when it coincides with a Channel-B transit anomaly on the same
-  star** — that coincidence (an otherwise-inexplicable IR excess *and* an anomalous transit on one
-  K dwarf) is the high-value residual, far stronger than either channel alone.
+- **Channel A — infrared excess (CALIBRATED but weak; self-weighting + corroborating).** A K dwarf's
+  cool IR photosphere suppresses excess contrast and debris disks are a common, *expected* natural
+  explanation, so this channel is *weak* — but weak is not zero, and **we keep a calibrated `f_max`**
+  (correcting an earlier draft that dropped it). The Phase-1 self-weighting math already handles the
+  weakness exactly: inject a synthetic anomalous excess and measure per-star completeness C_i; where
+  the photosphere swamps the signal (a cold, low-`f` anomaly) injection-recovery returns C_i ≈ 0 and
+  that star contributes nothing to `f_max = 3/ΣC_i`, while a warm, luminous structure (e.g. 500 K at
+  `f`=0.1) gives C_i ≈ 1 and a real constraint. The limit therefore *self-evaporates where the data
+  are blind and stands where they are not* — dropping it pre-emptively would throw away a valid (if
+  weak) upper limit on bright technological structures. We state plainly that this limit is inherently
+  weaker than Phase 1's WD limit, and let ΣC_i show by how much. Natural debris disks are removed by
+  the battery (SED regime + SIMBAD/literature cross-check), exactly as for white dwarfs.
+  - **Corroborating extreme-outlier flag — with a *locked* threshold (coincidence multiplicity).**
+    Separately from the `f_max`, Channel A contributes a high-bar flag for the *far tail* (an excess
+    outside any natural regime, an anomalous SED shape, or a *fluctuating* excess a static disk cannot
+    fake). Because we elevate a star when its IR flag **coincides** with a Channel-B transit anomaly,
+    the intersection has its own multiplicity: with M Channel-B survivors and K Channel-A flags over N
+    stars, the expected chance coincidences under the null are ≈ M·K/N. K must therefore be *locked
+    before unblinding*, not chosen to manufacture a coincidence: the Channel-A flag fires at a fixed
+    **> 4σ on the per-cohort IR empirical null**, which fixes K, so the expected false-coincidence
+    rate M·K/N is pre-computed and registered here (with M held to ≈1 by the §5 FWER bar, a 4σ tail
+    giving the joint chance rate ≪ 1). A surviving extreme IR excess *and* an anomalous transit on one
+    K dwarf is then the high-value residual — far stronger than either channel alone, and now with a
+    pre-registered false-alarm budget rather than an arbitrary one.
 
 ## 5. Natural-explanation battery, statistics, and stopping rule
 
@@ -164,21 +199,40 @@ because at this sample size nothing can be vetted by hand.
 - **Detection threshold and the trial factor.** With tens of thousands of stars × ~10⁶ BLS
   period/phase trials each, a 3–4σ bar would bury the residual list in noise. We therefore
   compose two corrections, both pre-specified as *procedures* (the resulting numbers come from the
-  data via those procedures, never from inspecting candidates): **(a)** an **empirical null on the
-  per-star BLS detection statistic, computed *within noise/activity cohorts*** (binned by each
-  light curve's photometric scatter / CDPP / activity level) rather than globally — so a quiet star
-  is judged against other quiet stars and the active stars' heavy-tailed noise (spots, flares,
-  rotation) does **not** inflate the threshold for the clean ones. This per-cohort grading (the
-  lesson from the v2 W2-offset handling, generalised) is what lets us keep every star above the
-  youth floor without a hard activity cut: within each cohort, genomic-control inflation λ rescales
-  for the non-Gaussian reality of TESS/Kepler systematics — as the WISE-excess null did (λ≈10.6 in
-  Phase 1). And **(b)** a
-  **survey-wide family-wise / look-elsewhere correction** (Gross & Vitells 2010; FDR, Benjamini–
-  Hochberg / Storey) such that the expected number of pure-noise false alarms across the *entire
-  frozen sample* is < 1. The resulting threshold is expected to land in the **≈6–7σ regime** (cf.
-  the Kepler 7.1σ bar, Jenkins et al. 2002, for ~150k stars) — but it is **derived from our own
-  injection-recovery on the frozen sample, not borrowed from Kepler**, since it depends on our
-  sample size, cadence, and period range. It is frozen before the real candidate tail is unblinded.
+  data via those procedures, never from inspecting candidates):
+  - **(a) Per-cohort empirical null — with an outlier-*blind* noise metric.** An empirical null on
+    the per-star BLS detection statistic, computed *within noise/activity cohorts* (binned by each
+    light curve's scatter / activity level) rather than globally — so a quiet star is judged against
+    other quiet stars and the active stars' heavy-tailed noise (spots, flares, rotation) does **not**
+    inflate the threshold for the clean ones. **The cohort-assignment noise metric is an
+    outlier-blind robust estimator — the median absolute deviation (MAD) of the out-of-transit
+    continuum after iterative σ-clipping of *downward* excursions (points > 3σ below the median are
+    masked) — never the raw standard deviation or CDPP.** This is load-bearing: a genuine deep
+    anomalous dip inflates a naïve variance, which would mis-bin that very star into a "noisy"
+    cohort, raise its local threshold, and let the anomaly **mask itself**. Clipping the dips before
+    measuring the baseline closes that data-leak. Within each cohort, genomic-control inflation λ
+    rescales for the non-Gaussian reality of TESS/Kepler systematics (as the WISE-excess null did,
+    λ≈10.6 in Phase 1); this per-cohort grading (the v2 W2-offset lesson, generalised) is what lets
+    us keep every star above the youth floor without a hard activity cut.
+  - **(b) One survey-wide family-wise (FWER) bar — a single framework, not a mix.** The threshold
+    controls the expected number of pure-noise false alarms across the *entire frozen manifest* to
+    **< 1** (cf. the Kepler 7.1σ bar, Jenkins et al. 2002, for ~150k stars), derived from **our own
+    injection-recovery**, not borrowed — it depends on our sample size, cadence, and period range,
+    and is expected to land in the **≈6–7σ regime**. Crucially we **do not compose mismatched
+    error-control frameworks**: we control FWER, full stop; we do *not* also spend FDR against the
+    same decision (FDR / Benjamini–Hochberg is used only to *rank-report* the surviving residual
+    list, never to set the detection bar), and we do *not* spend alpha per tier — `N_total` is the
+    fixed size of the immutable manifest (§3), not an open-ended census, so the bar is well-defined
+    and set **once** for the whole population.
+  - **(c) Calibrated up front from the whole manifest, then frozen.** Both the per-cohort nulls and
+    the FWER bar are calibrated **once, from the noise floor of the *entire* manifest** — a cheap
+    pass computing each star's robust scatter and BLS-null statistic, with **no transit search** —
+    *before* any tier is searched. This is what makes the staged analysis (§3) statistically clean:
+    because the cohorts and the bar are fixed from the whole population at the outset, analysing
+    tiers in compute order cannot retrospectively shift the null or threshold a later tier sees (the
+    "cohort clash" is closed). Only the transit search and injection-recovery are staged; the
+    statistical calibration covers everything from the start. The bar is frozen before any real
+    candidate tail is unblinded.
 - **Upper limit (Channel B, now calibrated).** The Poisson zero-detection bound
   `f_max(depth, period) = 3 / Σ_i C_i`, with per-star completeness C_i(depth, period) measured by
   **injection-recovery of synthetic anomalous transits into the real light curves** — the same
@@ -194,11 +248,12 @@ because at this sample size nothing can be vetted by hand.
 
 1. Freeze the sample → the immutable checksummed manifest (§3).
 2. Pull TESS/Kepler light curves (deterministic recipe); detrend.
-3. **Calibrate and freeze the thresholds before unblinding** — run the empirical-null calibration
-   on the bulk BLS-statistic distribution (the noise floor, not the candidate tail) and the
-   injection-recovery on the frozen sample to fix the family-wise-controlled detection threshold
-   and the per-star completeness C_i. *This step touches only the noise floor and synthetic
-   injections — never the real candidate tail.*
+3. **Calibrate and freeze the thresholds before unblinding** — over the **whole manifest's** noise
+   floor (every star's outlier-blind MAD scatter and BLS-null statistic; no transit search), fix the
+   per-cohort empirical nulls and the single FWER-controlled detection bar; run injection-recovery
+   to fix the per-star completeness C_i. Calibrating from the entire population up front (not from
+   whatever tier is in hand) is what keeps the staged search clean. *This step touches only the
+   noise floor and synthetic injections — never the real candidate tail.*
 4. **Unblind:** run the BLS/TLS search, apply the frozen threshold, compute morphology metrics,
    and pass survivors through the natural-explanation battery (automated centroid gate first).
 5. Report the full ranked residual list and the calibrated `f_max(depth, period)`.
