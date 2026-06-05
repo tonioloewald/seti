@@ -1,7 +1,8 @@
 # Pre-registration (DRAFT) — An Anomaly-Residual Search for Unexplained Transit and Photometric Signatures Around Main-Sequence K Dwarfs
 
-**Status: REGISTERED on OSF, 2026-06-05** (archiving; OSF URL / DOI to be recorded here once
-live). Phase 2 of the program whose Phase 1 (white dwarfs) is registered at OSF
+**Status: REGISTERED on OSF, 2026-06-05** — public and immutable at <https://osf.io/2akn3/>
+(DOI pending OSF minting, expected `10.17605/OSF.IO/2AKN3`). Phase 2 of the program whose Phase 1
+(white dwarfs) is registered at OSF
 [10.17605/OSF.IO/6YH7R](https://doi.org/10.17605/OSF.IO/6YH7R). The plan was frozen and registered
 **before any K-dwarf light curve was analysed**; the exact registered snapshot is git tag
 `phase2-registered-1.0` (commit `c404b73`). Post-registration changes are dated amendments

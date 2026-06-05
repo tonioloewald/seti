@@ -184,8 +184,8 @@ This is an **observational survey/census**, not a manipulative experiment: we ad
 
 ## Status
 
-- Pre-registration: **registered on OSF, 2026-06-05** (archiving). Submitted `preregistration_kdwarf.md` + this `REGISTRATION.md`, before any K-dwarf light curve is analysed.
-- OSF: _URL / DOI to be recorded here once archiving completes._
+- Pre-registration: **registered, public, and immutable on OSF, 2026-06-05** (10:30 UTC). Submitted `preregistration_kdwarf.md` + this `REGISTRATION.md`, before any K-dwarf light curve is analysed.
+- OSF: <https://osf.io/2akn3/> — title "Phase 2 — Main-Sequence K Dwarfs"; `public=true`, `registration=true`, not withdrawn (confirmed via the OSF API). **DOI pending OSF minting** — expected `10.17605/OSF.IO/2AKN3` (OSF mints `10.17605/OSF.IO/<GUID>`, as Phase 1's `6YH7R`); to be recorded here when assigned.
 - **Subjects (OSF / bepress taxonomy):** _Physical Sciences and Mathematics › Astrophysics and Astronomy › Stars, Interstellar Medium and the Galaxy_ (primary) **and** _Physical Sciences and Mathematics › Statistics and Probability_ (the empirical-null / large-scale-inference methodology). The taxonomy has no SETI/astrobiology node, so the work is classified by its actual objects and methods. _(Phase 1's selection was not recorded at the time; the same pairing applies — white dwarfs also fall under "Stars, Interstellar Medium and the Galaxy" — and can be backfilled here.)_
 - **Tags (OSF):** technosignatures, SETI, K dwarfs, main-sequence stars, transit photometry, transit morphology, TESS, Kepler, light curves, anomaly detection, box least squares, mechanism-agnostic, empirical null, false discovery rate, large-scale inference, look-elsewhere effect, injection-recovery, occurrence-rate upper limit, artificial transit signatures, astrostatistics. _("pre-registration" deliberately omitted as intrinsic; "Dyson sphere" omitted as it cuts against the mechanism-agnostic framing.)_
 - Registered-version git tag: **`phase2-registered-1.0` → commit `c404b73`** — the exact `preregistration_kdwarf.md` and `REGISTRATION.md` submitted to OSF. Everything after it is a dated pre-data amendment.

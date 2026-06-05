@@ -58,6 +58,6 @@ Post-registration changes to the Phase-2 registered plan ([`preregistration_kdwa
 
 | Date | Type | Section(s) | Change | Rationale |
 |------|------|-----------|--------|-----------|
-| 2026-06-05 | housekeeping | header, Status | Flip status DRAFT → registered; record the registered git tag and date (OSF URL/DOI to be filled once archiving completes). | Records the registration event itself; no methodological change. |
+| 2026-06-05 | housekeeping | header, Status | Flip status DRAFT → registered; record the registered git tag and date. Registration **approved, public, and immutable** at <https://osf.io/2akn3/> (10:30 UTC); DOI pending OSF minting (expected `10.17605/OSF.IO/2AKN3`). | Records the registration event itself; no methodological change. |
 
 *No real K-dwarf candidate data has been analysed. The calibration/validation procedure (prereg §6 step 3), the K-dwarf plugin, and the synthetic/known-object pilots are all pre-data and remain confirmatory.*
