@@ -31,40 +31,50 @@ def bls_detect(time, flux, periods, durations):
             "depth_snr": float(pg.depth_snr[i]), "sde": sde}
 
 
-def single_event_detect(time, flux, scatter, widths_pts=(3, 5, 9, 15, 25)):
-    """Aperiodic / variable-depth detector: matched-filter the light curve with box dips of
-    several widths at every epoch, scoring each by its dip SNR = (depth * sqrt(w)) / scatter.
-    Returns the strongest single dip and the count of significant (SNR>5) events -- catches a
-    fluctuating-depth tail or a one-off dimming that a constant-depth periodic search dilutes.
+def single_event_detect(time, flux, scatter, durations_d=(0.05, 0.1, 0.2, 0.4, 0.8),
+                        min_pts=3, snr_floor=5.0):
+    """Aperiodic / variable-depth detector, **gap-aware** (windows in real time, not point
+    indices): for each trial box duration (days) and each epoch as box centre, sum the flux
+    deficit over the points that actually fall within +/- duration/2 in time, and score by the
+    dip SNR = depth * sqrt(n_in_box) / scatter. Catches a fluctuating-depth tail or a one-off
+    dimming that a constant-depth periodic search dilutes; robust to the gaps and uneven
+    cadence of real TESS/Kepler light curves (a box spanning a data gap is scored by the
+    points it truly contains, not by index width).
 
-    Point-based (assumes roughly uniform cadence within a sector); the production version
-    windows in time across gaps. `scatter` is the outlier-blind per-point noise (core.noise).
+    `scatter` is the outlier-blind per-point noise (core.noise.robust_scatter). Returns the
+    strongest single dip and the count of distinct significant (SNR>snr_floor) events.
+    Vectorised per duration via searchsorted + cumulative sums.
     """
+    t = np.asarray(time, float)
     f = np.asarray(flux, float)
-    good = np.isfinite(f)
-    base = np.median(f[good])
-    if not np.isfinite(scatter) or scatter <= 0:
-        return {"best_snr": np.nan, "n_events": 0, "best_width": 0, "best_idx": -1}
-    fclean = np.where(good, f, base)
-    snr_max = np.zeros(f.size)
-    w_at = np.zeros(f.size, int)
-    dep_at = np.zeros(f.size)
-    for w in widths_pts:
-        if w % 2 == 0 or w >= good.sum():
-            continue                                        # odd widths only (exact length)
-        pad = w // 2                                        # edge-pad with base, not zeros,
-        fp = np.r_[np.full(pad, base), fclean, np.full(pad, base)]  # so boundaries aren't fake dips
-        sm = np.convolve(fp, np.ones(w) / w, mode="valid")  # length == f.size
-        deficit = base - sm
-        snr = deficit * np.sqrt(w) / scatter                # dip SNR at each epoch
+    m = np.isfinite(t) & np.isfinite(f)
+    t, f = t[m], f[m]
+    if t.size < min_pts or not np.isfinite(scatter) or scatter <= 0:
+        return {"best_snr": np.nan, "n_events": 0, "best_duration": 0.0, "best_time": np.nan,
+                "best_depth": np.nan}
+    o = np.argsort(t); t, f = t[o], f[o]
+    base = np.median(f)
+    csum = np.concatenate([[0.0], np.cumsum(f)])            # prefix sums for O(1) window means
+    snr_max = np.zeros(t.size)
+    dur_at = np.zeros(t.size)
+    dep_at = np.zeros(t.size)
+    for W in durations_d:
+        lo = np.searchsorted(t, t - W / 2.0, side="left")  # window [t-W/2, t+W/2] per centre
+        hi = np.searchsorted(t, t + W / 2.0, side="right")
+        n = hi - lo
+        ok = n >= min_pts
+        mean = np.where(ok, (csum[hi] - csum[lo]) / np.maximum(n, 1), base)
+        deficit = base - mean
+        snr = np.where(ok, deficit * np.sqrt(n) / scatter, 0.0)
         better = snr > snr_max
         snr_max = np.where(better, snr, snr_max)
-        w_at = np.where(better, w, w_at)
+        dur_at = np.where(better, W, dur_at)
         dep_at = np.where(better, deficit, dep_at)
-    i = int(np.argmax(snr_max))                             # per-epoch max across widths, then
-    n_events = _count_runs(snr_max > 5.0)                   # count distinct dips once (no frags)
+    i = int(np.argmax(snr_max))
+    n_events = _count_runs(snr_max > snr_floor)
     return {"best_snr": float(snr_max[i]), "n_events": int(n_events),
-            "best_width": int(w_at[i]), "best_idx": i, "best_depth": float(dep_at[i])}
+            "best_duration": float(dur_at[i]), "best_time": float(t[i]),
+            "best_depth": float(dep_at[i])}
 
 
 def _count_runs(mask):
