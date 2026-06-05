@@ -71,4 +71,5 @@ The detection threshold is not a guessed number but a **frozen procedure**: an o
 
 - Pre-registration: **DRAFT — not yet registered.** To be frozen and registered on OSF before any K-dwarf light curve is analysed.
 - OSF: _DOI to be recorded here on registration._
+- **Subjects (OSF / bepress taxonomy):** _Physical Sciences and Mathematics › Astrophysics and Astronomy › Stars, Interstellar Medium and the Galaxy_ (primary) **and** _Physical Sciences and Mathematics › Statistics and Probability_ (the empirical-null / large-scale-inference methodology). The taxonomy has no SETI/astrobiology node, so the work is classified by its actual objects and methods. _(Phase 1's selection was not recorded at the time; the same pairing applies — white dwarfs also fall under "Stars, Interstellar Medium and the Galaxy" — and can be backfilled here.)_
 - Registered-version git tag: _`phase2-registered-1.0` → commit `<hash>` to be recorded on registration._
