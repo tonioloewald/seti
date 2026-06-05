@@ -1,0 +1,33 @@
+{
+  "dataset": "Gaia DR3 gaiadr3.gaia_source (static release)",
+  "service": "ESA Gaia TAP (astroquery.gaia)",
+  "adql": "SELECT source_id, ra, dec, parallax, parallax_over_error, ruwe,\n       phot_g_mean_mag, bp_rp, teff_gspphot, logg_gspphot\nFROM gaiadr3.gaia_source\nWHERE teff_gspphot BETWEEN 3900 AND 5300\n  AND logg_gspphot > 4.3\n  AND ruwe < 1.4\n  AND parallax_over_error > 10\n  AND phot_g_mean_mag < 13.0",
+  "accessed_utc": "2026-06-05T12:09:29+00:00",
+  "registered_core_cuts": "Teff 3900-5300 K; logg>4.3; RUWE<1.4; parallax_over_error>10; G<13.0",
+  "ms_box": {
+    "bp_rp": [
+      0.78,
+      1.84
+    ],
+    "ridge_M_G": "5.5+2.83*(bp_rp-0.85)",
+    "halfwidth_mag": 1.5,
+    "note": "pre-data implementation decision; see AMENDMENTS.md Phase 2"
+  },
+  "n_core": 177649,
+  "n_selected": 175968,
+  "manifest_columns": [
+    "source_id",
+    "ra_deg",
+    "dec_deg",
+    "parallax",
+    "parallax_over_error",
+    "ruwe",
+    "g_mag",
+    "bp_rp",
+    "teff_gspphot",
+    "logg_gspphot",
+    "m_g"
+  ],
+  "manifest_sha256": "ffe47bc2b0591e4ee7c24705e6741b59b88bf6fac69fa674e0347bbac0d606d4",
+  "note": "Frozen K-dwarf target list for the registered Phase-2 search (OSF osf.io/2akn3). No light curve is pulled before this is committed."
+}
