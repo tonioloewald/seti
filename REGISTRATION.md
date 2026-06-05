@@ -113,6 +113,59 @@ This is an **observational survey/census**, not a manipulative experiment: we ad
 - **No counterbalancing** in the experimental sense (no presentation-order or carryover effects exist). The one ordering — the resource-staged tier sequence T₁ ⊂ T₂ ⊂ … — is fixed and pre-declared (cleanest first), expanded only by compute and never by a result; it is an analysis *order*, not a manipulated condition, and the family-wise bar is set once for the full census so order cannot bias the outcome.
 - **Outcome assessment.** Primary outcomes: (RQ1/RQ2) the residuals surviving the battery, and (RQ3) the per-family `f_max(depth, period) = 3/ΣC_i`. All measures and thresholds are frozen before the real candidate tail is unblinded.
 
+## Sampling and data collection procedures (OSF registration field)
+
+**Sampling strategy.**
+
+- **Target population.** Main-sequence K dwarfs in the solar neighbourhood, from Gaia DR3: Teff 3900–5300 K, log g > 4.3 (dwarfs, excluding subgiants/giants), clean astrometry (RUWE < 1.4, parallax_over_error > 10), within the corresponding absolute-G vs (G_BP − G_RP) main-sequence box. Indicative scale: ~12,600 at G < 11; ~22,000 within 100 pc; ~178,000 at G < 13.
+- **Sampling frame.** A single deterministic Gaia DR3 ADQL query (text pinned in the repo) returning source_ids, committed as an **immutable, checksummed manifest** before any light curve is pulled (same discipline as the Phase-1 `wd_sample` manifest).
+- **Inclusion.** Membership in the frozen manifest plus a **usable TESS and/or Kepler light curve**; the Kepler-field subset (4-year photometry) is a distinct, deepest tier.
+- **Exclusion.** One pre-specified **youth floor** (activity-based youth proxy: gyro age < 1.0 Gyr [Angus et al. 2019], or log L_X/L_bol > −4.0, or — lacking a rotation period — the youngest decile of Gaia variability amplitude). No hard "quiet" cut beyond this; no habitable-zone or period restriction.
+- **No recruitment, no randomization.** The population *is* the catalogue; which stars are *analysed when* is set by compute via pre-declared nested tiers (cleanest first, T₁ ⊂ T₂ ⊂ … ⊂ full manifest).
+
+**Data collection.**
+
+- **Source.** All public archival: Gaia DR3 (ESA Gaia Archive); TESS/Kepler light curves via MAST (`lightkurve`, gitignored bulk, pinned recipe). No new observations.
+- **Preparation.** Download SPOC/TESS-SPOC/QLP or Kepler products, normalise, detrend/flatten, **clip only upward outliers** (a downward clip would delete transits); source_ids carried as strings (19-digit Gaia IDs exceed float64 exact range).
+- **Order of operations (prereg §6).** (1) freeze manifest → (2) pull/detrend → (3) calibrate-and-freeze thresholds on the noise floor + synthetics + known-object controls (never the candidate tail) → (4) unblind and search → (5) report residuals + per-family `f_max`. Steps 1–3 touch no real candidate signal.
+- **Expected duration.** Compute-bound, not calendar-bound; no fixed end-date. The frozen manifest is finite; the analysed fraction grows with compute through the tiers, each reported as completed.
+
+## Remaining OSF template fields (Design / Sampling / Variables / Analysis)
+
+*The OSF Preregistration template is written for manipulative experiments; for an observational survey several fields are "none / not applicable," stated honestly rather than forced.*
+
+**Study type.** Observational study (archival survey of public TESS/Kepler photometry). No manipulation of the units.
+
+**Randomization.** None. Units are catalogue stars with fixed, given properties; the only stochastic element is the pseudo-random realizations of *synthetic injections* in the completeness sub-study. Analysis order (the tier sequence) is fixed and pre-declared, not randomized.
+
+**Existing data.** Registration *prior to analysis of the data*: the data are public archival (they exist), but the registered analysis — the candidate search — has not been run, and the sample manifest is not yet frozen. (Full disclosure of what *has* been touched — synthetic pilots and known-object validation — is in the foreknowledge field above.)
+
+**Sample size.** The finite frozen manifest (≈178,000 K dwarfs at G < 13; smaller, brighter tiers analysed first). The *planned maximal* sample is the whole manifest; the *analysed* subset grows by compute through the pre-declared tiers.
+
+**Sample size rationale.** Not a power calculation — a null is expected, so there is no target effect size. Sensitivity to the upper limit scales as ΣC_i, so a larger analysed sample only tightens `f_max`; we therefore take as much of the population as compute allows. The population itself is bounded by the catalogue cuts (clean MS K dwarfs to the magnitude/volume limit) and the usable-light-curve requirement, not by a target N.
+
+**Stopping rule.** Data collection/analysis stops when the frozen manifest is exhausted or compute is spent, whichever first; tiers complete in pre-declared order. **No results-dependent stopping** — the family-wise bar is set once for the full census, so stopping at any tier neither inflates false positives nor can be used to chase a candidate.
+
+**Manipulated variables.** None in the science search (observational). The only manipulation is synthetic-signal injection in the completeness sub-study, over a fully-crossed grid of morphology family × depth × period, used solely to measure C_i.
+
+**Measured variables.** Per star: BLS SDE and aperiodic/variable-depth SNR (detection statistics); folded-transit morphology metrics (flat-bottom / box-vs-U, ingress–egress asymmetry, depth-CV, duty cycle); difference-image centroid offset; and the natural-explanation battery outcomes (EB, activity, planet, disintegrating body, instrumental). Per population: per-family completeness C_i and the upper limit f_max.
+
+**Indices.** Per-cohort empirical-null parameters (δ0, σ0, genomic-control λ); the family-wise detection threshold; and `f_max(depth, period) = 3 / ΣC_i` reported separately per morphology family.
+
+**Statistical models.** Per-cohort empirical null (Efron 2004) with genomic-control inflation λ (Devlin & Roeder 1999); a single family-wise (Bonferroni-equivalent) threshold over N_total; the Poisson zero-detection bound `f_max = 3/ΣC_i`. FDR (Benjamini–Hochberg / Storey) is used only to *rank* the residual list, never to set the bar. There is no regression/GLM — this is calibrated detection and counting, not parameter estimation.
+
+**Transformations.** Light-curve normalisation, detrending/flattening, upward-only outlier clipping, phase-folding; outlier-blind MAD scatter (downward-clipped) for cohort assignment; magnitude↔flux conversions for the corroborating IR channel.
+
+**Inference criteria.** A candidate becomes a reported residual **iff** it exceeds the frozen family-wise empirical-null threshold (the *calculated* bar, expected near the Kepler-style ~6–7σ regime; expected pure-noise false alarms over N_total < 1) **and** survives every applicable battery item. The threshold is computed by the registered procedure (§6 step 3), never chosen by inspecting candidates.
+
+**Data exclusion.** Pre-specified: the youth floor (activity proxy) and the usable-light-curve requirement. In-pipeline: upward outliers clipped; a star with no recoverable signal earns C_i → 0 and self-weights toward zero in `f_max` rather than being hand-excluded. No exclusion is ever made in reaction to a candidate.
+
+**Missing data.** Stars lacking a usable TESS/Kepler light curve are not analysable; they weight to zero in `f_max` (they cannot bias the limit, they simply do not contribute). Light-curve gaps and cadence are handled by the detrend recipe; on real data the aperiodic detector uses its time-windowed (gap-aware) form.
+
+**Exploratory analysis.** Anything beyond the registered confirmatory pipeline — follow-up characterisation of a surviving residual, or any post-hoc cut — is flagged **exploratory/post-hoc** and never presented as confirmatory. The byproduct catalogues (transit candidates, activity characterisation) are descriptive.
+
+**Other.** The analysis reuses the Phase-1 **validated population-agnostic core** (regression-tested in `pipeline/runners/validate_wd.py`) via a new K-dwarf plugin — reused, not forked. AI systems (Gemini, Claude) served as co-designers; full transcripts are published. Because OSF's native registration-update flow is unavailable for Open-Ended Registrations, the **linked public git repository is the authoritative amendment record**.
+
 ## Route, timing, provenance — same as Phase 1
 
 - **Route:** OSF Open-Ended Registration (immutable, timestamped, DOI, unmoderated, created public).
