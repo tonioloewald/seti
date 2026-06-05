@@ -20,7 +20,8 @@ Outputs:
   data/derived/kdwarf_noise_floor.parquet   one row/star (source_id, tier, mission, scatter...)
   data/lightcurves/<source_id>.npz          compact detrended LC (time, flux)  [gitignored]
 """
-import os, sys, time, warnings
+import os, sys, time, warnings, tempfile, shutil
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import numpy as np
 import pandas as pd
 warnings.filterwarnings("ignore")
@@ -42,9 +43,9 @@ def tier_of(g):
     return len(TIER_EDGES)
 
 
-def fetch_one(ra, dec, mission_pref):
+def fetch_one(ra, dec, mission_pref, download_dir=None):
     """Return (time, flux, mission, label, cadence_d) for the best available light curve,
-    detrended and upward-only-clipped, or raise."""
+    detrended and upward-only-clipped, or raise. `download_dir` isolates concurrent downloads."""
     from astropy.coordinates import SkyCoord
     import astropy.units as u
     from lightkurve import search_lightcurve
@@ -65,7 +66,7 @@ def fetch_one(ra, dec, mission_pref):
             sub = s if len(s) else None
         if sub is None:
             continue
-        lc = sub[0].download().remove_nans().normalize()
+        lc = sub[0].download(download_dir=download_dir).remove_nans().normalize()
         lc = lc.flatten(window_length=401).remove_outliers(sigma_upper=5, sigma_lower=1e9)
         t = np.asarray(lc.time.value, float); f = np.asarray(lc.flux, float)
         good = np.isfinite(t) & np.isfinite(f)
@@ -78,52 +79,78 @@ def fetch_one(ra, dec, mission_pref):
     raise RuntimeError("no_usable_lightcurve")
 
 
+def process_star(s, mission):
+    """Fetch + characterise one star (thread-safe: isolated download dir, own npz)."""
+    sid = s["source_id"]
+    rec = {"source_id": sid, "tier": tier_of(s["g_mag"]), "g_mag": float(s["g_mag"])}
+    tmp = tempfile.mkdtemp(prefix="lk_")               # isolate astroquery/lightkurve cache
+    try:
+        tt, ff, mis, label, cad = fetch_one(float(s["ra_deg"]), float(s["dec_deg"]), mission, tmp)
+        sc = robust_scatter(ff)
+        np.savez_compressed(os.path.join(LCDIR, f"{sid}.npz"), time=tt, flux=ff)
+        rec.update({"mission": mis, "label": label, "n_points": int(tt.size),
+                    "cadence_d": cad, "scatter_ppm": sc * 1e6, "status": "ok"})
+    except Exception as e:
+        rec.update({"mission": "", "label": "", "n_points": 0, "cadence_d": np.nan,
+                    "scatter_ppm": np.nan, "status": f"err:{type(e).__name__}"})
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+    return rec
+
+
 def main():
     args = sys.argv[1:]
-    maxn = int(args[args.index("--max") + 1]) if "--max" in args else 10**9
-    gmax = float(args[args.index("--gmax") + 1]) if "--gmax" in args else 99.0
-    mission = args[args.index("--mission") + 1] if "--mission" in args else "TESS"
+    def opt(name, default, cast=str):
+        return cast(args[args.index(name) + 1]) if name in args else default
+    maxn = opt("--max", 10**9, int)
+    gmin = opt("--gmin", 0.0, float)
+    gmax = opt("--gmax", 99.0, float)
+    sample = opt("--sample", 0, int)          # >0: random-sample across the range (for the
+    seed = opt("--seed", 0, int)              #     full-manifest noise floor; not tier-ordered)
+    mission = opt("--mission", "TESS")
+    workers = opt("--workers", 6, int)        # concurrent MAST downloads (I/O-bound)
     os.makedirs(LCDIR, exist_ok=True)
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
 
     man = pd.read_csv(MAN, dtype={"source_id": str})
-    man = man[man["g_mag"] < gmax].sort_values("g_mag").reset_index(drop=True)  # brightest first
+    man = man[(man["g_mag"] >= gmin) & (man["g_mag"] < gmax)].sort_values("g_mag").reset_index(drop=True)
     done = set()
     rows = []
     if os.path.exists(OUT):
         prev = pd.read_parquet(OUT); prev["source_id"] = prev["source_id"].astype(str)
         done = set(prev["source_id"]); rows = prev.to_dict("records")
     todo = man[~man["source_id"].isin(done)]
-    print(f"manifest<G{gmax}: {len(man):,} | done: {len(done):,} | this run: up to {min(maxn, len(todo)):,}",
-          flush=True)
+    if sample > 0:
+        todo = todo.sample(min(sample, len(todo)), random_state=seed)  # representative spread
+        maxn = min(maxn, sample)
+    todo = todo.head(maxn)
+    total = len(todo)
+    print(f"manifest in [G{gmin},{gmax}): {len(man):,} | done: {len(done):,} | "
+          f"this run: {total:,} on {workers} workers", flush=True)
 
     t0 = time.time(); n = 0
-    for _, s in todo.iterrows():
-        if n >= maxn:
-            break
-        sid = s["source_id"]; rec = {"source_id": sid, "tier": tier_of(s["g_mag"]),
-                                     "g_mag": float(s["g_mag"])}
-        try:
-            tt, ff, mis, label, cad = fetch_one(float(s["ra_deg"]), float(s["dec_deg"]), mission)
-            sc = robust_scatter(ff)
-            np.savez_compressed(os.path.join(LCDIR, f"{sid}.npz"), time=tt, flux=ff)
-            rec.update({"mission": mis, "label": label, "n_points": tt.size,
-                        "cadence_d": cad, "scatter_ppm": sc * 1e6, "status": "ok"})
-        except Exception as e:
-            rec.update({"mission": "", "label": "", "n_points": 0, "cadence_d": np.nan,
-                        "scatter_ppm": np.nan, "status": f"err:{type(e).__name__}"})
-        rows.append(rec); n += 1
-        if n % 20 == 0:
-            pd.DataFrame(rows).to_parquet(OUT, index=False)
-            ok = sum(1 for r in rows if r.get("status") == "ok")
-            print(f"  {n}/{min(maxn, len(todo))}  ({time.time()-t0:.0f}s, {ok} ok total)", flush=True)
+    with ProcessPoolExecutor(max_workers=workers) as ex:
+        futs = [ex.submit(process_star, s.to_dict(), mission) for _, s in todo.iterrows()]
+        for fut in as_completed(futs):
+            rows.append(fut.result()); n += 1
+            if n % 25 == 0:
+                pd.DataFrame(rows).to_parquet(OUT, index=False)
+                ok = sum(1 for r in rows if r.get("status") == "ok")
+                rate = n / max(time.time() - t0, 1e-9)
+                eta = (total - n) / max(rate, 1e-9)
+                print(f"  {n}/{total}  ({time.time()-t0:.0f}s, {rate:.1f}/s, ETA {eta/60:.0f}m, "
+                      f"{ok} ok total)", flush=True)
     df = pd.DataFrame(rows); df.to_parquet(OUT, index=False)
-    ok = df[df["status"] == "ok"]
-    print(f"done this run: +{n} processed; total {len(df):,} ({len(ok):,} ok).", flush=True)
-    if len(ok):
-        print(f"  scatter (ppm): median={ok['scatter_ppm'].median():.0f}  "
-              f"p10={ok['scatter_ppm'].quantile(.1):.0f}  p90={ok['scatter_ppm'].quantile(.9):.0f}")
-        print(f"  by tier: " + "  ".join(f"T{t}={(ok['tier']==t).sum()}" for t in sorted(ok['tier'].unique())))
+    try:
+        ok = df[df["status"] == "ok"]
+        print(f"done this run: +{n} processed; total {len(df):,} ({len(ok):,} ok).", flush=True)
+        if len(ok):
+            print(f"  scatter (ppm): median={ok['scatter_ppm'].median():.0f}  "
+                  f"p10={ok['scatter_ppm'].quantile(.1):.0f}  p90={ok['scatter_ppm'].quantile(.9):.0f}")
+            print(f"  by tier: " + "  ".join(f"T{t}={(ok['tier']==t).sum()}"
+                                             for t in sorted(ok['tier'].unique())))
+    except (ValueError, OSError):
+        pass            # stdout may be closed under a background redirect; the parquet is saved
 
 
 if __name__ == "__main__":
