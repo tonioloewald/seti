@@ -91,6 +91,28 @@ For a null-expected search, predicting a detection would be dishonest: the regis
 
 The honest summary: some public data and known-object/synthetic validation have been seen and disclosed; **none of the registered target sample has been searched**; and the procedure that will search it is frozen and auditable before it runs.
 
+## Additional blinding during analysis (OSF registration field)
+
+The primary blind is structural and already registered (prereg §6): detection thresholds and per-cohort nulls are *calculated* on the noise floor, synthetics, and known-object controls (step 3) and **frozen before the real candidate tail is unblinded** (step 4). During calibration the analyst is blind to the real candidate signals — the empirical null is built from the bulk noise distribution, never the tail — so no threshold can be set in response to a candidate. This is the particle-physics "keep the signal region hidden until the analysis is frozen" discipline, implemented via the step-3 / step-4 split.
+
+Additional analysis-time blinding:
+
+- **Automated, deterministic vetting.** At this sample scale (tens of thousands), candidate vetting is algorithmic, not by-eye: the difference-image centroid gate and the full natural-explanation battery run automatically at frozen thresholds. There is no human "looks promising / looks like junk" step that could import selection bias — the pipeline is a deterministic function of the frozen inputs.
+- **Outlier-blind noise/cohort estimation.** The per-star noise metric (MAD with downward-only σ-clipping) is computed so a genuine dip cannot influence the noise floor or a star's cohort assignment — blinding the *calibration* to the very signals it might otherwise suppress.
+- **Blind injection-recovery.** Completeness `C_i` is measured by injecting synthetic anomalies into the real light curves; the injected set is not surfaced to the analyst during threshold-setting (a salt-and-pepper blind), so the pipeline cannot be tuned to preferentially recover or suppress particular morphologies.
+
+What we deliberately do **not** blind, and why — **object identity.** Cross-matching a candidate against SIMBAD / the literature / known-disk and eclipsing-binary catalogues is a *registered battery step*; blinding identity would disable it. The protection is directional instead: prior knowledge may only *explain a candidate away*, never *assume the residual set is empty* — it can subtract candidates, never manufacture confidence in a non-detection.
+
+## Study design (OSF registration field)
+
+This is an **observational survey/census**, not a manipulative experiment: we administer no conditions or treatments and randomize nothing about the stars — the units (individual main-sequence K dwarfs in a frozen, checksummed manifest) have fixed, given properties we *measure*, not assign. We use the experimental vocabulary only where it genuinely maps.
+
+- **Primary design — single-group observational screen with a pre-calibrated decision rule.** Each star is a unit contributing a light curve; the measure is a per-star detection statistic (BLS SDE + aperiodic/variable-depth SNR) plus the binary outcome of a fixed natural-explanation battery. One group, no treatment/control arms; the "condition" a star is in — its noise/activity level — is *observed, not assigned*. The outcome (anomalous residual vs explained) is assessed by a frozen, automated decision rule, not by eye.
+- **Stratification (descriptive blocking, not randomized blocks).** Stars are binned into noise/activity **cohorts** by an outlier-blind scatter metric, and the threshold is calibrated within each cohort. The strata are measured, not randomly assigned — "blocking" only in the descriptive sense.
+- **Embedded injection-recovery sub-study — where controlled factorial/repeated-measures design genuinely applies.** To measure completeness `C_i`, synthetic signals are injected into the real light curves over a fully-crossed grid of **morphology family × depth × period** (factorial). Each star receives many injections (**within-subject / repeated measures**); recovery at the frozen threshold is the dependent measure; injection realizations are pseudo-randomized. Because each light curve is its own noise background across all injected conditions, the completeness comparison across depth/period/family is **paired (within-subject)**, while the comparison *across cohorts* is **between-subject** — so the overall design is **mixed**.
+- **No counterbalancing** in the experimental sense (no presentation-order or carryover effects exist). The one ordering — the resource-staged tier sequence T₁ ⊂ T₂ ⊂ … — is fixed and pre-declared (cleanest first), expanded only by compute and never by a result; it is an analysis *order*, not a manipulated condition, and the family-wise bar is set once for the full census so order cannot bias the outcome.
+- **Outcome assessment.** Primary outcomes: (RQ1/RQ2) the residuals surviving the battery, and (RQ3) the per-family `f_max(depth, period) = 3/ΣC_i`. All measures and thresholds are frozen before the real candidate tail is unblinded.
+
 ## Route, timing, provenance — same as Phase 1
 
 - **Route:** OSF Open-Ended Registration (immutable, timestamped, DOI, unmoderated, created public).
