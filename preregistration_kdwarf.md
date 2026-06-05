@@ -349,12 +349,17 @@ The complete, lightly-redacted working transcripts are archived in the public re
 
 ## References
 
-(Shared methodology references as Phase 1, plus transit-specific.)
+(Shared methodology references as Phase 1 — Efron 2004 empirical null; Devlin & Roeder 1999
+genomic control; Benjamini & Hochberg 1995 / Storey 2002 FDR; Gross & Vitells 2010
+look-elsewhere; Jenkins et al. 2002 Kepler 7.1σ — plus transit-specific below.)
 - Arnold, L. F. A. 2005, *ApJ*, 627, 534 — artificial/ringed transit signatures.
 - Kovács, G., Zucker, S., & Mazeh, T. 2002, *A&A*, 391, 369 — Box Least Squares.
 - Hippke, M., & Heller, R. 2019, *A&A*, 623, A39 — Transit Least Squares.
 - Boyajian, T. S., et al. 2016, *MNRAS*, 457, 3988 — KIC 8462852 (anomalous, structured transits).
+- Rappaport, S., et al. 2012, *ApJ*, 752, 1 — KIC 12557548, a disintegrating planet (step-3d control).
 - Vanderburg, A., et al. 2015, *Nature*, 526, 546 — disintegrating planetesimals at WD 1145+017.
+- Angus, R., et al. 2019, *AJ*, 158, 173 — gyrochronology age–rotation relation (youth floor, §3).
+- Claret, A. 2017, *A&A*, 600, A30 — limb-darkening coefficients (TESS), Channel-B forward models.
 - Borucki, W. J., et al. 2010, *Science*, 327, 977 — Kepler.
 - Ricker, G. R., et al. 2015, *JATIS*, 1, 014003 — TESS.
 - Jenkins, J. M., Caldwell, D. A., & Borucki, W. J. 2002, *ApJ*, 564, 495 — transit detection threshold.
