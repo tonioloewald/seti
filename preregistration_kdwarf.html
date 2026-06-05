@@ -26,7 +26,7 @@ figure { margin: 1.1em auto; text-align: center; page-break-inside: avoid; }
 figure img { max-width: 100%; height: auto; border: 1px solid #ddd; }
 figcaption { font-size: 9pt; color: #333; text-align: left; margin-top: 0.45em;
              line-height: 1.35; }
-</style></head><body><h1>Pre-registration (DRAFT) — An Anomaly-Residual Search for Unexplained Transit and Photometric Signatures Around Old, Quiet K Dwarfs</h1>
+</style></head><body><h1>Pre-registration (DRAFT) — An Anomaly-Residual Search for Unexplained Transit and Photometric Signatures Around Main-Sequence K Dwarfs</h1>
 <p><strong>Status: DRAFT / in preparation — NOT yet registered.</strong> Phase 2 of the program whose
 Phase 1 (white dwarfs) is registered at OSF <a href="https://doi.org/10.17605/OSF.IO/6YH7R">10.17605/OSF.IO/6YH7R</a>.
 This plan is to be frozen and registered on OSF <strong>before any K-dwarf light curve is analysed</strong>;
@@ -36,8 +36,8 @@ the K-dwarf-specific parts are a new population plugin, not a fork.</p>
 <hr />
 <h2>0. Summary</h2>
 <p>A pre-registered, mechanism-agnostic search for anomalous transit and photometric signatures
-around <strong>old, quiet main-sequence K dwarfs</strong> — the longest-lived, most thermally-stable, and
-photometrically-quietest <em>living</em> stellar hosts. Phase 1 applied this anomaly-residual
+around <strong>main-sequence K dwarfs</strong> — the longest-lived and most thermally-stable <em>living</em> stellar
+hosts — restricted only by an <em>activity-based youth floor</em> (§3) that excludes the genuinely young. Phase 1 applied this anomaly-residual
 methodology to white-dwarf remnants and returned a clean, fully-explained null with a
 quantitative upper limit. Phase 2 carries the <strong>same validated machinery</strong> to a living host,
 with <strong>transit morphology as the primary channel</strong>. We search for departures from the natural
@@ -84,8 +84,8 @@ and injection-recovery, never by inspecting candidates.</p>
 <li><strong>RQ2 (photometric departure).</strong> Do any show a persistent or time-varying photometric signature
   departing from the natural rotation/granulation/activity model that survives the battery?</li>
 <li><strong>RQ3 (upper limit).</strong> With no unexplained anomaly, what upper limit <code>f_max</code> can we place on
-  the prevalence of anomalous occulters/departures around old, quiet K dwarfs, as a function of
-  depth and period?</li>
+  the prevalence of anomalous occulters/departures around main-sequence K dwarfs (above the
+  youth floor), as a function of depth and period?</li>
 </ul>
 <h2>3. Sample and inclusion</h2>
 <ul>
@@ -104,19 +104,29 @@ and injection-recovery, never by inspecting candidates.</p>
   impose no scientific exclusion beyond the minimal <em>youth floor</em> below and the data-quality
   requirement above. Which stars have been <em>analysed</em> at any moment is set by available compute;
   the asymptotic target is the entire K-dwarf census.</li>
-<li><strong>Youth floor (the one real cut — soft and pre-specified).</strong> We exclude only genuinely young,
-  active stars, for two reasons that point the same way: the <em>life prior</em> (a star must have
-  <em>existed</em> long enough for life to have originated, regardless of how long it will ultimately
-  live) and <em>data quality</em> (young K dwarfs are magnetically active — the worst photometric noise).
-  The floor is a <strong>fixed rule, not a placeholder</strong> (so the data decides <em>which</em> stars without any
-  human break-picking): a star is excluded iff <strong>(i)</strong> its gyrochronological age from a measured
-  rotation period, via the Angus et al. (2019) relation, is <strong>&lt; 1.0 Gyr</strong>, <strong>or (ii)</strong> its
-  fractional X-ray luminosity (eROSITA/ROSAT) is <strong>log(L_X/L_bol) &gt; −4.0</strong> (saturated/active), <strong>or
-  (iii)</strong> it lacks a rotation period <em>and</em> sits in the youngest decile of the Gaia
-  photometric-variability-amplitude distribution. Stars with no measurable rotation period and
-  normal activity are <strong>retained</strong> (absence of a period is not youth). These relations and the
-  three numeric cuts (1.0 Gyr, −4.0 dex, 10th percentile) are frozen here; rotation/activity are
-  measured pre-unblinding as noise characterisation, never from the transit candidates.</li>
+<li><strong>Youth floor (the one real cut — an <em>activity-based youth proxy</em>).</strong> Its purpose is the
+  <em>life prior</em>: a star must have <em>existed</em> long enough for life to have had the chance to originate.
+  But we are honest about the observable: <strong>we cannot measure a field K dwarf&rsquo;s age directly</strong> (no
+  per-star asteroseismology, no cluster membership), so the floor is operationally an
+  <strong>activity/rotation cut interpreted as youth</strong> through the well-established age–rotation–activity
+  relation — a fast rotator / X-ray-saturated / highly variable K dwarf is young. The intent is age;
+  the measurement is activity; we state both rather than dress one as the other. The floor is a
+  <strong>fixed rule, not a placeholder</strong> (so the data decides <em>which</em> stars, no human break-picking): a
+  star is excluded iff <strong>(i)</strong> its gyrochronological age from a measured rotation period, via the
+  Angus et al. (2019) age–rotation relation, is <strong>&lt; 1.0 Gyr</strong>, <strong>or (ii)</strong> its fractional X-ray
+  luminosity (eROSITA/ROSAT) is <strong>log(L_X/L_bol) &gt; −4.0</strong> (saturated/active), <strong>or (iii)</strong> it lacks
+  a rotation period <em>and</em> sits in the youngest decile of the Gaia photometric-variability-amplitude
+  distribution. Stars with no measurable rotation period and normal activity are <strong>retained</strong>
+  (absence of a period is not youth). These relations and the three numeric cuts (1.0 Gyr, −4.0 dex,
+  10th percentile) are frozen here; rotation/activity are measured pre-unblinding as noise
+  characterisation, never from the transit candidates.</li>
+<li><em>Reconciling with &ldquo;no quiet cut&rdquo; below.</em> The youth floor and the no-quiet-cut principle sit at
+    <strong>opposite ends of the same activity axis, for different reasons</strong>. The youth floor removes only
+    the <em>extreme</em> young/active tail — and removes it for the <strong>life prior</strong>, not for noise. Everything
+    above it (the broad spread of moderately-active-to-quiet <em>old</em> stars) is <strong>retained</strong>, and its
+    residual activity is handled by per-star self-weighting, <strong>not</strong> by a further activity cut. So we
+    do cut on activity once, at the young extreme, to serve the age prior; we do <em>not</em> cut on activity
+    again to manage noise.</li>
 <li><strong>No hard &ldquo;quiet&rdquo; cut — noisy stars self-weight.</strong> Rather than excluding active stars, we include
   every star above the youth floor and let the per-star injection-recovery completeness C_i (§5) do
   the work: a transit is harder to recover in an active light curve, so a noisy star earns a low
@@ -147,7 +157,15 @@ and injection-recovery, never by inspecting candidates.</p>
 <li><strong>Channel B — transit morphology (PRIMARY, CALIBRATED).</strong> Detection by BLS/TLS for periodic
   box/U transits, <strong>plus a parallel variable-depth / aperiodic-dip detector</strong>, then morphology
   metrics (asymmetry, flat-bottom fraction, box-vs-U, duty cycle) and a <strong>mandatory automated
-  difference-image centroid gate</strong> (§5). The Phase-1 machinery transfers directly: K dwarfs are
+  difference-image centroid gate</strong> (§5). <strong>Detection does not depend on morphology.</strong> BLS/TLS (and
+  the variable-depth detector) are the gate: any sufficiently deep dip is <em>caught as a candidate</em>
+  regardless of its shape — a smooth, U-shaped occulter (e.g. an end-on cylinder) is detected
+  exactly as a planet is. The morphology and depth-variability metrics are <em>parallel safety nets</em>
+  that run <strong>after</strong> detection to flag the non-planetary minority; they are never required to
+  trigger a detection. This is deliberate: when the baseline is a rigorous null, an unexplained
+  anomaly is already the extreme tail, and demanding it <em>also</em> cast a diagnostically asymmetric
+  shadow would be asking for the tail of the tail. We do not — detection sensitivity (the <code>f_max</code>
+  in §5) rests on the depth/period reach of BLS, not on resolving exotic morphology. The Phase-1 machinery transfers directly: K dwarfs are
   point sources with clean Gaia astrometry, and a real occulter gives a <em>deep</em> transit, so the
   &ldquo;deep ⇒ on-target real; shallow-and-offset ⇒ background blend, confirmed by centroiding&rdquo; logic
   applies (the same code validated for white dwarfs, <code>pipeline/analysis/07–09</code>). Crucially, the
@@ -258,11 +276,26 @@ because at this sample size nothing can be vetted by hand.</p>
     &ldquo;cohort clash&rdquo; is closed). Only the transit search and injection-recovery are staged; the
     statistical calibration covers everything from the start. The bar is frozen before any real
     candidate tail is unblinded.</li>
-<li><strong>Upper limit (Channel B, now calibrated).</strong> The Poisson zero-detection bound
-  <code>f_max(depth, period) = 3 / Σ_i C_i</code>, with per-star completeness C_i(depth, period) measured by
-  <strong>injection-recovery of synthetic anomalous transits into the real light curves</strong> — the same
-  logic as Phase 1&rsquo;s IR-excess limit, now yielding a population constraint on structural transit
-  anomalies as a function of depth and period.</li>
+<li><strong>Upper limit (Channel B, now calibrated) — reported <em>per morphology family</em>.</strong> The Poisson
+  zero-detection bound <code>f_max = 3 / Σ_i C_i</code>, with per-star completeness C_i measured by
+  <strong>injection-recovery of a frozen library of forward-modelled anomaly morphologies into the real
+  light curves</strong>. The library is registered here (not chosen after seeing data) and generated by a
+  single exact procedure — sweeping an opaque/graded occulter mask across a limb-darkened stellar
+  disk (<code>core/transit.py</code>): a <strong>flat occulter</strong> (box), an <strong>asymmetric tilted / triangular
+  occulter</strong> (Arnold-type), and a <strong>disintegrating dust-tail</strong> (sharp ingress / slow egress with
+  per-epoch depth variation and dropouts), all against a <strong>natural limb-darkened-planet negative
+  control</strong> that defines the morphology null. C_i — and therefore <code>f_max</code> — is reported <strong>separately
+  for each family</strong>, as a function of (depth, period): a flat megastructure occulter is easy and
+  bounds tightly, a subtle tilted shape at shallow depth is hard and bounds loosely, and the limit
+  <em>states which is which</em> rather than collapsing every anomaly onto one box (which would silently
+  overstate completeness for exactly the non-box signals this channel exists to find). A
+  synthetic-only pilot (<code>runners/pilot_injection.py</code>, run pre-freeze, no target data) confirms the
+  morphology metrics (flat-bottom, ingress/egress asymmetry, depth-CV) separate these families from
+  the planet locus above explicit <em>folded-profile per-bin SNR</em> floors — at 1 % depth, box ≳ 20 on
+  flat-bottom, tail ≳ 12 on asymmetry (plus depth-CV ≈ 0.7 vs ≈ 0 for a stable transiter), while
+  subtle tilted/triangular shapes are <em>not</em> separable at shallow depth and need depth-CV or deeper
+  transits. The metrics demonstrably fire on the non-box signals, and the SNR floors are reported,
+  not hidden.</li>
 <li><strong>Stopping rule (unchanged from Phase 1):</strong> &ldquo;unexplained&rdquo; means &ldquo;survives the registered
   battery at procedure-frozen thresholds,&rdquo; nothing more. We report the <em>full ranked residual
   list</em>, and the standing interpretation is that a residual is a target for conventional
@@ -273,20 +306,47 @@ because at this sample size nothing can be vetted by hand.</p>
 <ol>
 <li>Freeze the sample → the immutable checksummed manifest (§3).</li>
 <li>Pull TESS/Kepler light curves (deterministic recipe); detrend.</li>
-<li><strong>Calibrate and freeze the thresholds before unblinding</strong> — over the <strong>whole manifest&rsquo;s</strong> noise
-   floor (every star&rsquo;s outlier-blind MAD scatter and BLS-null statistic; no transit search), fix the
-   per-cohort empirical nulls and the single FWER-controlled detection bar; run injection-recovery
-   to fix the per-star completeness C_i. Calibrating from the entire population up front (not from
-   whatever tier is in hand) is what keeps the staged search clean. <em>This step touches only the
-   noise floor and synthetic injections — never the real candidate tail.</em></li>
-<li><strong>Unblind:</strong> run the BLS/TLS search, apply the frozen threshold, compute morphology metrics,
-   and pass survivors through the natural-explanation battery (automated centroid gate first).</li>
-<li>Report the full ranked residual list and the calibrated <code>f_max(depth, period)</code>.</li>
+<li><strong>Calibration &amp; validation — a pre-registered <em>procedure</em>, not a frozen number.</strong> We do not
+   peek at data to pick thresholds, and we do not register guessed values. We register the <em>method</em>
+   below in full; the resulting numbers (the per-cohort nulls, the genomic-control λ, the FWER σ-bar,
+   the per-family C_i) are <em>outputs</em> of running it, generated after registration and auditable by a
+   reviewer against this specification. Every sub-step touches only the noise floor and synthetic
+   injections — <strong>never the real candidate tail</strong> — so executing it reveals no candidate.
+   - <strong>3a. Outlier-blind noise floor &amp; cohorts.</strong> For every manifest star, compute the noise metric
+     as the <strong>MAD of the out-of-transit continuum after iterative downward 3σ-clipping</strong> (dips
+     masked, §5(a)); assign each star to a noise/activity cohort by <strong>fixed percentile edges</strong> of
+     that MAD (and the activity proxies of §3), registered here so the binning is reproducible.
+     Acceptance check: an injected deep dip must <em>not</em> move its star&rsquo;s cohort (the clip prevents an
+     anomaly inflating its own baseline).
+   - <strong>3b. Bulk sensitivity (U-shaped transits).</strong> Inject <strong>constant-depth, limb-darkened (U-shaped)
+     transits</strong> across a registered depth × period grid into the real light curves; run BLS/TLS
+     recovery. This yields the per-star, per-cohort completeness C_i for ordinary transits, the
+     genomic-control inflation λ, and the <strong>single FWER σ-bar</strong> set so the expected pure-noise false
+     alarms over the whole manifest N_total is &lt; 1 (§5(b)). Whatever σ this procedure returns is the
+     bar — we expect ≈ 6–7σ, but we report the value it yields.
+   - <strong>3c. Anomaly sensitivity &amp; metric validation (the frozen library, §5).</strong> Inject the registered
+     anomaly families — <strong>variable-depth disintegrating tails and strictly asymmetric dips</strong> — across
+     the same grid, and confirm (i) the <strong>variable-depth / aperiodic detector recovers them</strong> (BLS
+     does not silently discard a fluctuating-depth dip as noise) and (ii) the <strong>morphology metrics
+     flag them non-planetary</strong>. This yields the <strong>per-family C_i</strong> for the per-family <code>f_max</code>. Recall
+     (§4) that detection does not depend on morphology: 3b sets detection sensitivity, 3c verifies
+     the parallel nets catch the non-planetary minority.
+   - <strong>3d. Known-object controls.</strong> Validate the end-to-end detector + metrics against <strong>named,
+     published systems</strong> (not the target tail): they must recover ordinary transiters and must fire
+     on real anomalous transiters — KIC 12557548 / Kepler-1520 (disintegrating dust tail) and
+     WD 1145+017 — reproducing their known behaviour. This is the Phase-1 &ldquo;validate on WD 1856+534 b&rdquo;
+     discipline, registered as a step rather than left informal.</li>
 </ol>
-<p>Same recipe-in-repo, checksum, gitignored-bulk discipline as Phase 1. The split between steps 3
-(noise-floor/synthetic calibration, thresholds frozen) and 4 (real candidates unblinded against
-the frozen thresholds) is the integrity crux at this sample size: it is what prevents a strange
-real signal from tempting a threshold tweak.</p>
+<p>All outputs of step 3 are frozen before step 4; none is ever re-touched in reaction to a candidate.
+4. <strong>Unblind:</strong> run the BLS/TLS + variable-depth search, apply the frozen threshold, compute
+   morphology metrics, and pass survivors through the natural-explanation battery (automated centroid
+   gate first).
+5. Report the full ranked residual list and the calibrated per-family <code>f_max(depth, period)</code>.</p>
+<p>Same recipe-in-repo, checksum, gitignored-bulk discipline as Phase 1. The split between step 3
+(noise-floor/synthetic calibration + known-object validation, all outputs frozen) and step 4 (real
+candidates unblinded against the frozen thresholds) is the integrity crux at this sample size: it is
+what prevents a strange real signal from tempting a threshold tweak. A reviewer judges us not on the
+numbers we obtained but on whether we executed the registered procedure that produced them.</p>
 <h2>7. Outcomes and interpretation</h2>
 <ul>
 <li><strong>Expected:</strong> a clean, explained null plus a prevalence upper limit, with a byproduct catalogue
@@ -316,12 +376,17 @@ active computational logic engines and co-designers in methodology, implementati
 adversarial review; they are credited as such while the investigator retains all accountability.
 The complete, lightly-redacted working transcripts are archived in the public repository.</p>
 <h2>References</h2>
-<p>(Shared methodology references as Phase 1, plus transit-specific.)
+<p>(Shared methodology references as Phase 1 — Efron 2004 empirical null; Devlin &amp; Roeder 1999
+genomic control; Benjamini &amp; Hochberg 1995 / Storey 2002 FDR; Gross &amp; Vitells 2010
+look-elsewhere; Jenkins et al. 2002 Kepler 7.1σ — plus transit-specific below.)
 - Arnold, L. F. A. 2005, <em>ApJ</em>, 627, 534 — artificial/ringed transit signatures.
 - Kovács, G., Zucker, S., &amp; Mazeh, T. 2002, <em>A&amp;A</em>, 391, 369 — Box Least Squares.
 - Hippke, M., &amp; Heller, R. 2019, <em>A&amp;A</em>, 623, A39 — Transit Least Squares.
 - Boyajian, T. S., et al. 2016, <em>MNRAS</em>, 457, 3988 — KIC 8462852 (anomalous, structured transits).
+- Rappaport, S., et al. 2012, <em>ApJ</em>, 752, 1 — KIC 12557548, a disintegrating planet (step-3d control).
 - Vanderburg, A., et al. 2015, <em>Nature</em>, 526, 546 — disintegrating planetesimals at WD 1145+017.
+- Angus, R., et al. 2019, <em>AJ</em>, 158, 173 — gyrochronology age–rotation relation (youth floor, §3).
+- Claret, A. 2017, <em>A&amp;A</em>, 600, A30 — limb-darkening coefficients (TESS), Channel-B forward models.
 - Borucki, W. J., et al. 2010, <em>Science</em>, 327, 977 — Kepler.
 - Ricker, G. R., et al. 2015, <em>JATIS</em>, 1, 014003 — TESS.
 - Jenkins, J. M., Caldwell, D. A., &amp; Borucki, W. J. 2002, <em>ApJ</em>, 564, 495 — transit detection threshold.

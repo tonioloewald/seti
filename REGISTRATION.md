@@ -48,3 +48,27 @@ Two independent, public, timestamped records secure this work:
 - Pre-registration: **registered on OSF, 2026-06-01.**
 - OSF: <https://osf.io/6yh7r> · DOI **10.17605/OSF.IO/6YH7R** — registration **accepted and live**; the public Git repository is linked from the OSF project, and post-registration amendments are tracked there (`AMENDMENTS.md`) with the authoritative timeline in the git history.
 - Registered-version git tag: **`registered-1.0` → commit `005ef88`** — the exact `preregistration.md` and `REGISTRATION.md` submitted to OSF. Everything after it is a dated pre-data amendment.
+
+---
+
+# Phase 2 — Main-Sequence K Dwarfs
+
+Phase 2 ([`preregistration_kdwarf.md`](preregistration_kdwarf.md)) is a **new, separate** OSF Open-Ended Registration (its own DOI), linked to this same public repository and cross-referencing the Phase-1 DOI. It is *not* an amendment to Phase 1: the sample (living K dwarfs), the primary channel (transit morphology), and the upper limit (per morphology family) are new. It reuses the Phase-1 **validated population-agnostic pipeline core** (regression-tested in [`pipeline/runners/validate_wd.py`](pipeline/runners/validate_wd.py)) via a new K-dwarf plugin — reused, not forked.
+
+## Narrative summary (OSF registration field)
+
+This is Phase 2 of a mechanism-agnostic technosignature program whose Phase 1 (white dwarfs) is registered at OSF DOI 10.17605/OSF.IO/6YH7R. The same "anomaly-residual" method — look for a departure from a well-modelled natural baseline, try to explain it away with a pre-registered battery of natural hypotheses, and report the residual — is carried from stellar remnants to a *living* host: main-sequence K dwarfs, the longest-lived and most thermally-stable living stars, and (being small) the deepest, most morphologically-resolvable transit hosts. Where Phase 1 was anchored on infrared excess, Phase 2 is **anchored on transit morphology**: a living star's cool photosphere is bright in the IR, so that channel loses its contrast and is demoted to a calibrated-but-weak corroborating role. We search TESS/Kepler light curves for transit *shapes* and photometric departures that no natural occulter (planet, eclipsing binary, disintegrating body, starspot) can produce, run every candidate through a fixed battery (an automated difference-image centroid gate first, then EB / activity / planet / disintegrating-body / instrumental tests), and report the surviving residual together with a population upper limit `f_max` reported **separately per morphology family** (a flat occulter bounds tightly; a subtle asymmetric one loosely; the limit says which).
+
+The detection threshold is not a guessed number but a **frozen procedure**: an outlier-blind, per-noise-cohort empirical null plus injection-recovery that *calculates* the family-wise bar (expected to land near the Kepler-style ~6–7σ regime) on the noise floor and on synthetic and known-object controls — before any real candidate is unblinded. The single assumption we retain is the precondition for there being anything to find at all — time for life to have *originated* — implemented honestly as an **activity-based youth floor** (we cannot measure a field K dwarf's age directly, so we use the age–rotation–activity relation as a youth proxy and say so). The analysis runs on the same validated population-agnostic core as Phase 1, with a new K-dwarf plugin; we expect, and would be content with, a clean explained null and a quantitative upper limit, with a byproduct catalogue of K-dwarf transit and activity characterisation of value independent of the technosignature framing.
+
+## Route, timing, provenance — same as Phase 1
+
+- **Route:** OSF Open-Ended Registration (immutable, timestamped, DOI, unmoderated, created public).
+- **Timing:** the invariant is unchanged — *no analysis of real K-dwarf candidate data before the plan is frozen and registered.* Registered before the final read-through completes; later changes are dated pre-data amendments while no real candidate is touched. Critically, the calibration/validation steps (prereg §6 step 3: noise-floor cohorts, injection-recovery, known-object controls) are themselves pre-registered *procedures* — we register the method, not the numbers, and a reviewer judges adherence.
+- **Provenance:** identical stand — Gemini and Claude as co-designers, full transcripts published, investigator retains 100% accountability; one collaborator credited unnamed at their request.
+
+## Status
+
+- Pre-registration: **DRAFT — not yet registered.** To be frozen and registered on OSF before any K-dwarf light curve is analysed.
+- OSF: _DOI to be recorded here on registration._
+- Registered-version git tag: _`phase2-registered-1.0` → commit `<hash>` to be recorded on registration._
