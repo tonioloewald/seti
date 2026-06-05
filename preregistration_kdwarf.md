@@ -1,9 +1,12 @@
 # Pre-registration (DRAFT) — An Anomaly-Residual Search for Unexplained Transit and Photometric Signatures Around Main-Sequence K Dwarfs
 
-**Status: DRAFT / in preparation — NOT yet registered.** Phase 2 of the program whose
-Phase 1 (white dwarfs) is registered at OSF [10.17605/OSF.IO/6YH7R](https://doi.org/10.17605/OSF.IO/6YH7R).
-This plan is to be frozen and registered on OSF **before any K-dwarf light curve is analysed**;
-until then it is edited freely in this repository. It reuses the *validated* population-agnostic
+**Status: REGISTERED on OSF, 2026-06-05** (archiving; OSF URL / DOI to be recorded here once
+live). Phase 2 of the program whose Phase 1 (white dwarfs) is registered at OSF
+[10.17605/OSF.IO/6YH7R](https://doi.org/10.17605/OSF.IO/6YH7R). The plan was frozen and registered
+**before any K-dwarf light curve was analysed**; the exact registered snapshot is git tag
+`phase2-registered-1.0` (commit `c404b73`). Post-registration changes are dated amendments
+(see [`REGISTRATION.md`](REGISTRATION.md) and [`AMENDMENTS.md`](AMENDMENTS.md)), confirmatory so
+long as no real candidate has been analysed. It reuses the *validated* population-agnostic
 pipeline core (see `pipeline/core/`, regression-tested in `pipeline/runners/validate_wd.py`);
 the K-dwarf-specific parts are a new population plugin, not a fork.
 

@@ -49,3 +49,15 @@ formal OSF Registration Update (by the human author) before execution.
 ---
 
 *Before registration, the plan is edited directly in `preregistration.md` (tracked in git); this log begins at the moment of OSF registration. Amendment rows above are filed as OSF Registration Updates by the human author of record; this file and the git history are the human-readable companion.*
+
+---
+
+# Phase 2 (Main-Sequence K Dwarfs) — amendments log
+
+Post-registration changes to the Phase-2 registered plan ([`preregistration_kdwarf.md`](preregistration_kdwarf.md)), which is a **separate** OSF Open-Ended Registration (see [`REGISTRATION.md`](REGISTRATION.md) → "Phase 2"). Registered baseline: git tag **`phase2-registered-1.0` → commit `c404b73`**, submitted to OSF 2026-06-05. The same confirmatory (pre-data) vs exploratory (post-data) rules as Phase 1 apply; because OSF's update flow is unavailable for Open-Ended Registrations, this file + the git history are the authoritative amendment record.
+
+| Date | Type | Section(s) | Change | Rationale |
+|------|------|-----------|--------|-----------|
+| 2026-06-05 | housekeeping | header, Status | Flip status DRAFT → registered; record the registered git tag and date (OSF URL/DOI to be filled once archiving completes). | Records the registration event itself; no methodological change. |
+
+*No real K-dwarf candidate data has been analysed. The calibration/validation procedure (prereg §6 step 3), the K-dwarf plugin, and the synthetic/known-object pilots are all pre-data and remain confirmatory.*
