@@ -127,6 +127,25 @@ def make_transit(kind, depth=0.01, b=0.1, rp=0.1, npix=300, n=181,
     return x / (2 * span), f
 
 
+def inject_periodic(time, kind, depth, period, t0, duration, ld=LD_TESS_KDWARF,
+                    epoch_depths=None, **kw):
+    """Multiplicative transit signal sampled onto `time`: tile a forward-modelled template
+    (make_transit) at `period`/`t0`, each transit `duration` (days) wide. Returns a flux
+    factor (~1 out of transit, dipping in) to multiply into a light curve. `epoch_depths`
+    (from multi_epoch_depths) scales each epoch independently for a disintegrating body."""
+    tph, tfl = make_transit(kind, depth=depth, ld=ld, **kw)        # template in [-0.5,0.5]
+    t = np.asarray(time, float)
+    frac = ((t - t0) / period + 0.5) % 1.0 - 0.5                   # orbital phase [-0.5,0.5)
+    tphase = frac * period / (2.0 * duration)                     # template spans 2*duration
+    inj = np.interp(tphase, tph, tfl, left=1.0, right=1.0)
+    if epoch_depths is not None:                                   # per-epoch depth scaling
+        ep = np.floor((t - t0) / period + 0.5).astype(int)
+        ep0 = ep - ep.min()
+        scale = np.where(ep0 < len(epoch_depths), epoch_depths[np.clip(ep0, 0, len(epoch_depths)-1)] / depth, 1.0)
+        inj = 1.0 - (1.0 - inj) * scale
+    return inj
+
+
 def multi_epoch_depths(n_epochs, mean_depth, cv=0.6, dropout=0.15, rng=None):
     """Per-epoch depth sequence for a disintegrating body: lognormal scatter (coeff. of
     variation cv) plus a dropout fraction of near-zero epochs. Used to drive 'tail'
