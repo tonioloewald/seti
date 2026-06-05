@@ -271,20 +271,48 @@ because at this sample size nothing can be vetted by hand.
 
 1. Freeze the sample → the immutable checksummed manifest (§3).
 2. Pull TESS/Kepler light curves (deterministic recipe); detrend.
-3. **Calibrate and freeze the thresholds before unblinding** — over the **whole manifest's** noise
-   floor (every star's outlier-blind MAD scatter and BLS-null statistic; no transit search), fix the
-   per-cohort empirical nulls and the single FWER-controlled detection bar; run injection-recovery
-   to fix the per-star completeness C_i. Calibrating from the entire population up front (not from
-   whatever tier is in hand) is what keeps the staged search clean. *This step touches only the
-   noise floor and synthetic injections — never the real candidate tail.*
-4. **Unblind:** run the BLS/TLS search, apply the frozen threshold, compute morphology metrics,
-   and pass survivors through the natural-explanation battery (automated centroid gate first).
-5. Report the full ranked residual list and the calibrated `f_max(depth, period)`.
+3. **Calibration & validation — a pre-registered *procedure*, not a frozen number.** We do not
+   peek at data to pick thresholds, and we do not register guessed values. We register the *method*
+   below in full; the resulting numbers (the per-cohort nulls, the genomic-control λ, the FWER σ-bar,
+   the per-family C_i) are *outputs* of running it, generated after registration and auditable by a
+   reviewer against this specification. Every sub-step touches only the noise floor and synthetic
+   injections — **never the real candidate tail** — so executing it reveals no candidate.
+   - **3a. Outlier-blind noise floor & cohorts.** For every manifest star, compute the noise metric
+     as the **MAD of the out-of-transit continuum after iterative downward 3σ-clipping** (dips
+     masked, §5(a)); assign each star to a noise/activity cohort by **fixed percentile edges** of
+     that MAD (and the activity proxies of §3), registered here so the binning is reproducible.
+     Acceptance check: an injected deep dip must *not* move its star's cohort (the clip prevents an
+     anomaly inflating its own baseline).
+   - **3b. Bulk sensitivity (U-shaped transits).** Inject **constant-depth, limb-darkened (U-shaped)
+     transits** across a registered depth × period grid into the real light curves; run BLS/TLS
+     recovery. This yields the per-star, per-cohort completeness C_i for ordinary transits, the
+     genomic-control inflation λ, and the **single FWER σ-bar** set so the expected pure-noise false
+     alarms over the whole manifest N_total is < 1 (§5(b)). Whatever σ this procedure returns is the
+     bar — we expect ≈ 6–7σ, but we report the value it yields.
+   - **3c. Anomaly sensitivity & metric validation (the frozen library, §5).** Inject the registered
+     anomaly families — **variable-depth disintegrating tails and strictly asymmetric dips** — across
+     the same grid, and confirm (i) the **variable-depth / aperiodic detector recovers them** (BLS
+     does not silently discard a fluctuating-depth dip as noise) and (ii) the **morphology metrics
+     flag them non-planetary**. This yields the **per-family C_i** for the per-family `f_max`. Recall
+     (§4) that detection does not depend on morphology: 3b sets detection sensitivity, 3c verifies
+     the parallel nets catch the non-planetary minority.
+   - **3d. Known-object controls.** Validate the end-to-end detector + metrics against **named,
+     published systems** (not the target tail): they must recover ordinary transiters and must fire
+     on real anomalous transiters — KIC 12557548 / Kepler-1520 (disintegrating dust tail) and
+     WD 1145+017 — reproducing their known behaviour. This is the Phase-1 "validate on WD 1856+534 b"
+     discipline, registered as a step rather than left informal.
 
-Same recipe-in-repo, checksum, gitignored-bulk discipline as Phase 1. The split between steps 3
-(noise-floor/synthetic calibration, thresholds frozen) and 4 (real candidates unblinded against
-the frozen thresholds) is the integrity crux at this sample size: it is what prevents a strange
-real signal from tempting a threshold tweak.
+   All outputs of step 3 are frozen before step 4; none is ever re-touched in reaction to a candidate.
+4. **Unblind:** run the BLS/TLS + variable-depth search, apply the frozen threshold, compute
+   morphology metrics, and pass survivors through the natural-explanation battery (automated centroid
+   gate first).
+5. Report the full ranked residual list and the calibrated per-family `f_max(depth, period)`.
+
+Same recipe-in-repo, checksum, gitignored-bulk discipline as Phase 1. The split between step 3
+(noise-floor/synthetic calibration + known-object validation, all outputs frozen) and step 4 (real
+candidates unblinded against the frozen thresholds) is the integrity crux at this sample size: it is
+what prevents a strange real signal from tempting a threshold tweak. A reviewer judges us not on the
+numbers we obtained but on whether we executed the registered procedure that produced them.
 
 ## 7. Outcomes and interpretation
 
