@@ -1,4 +1,4 @@
-# Pre-registration (DRAFT) — An Anomaly-Residual Search for Unexplained Transit and Photometric Signatures Around Old, Quiet K Dwarfs
+# Pre-registration (DRAFT) — An Anomaly-Residual Search for Unexplained Transit and Photometric Signatures Around Main-Sequence K Dwarfs
 
 **Status: DRAFT / in preparation — NOT yet registered.** Phase 2 of the program whose
 Phase 1 (white dwarfs) is registered at OSF [10.17605/OSF.IO/6YH7R](https://doi.org/10.17605/OSF.IO/6YH7R).
@@ -12,8 +12,8 @@ the K-dwarf-specific parts are a new population plugin, not a fork.
 ## 0. Summary
 
 A pre-registered, mechanism-agnostic search for anomalous transit and photometric signatures
-around **old, quiet main-sequence K dwarfs** — the longest-lived, most thermally-stable, and
-photometrically-quietest *living* stellar hosts. Phase 1 applied this anomaly-residual
+around **main-sequence K dwarfs** — the longest-lived and most thermally-stable *living* stellar
+hosts — restricted only by an *activity-based youth floor* (§3) that excludes the genuinely young. Phase 1 applied this anomaly-residual
 methodology to white-dwarf remnants and returned a clean, fully-explained null with a
 quantitative upper limit. Phase 2 carries the **same validated machinery** to a living host,
 with **transit morphology as the primary channel**. We search for departures from the natural
@@ -59,8 +59,8 @@ and injection-recovery, never by inspecting candidates.
 - **RQ2 (photometric departure).** Do any show a persistent or time-varying photometric signature
   departing from the natural rotation/granulation/activity model that survives the battery?
 - **RQ3 (upper limit).** With no unexplained anomaly, what upper limit `f_max` can we place on
-  the prevalence of anomalous occulters/departures around old, quiet K dwarfs, as a function of
-  depth and period?
+  the prevalence of anomalous occulters/departures around main-sequence K dwarfs (above the
+  youth floor), as a function of depth and period?
 
 ## 3. Sample and inclusion
 
@@ -79,19 +79,29 @@ and injection-recovery, never by inspecting candidates.
   impose no scientific exclusion beyond the minimal *youth floor* below and the data-quality
   requirement above. Which stars have been *analysed* at any moment is set by available compute;
   the asymptotic target is the entire K-dwarf census.
-- **Youth floor (the one real cut — soft and pre-specified).** We exclude only genuinely young,
-  active stars, for two reasons that point the same way: the *life prior* (a star must have
-  *existed* long enough for life to have originated, regardless of how long it will ultimately
-  live) and *data quality* (young K dwarfs are magnetically active — the worst photometric noise).
-  The floor is a **fixed rule, not a placeholder** (so the data decides *which* stars without any
-  human break-picking): a star is excluded iff **(i)** its gyrochronological age from a measured
-  rotation period, via the Angus et al. (2019) relation, is **< 1.0 Gyr**, **or (ii)** its
-  fractional X-ray luminosity (eROSITA/ROSAT) is **log(L_X/L_bol) > −4.0** (saturated/active), **or
-  (iii)** it lacks a rotation period *and* sits in the youngest decile of the Gaia
-  photometric-variability-amplitude distribution. Stars with no measurable rotation period and
-  normal activity are **retained** (absence of a period is not youth). These relations and the
-  three numeric cuts (1.0 Gyr, −4.0 dex, 10th percentile) are frozen here; rotation/activity are
-  measured pre-unblinding as noise characterisation, never from the transit candidates.
+- **Youth floor (the one real cut — an *activity-based youth proxy*).** Its purpose is the
+  *life prior*: a star must have *existed* long enough for life to have had the chance to originate.
+  But we are honest about the observable: **we cannot measure a field K dwarf's age directly** (no
+  per-star asteroseismology, no cluster membership), so the floor is operationally an
+  **activity/rotation cut interpreted as youth** through the well-established age–rotation–activity
+  relation — a fast rotator / X-ray-saturated / highly variable K dwarf is young. The intent is age;
+  the measurement is activity; we state both rather than dress one as the other. The floor is a
+  **fixed rule, not a placeholder** (so the data decides *which* stars, no human break-picking): a
+  star is excluded iff **(i)** its gyrochronological age from a measured rotation period, via the
+  Angus et al. (2019) age–rotation relation, is **< 1.0 Gyr**, **or (ii)** its fractional X-ray
+  luminosity (eROSITA/ROSAT) is **log(L_X/L_bol) > −4.0** (saturated/active), **or (iii)** it lacks
+  a rotation period *and* sits in the youngest decile of the Gaia photometric-variability-amplitude
+  distribution. Stars with no measurable rotation period and normal activity are **retained**
+  (absence of a period is not youth). These relations and the three numeric cuts (1.0 Gyr, −4.0 dex,
+  10th percentile) are frozen here; rotation/activity are measured pre-unblinding as noise
+  characterisation, never from the transit candidates.
+  - *Reconciling with "no quiet cut" below.* The youth floor and the no-quiet-cut principle sit at
+    **opposite ends of the same activity axis, for different reasons**. The youth floor removes only
+    the *extreme* young/active tail — and removes it for the **life prior**, not for noise. Everything
+    above it (the broad spread of moderately-active-to-quiet *old* stars) is **retained**, and its
+    residual activity is handled by per-star self-weighting, **not** by a further activity cut. So we
+    do cut on activity once, at the young extreme, to serve the age prior; we do *not* cut on activity
+    again to manage noise.
 - **No hard "quiet" cut — noisy stars self-weight.** Rather than excluding active stars, we include
   every star above the youth floor and let the per-star injection-recovery completeness C_i (§5) do
   the work: a transit is harder to recover in an active light curve, so a noisy star earns a low
