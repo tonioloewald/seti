@@ -61,6 +61,36 @@ This is Phase 2 of a mechanism-agnostic technosignature program whose Phase 1 (w
 
 The detection threshold is not a guessed number but a **frozen procedure**: an outlier-blind, per-noise-cohort empirical null plus injection-recovery that *calculates* the family-wise bar (expected to land near the Kepler-style ~6–7σ regime) on the noise floor and on synthetic and known-object controls — before any real candidate is unblinded. The single assumption we retain is the precondition for there being anything to find at all — time for life to have *originated* — implemented honestly as an **activity-based youth floor** (we cannot measure a field K dwarf's age directly, so we use the age–rotation–activity relation as a youth proxy and say so). The analysis runs on the same validated population-agnostic core as Phase 1, with a new K-dwarf plugin; we expect, and would be content with, a clean explained null and a quantitative upper limit, with a byproduct catalogue of K-dwarf transit and activity characterisation of value independent of the technosignature framing.
 
+## Research questions and hypotheses (OSF registration field)
+
+**Research questions** (= prereg §2):
+
+- **RQ1 (morphology).** Do any K dwarfs show a periodic transit whose *shape* — asymmetry, flat-bottomedness, box-versus-U, anomalous duration, or secondary structure — cannot be reproduced by any natural occulter (sphere, ring, eclipsing binary, disintegrating body) after those are explicitly fitted and excluded?
+- **RQ2 (photometric departure).** Do any show a persistent or time-varying photometric signature departing from the natural rotation/granulation/activity model that survives the natural-explanation battery?
+- **RQ3 (upper limit).** Absent any unexplained anomaly, what upper limit `f_max` can be placed on the prevalence of anomalous occulters/departures around main-sequence K dwarfs, as a function of depth, period, and morphology family?
+
+**Hypotheses / expected outcome** — a discovery-style search, not a difference-of-means test, so we state expectations honestly rather than predict an effect we hope to find:
+
+- **Default (expected) — the null.** Every flagged candidate is explained away by the pre-registered battery, yielding a clean null and the RQ3 upper limit. We expect this and would be content with it.
+- **Alternative — a residual.** A transit/photometric anomaly survives every natural test. In order of prior probability: (a) a previously-unmodelled *natural* occulter or variability class — most likely, and a worthwhile result in itself; or, far less likely, (b) a genuinely structured/fluctuating anomaly with no natural account. **No claim of artificiality is made on the basis of this pipeline** — a surviving residual is a target for conventional astrophysical follow-up.
+- **Pre-specified detection criterion.** "Survives" means exceeding the frozen, family-wise empirical-null threshold (*calculated* by the registered §6 procedure, not guessed) **and** passing every applicable battery item; all thresholds are fixed before any real candidate is unblinded.
+
+For a null-expected search, predicting a detection would be dishonest: the registered prediction *is* the null plus an upper limit.
+
+## Explanation of foreknowledge and managing unintended influences (OSF registration field)
+
+**Has data been collected / analysed already?** The target data (TESS/Kepler light curves of the registered K-dwarf manifest) is public archival data — it physically exists and is downloadable — but the **candidate tail has not been analysed**: no K dwarf in the target sample has been searched for anomalies, and the sample manifest itself is not yet frozen. What *has* been touched, and is disclosed here, is (i) fully synthetic injection-recovery pilots (no real data), and (ii) detector validation on two *named, published, already-characterised* systems — KIC 12557548 / Kepler-1520 (a known disintegrating planet — and itself a K dwarf) and Kepler-8 b (a clean transiting planet) — run to confirm the detector and morphology metrics behave on real astrophysics, exactly as Phase 1 validated on WD 1856+534 b. These touch *known objects*, not the target sample, and reveal nothing about which (if any) target K dwarfs show anomalies. All of it is timestamped in the public git history.
+
+**Managing foreknowledge — the study is built around it:**
+
+- **Thresholds are *calculated*, not chosen.** The family-wise detection bar is computed by a frozen procedure (an outlier-blind, per-noise-cohort empirical null + injection-recovery; prereg §6 step 3) on the noise floor, synthetics, and known-object controls — never by inspecting real candidates — and frozen before the candidate tail is unblinded (step 4). We register the method, not a guessed number; a reviewer judges adherence.
+- **Outlier-blind noise estimation** (MAD with downward-only σ-clipping) stops a genuine anomaly from inflating its own threshold and masking itself.
+- **No results-driven choices.** A checksummed immutable manifest fixes the sample before any light curve is pulled; resource-staged tiers are nested and pre-declared, expanded only by available compute, never in reaction to a result; no boundary is ever loosened to rescue a candidate.
+- **Prior knowledge as a *filter*, never an assumption.** Domain knowledge of known anomalous systems (KIC 8462852, WD 1145+017) is used only to *explain candidates away* via the battery, never to assume the residual set is empty.
+- **Tamper-evident timeline.** The public, branch-protected git history and the archived AI-collaboration transcripts independently timestamp every decision relative to the data, so "method fixed, *then* data analysed" is externally verifiable, not merely asserted.
+
+The honest summary: some public data and known-object/synthetic validation have been seen and disclosed; **none of the registered target sample has been searched**; and the procedure that will search it is frozen and auditable before it runs.
+
 ## Route, timing, provenance — same as Phase 1
 
 - **Route:** OSF Open-Ended Registration (immutable, timestamped, DOI, unmoderated, created public).
