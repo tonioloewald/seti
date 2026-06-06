@@ -40,10 +40,14 @@ metric artifacts the positive control already characterised at low SNR.
 
 ## Population upper limit
 
-For resolvable anomalies (1% depth), the Poisson zero-detection bound over the searched T0
-population is **f_max ≈ 2.7×10⁻⁴ per morphology family** (ΣC_i ≈ 11,000). The limit weakens
-toward shallower depths as C_i falls; below ~0.3% depth the search has no morphology teeth
-and places no anomaly constraint (by design — the registered SNR floors).
+Completeness is **classification-aware**: an injected anomaly counts only if it is detected *and*
+survives the battery as a residual (corrected post-review; see AMENDMENTS.md 2026-06-06). The
+per-family Poisson zero-detection bounds at 1% depth over the searched T0 population are
+**f_max ≈ 2.8×10⁻⁴ for flat-occulter anomalies** (ΣC_i ≈ 10,900; leakage negligible — a flat
+occulter is reliably classified anomalous, C_i ≈ 0.96) and **≈ 3.4×10⁻⁴ for disintegrating-tail-like
+anomalies** (ΣC_i ≈ 8,950; weaker — partially explained as a natural disintegrating body). Both
+weaken toward shallower depths as C_i falls; below ~0.3% depth (the pre-registered pilot's
+resolution floor) the search has no morphology teeth and places no anomaly constraint.
 
 ## Byproduct catalogue
 
