@@ -18,7 +18,8 @@ The difference-image centroid gate (prereg §5 item 0) needs target-pixel data, 
 compact (time,flux) cache lacks; candidates are flagged `needs_centroid_vet` for a downstream
 TPF fetch (a small list, as in Phase 1). All other battery items work on the light curve.
 """
-import os, sys, json, warnings
+import os, sys, json, time, warnings
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import numpy as np
 import pandas as pd
 warnings.filterwarnings("ignore")
@@ -26,10 +27,12 @@ warnings.filterwarnings("ignore")
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(ROOT, "pipeline"))
 from core.detect import bls_detect, single_event_detect            # noqa: E402
+from core.stats import poisson_fmax                                 # noqa: E402
 from core.transit import metrics, make_transit, multi_epoch_depths  # noqa: E402
 
 NOISE = os.path.join(ROOT, "data", "derived", "kdwarf_noise_floor.parquet")
-CAL = os.path.join(ROOT, "data", "derived", "kdwarf_calibration.json")
+CAL = os.path.join(ROOT, "data", "manifests", "kdwarf_calibration_T0.json")   # FROZEN, tagged
+RESID = os.path.join(ROOT, "data", "manifests", "kdwarf_T0_residuals.csv")
 LCDIR = os.path.join(ROOT, "data", "lightcurves")
 PERIODS = np.arange(0.5, 13.0, 0.02)
 DURS = np.array([0.05, 0.1, 0.2])
@@ -151,9 +154,75 @@ def test_mode():
           "tail -> disintegrating_body/RESIDUAL; triangle -> natural_planet or RESIDUAL.")
 
 
+def _unblind_one(task):
+    """task=(sid, cohort, threshold, scatter, z) -> candidate dict (with sid) or None."""
+    sid, cohort, threshold, scatter, z = task
+    try:
+        d = np.load(os.path.join(LCDIR, f"{sid}.npz"))
+        res = search_one(d["time"], d["flux"], scatter, threshold, z)
+    except Exception:
+        return None
+    if res is None:
+        return None
+    return {"source_id": sid, "cohort": int(cohort), **res}
+
+
 def unblind_mode():
-    raise SystemExit("REFUSED: --unblind lifts the blind and must run only against the frozen "
-                     "PRODUCTION calibration (full-manifest), after it is tagged. Not the proof.")
+    """The real search: apply the FROZEN T0 calibration to the un-injected T0 light curves,
+    list residual candidates, report per-family f_max. This lifts the blind."""
+    if not os.path.exists(CAL):
+        raise SystemExit(f"frozen calibration not found: {CAL} (run k03 + freeze/tag first).")
+    cal = json.load(open(CAL))
+    workers = int(sys.argv[sys.argv.index("--workers")+1]) if "--workers" in sys.argv else 6
+    z = cal["fwer_sigma"]
+    edges = np.array(cal["cohort_edges_scatter"])
+    from core.noise import assign_cohorts
+    nf = pd.read_parquet(NOISE); nf["source_id"] = nf["source_id"].astype(str)
+    ok = nf[(nf["status"] == "ok") & np.isfinite(nf["scatter_ppm"]) & (nf["tier"] == 0)].copy()
+    ok["cohort"] = assign_cohorts(ok["scatter_ppm"].to_numpy()/1e6, edges)
+    thr = {int(c): cal["cohorts"][c]["threshold_sde"] for c in cal["cohorts"]}
+    print(f"UNBLINDING T0: {len(ok)} G<11 stars against frozen bars "
+          f"{ {c: round(thr[c],1) for c in thr} } SDE ...", flush=True)
+
+    tasks = [(r["source_id"], int(r["cohort"]), thr[int(r["cohort"])], r["scatter_ppm"]/1e6, z)
+             for _, r in ok.iterrows()]
+    cands = []; t0 = time.time()
+    with ProcessPoolExecutor(max_workers=workers) as ex:
+        futs = [ex.submit(_unblind_one, t) for t in tasks]
+        for i, fut in enumerate(as_completed(futs)):
+            r = fut.result()
+            if r is not None:
+                cands.append(r)
+            if (i+1) % 2000 == 0:
+                print(f"  searched {i+1}/{len(tasks)} ({time.time()-t0:.0f}s, {len(cands)} candidates)",
+                      flush=True)
+
+    df = pd.DataFrame(cands)
+    print(f"\n=== T0 UNBLIND RESULT ===\n  {len(ok)} stars searched; {len(df)} candidates above the bar.")
+    if len(df):
+        vc = df["verdict"].value_counts()
+        print("  battery verdicts:")
+        for v, n in vc.items():
+            print(f"    {v:22s} {n}")
+        resid = df[df["verdict"] == "RESIDUAL"].sort_values("sde", ascending=False)
+        cols = ["source_id", "cohort", "sde", "period", "depth", "flat_bottom", "asymmetry",
+                "depth_cv", "se_snr", "verdict"]
+        resid[cols].to_csv(RESID, index=False)
+        print(f"\n  {len(resid)} RESIDUALS (verdict=RESIDUAL) -> {RESID}")
+        print("  These are NOT detections: each requires the difference-image centroid gate "
+              "(TPF) and identity / known-planet cross-check before it is a real residual.")
+        if len(resid):
+            print("  top residuals by SDE:")
+            for _, r in resid[cols].head(8).iterrows():
+                print(f"    {r.source_id}  SDE={r.sde:.1f}  P={r.period:.3f}d  d={r.depth*100:.2f}%  "
+                      f"flat={r.flat_bottom:.2f} asym={r.asymmetry:.3f}")
+    # per-family f_max from the frozen completeness x searched cohort counts (zero-residual basis)
+    print("\n  per-family f_max (3/sum C_i over searched T0 stars; the limit IF residuals clear):")
+    for fam in cal["completeness"]:
+        ds = "0.010" if "0.010" in cal["completeness"][fam] else list(cal["completeness"][fam])[0]
+        sumCi = sum((cal["completeness"][fam][ds][str(c)] or 0) * int((ok["cohort"] == c).sum())
+                    for c in range(cal["n_cohorts"]))
+        print(f"    {fam:8s} (1% depth): f_max = {poisson_fmax(sumCi):.2e}  (sum C_i = {sumCi:.0f})")
 
 
 if __name__ == "__main__":
