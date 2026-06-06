@@ -112,10 +112,14 @@ def main():
     cen = pd.read_csv(CEN, dtype={"source_id": str})
     on = cen[cen["centroid_verdict"] == "on_target"].copy()
     print(f"on-target candidates for recurrence test: {len(on)} on {workers} workers", flush=True)
+    rcols = ["source_id", "n_sectors", "n_detected", "ms_verdict"]   # worker result columns
     done = {}
     if os.path.exists(OUT):
         prev = pd.read_csv(OUT, dtype={"source_id": str})
-        done = {r.source_id: r._asdict() for r in prev.itertuples(index=False)}
+        done = {r["source_id"]: {c: r[c] for c in rcols} for _, r in prev.iterrows()}
+    if "--retry" in sys.argv:                  # re-attempt transient no_data/err failures
+        done = {k: v for k, v in done.items()
+                if not str(v.get("ms_verdict", "")).startswith(("no_data", "err"))}
     todo = on[~on["source_id"].isin(done)]
     tasks = [(r["source_id"], r["ra_deg"], r["dec_deg"]) for _, r in todo.iterrows()]
     rows = list(done.values()); t0 = time.time(); n = 0
@@ -127,7 +131,7 @@ def main():
                 pd.DataFrame(rows).to_csv(OUT, index=False)
                 rec = sum(1 for r in rows if r.get("ms_verdict") == "recurs")
                 print(f"  {n}/{len(tasks)} ({time.time()-t0:.0f}s, {rec} recurring)", flush=True)
-    out = pd.DataFrame(rows)
+    out = pd.DataFrame(rows)[rcols]            # only result cols, so re-merge can't collide
     full = on.merge(out, on="source_id", how="left")
     full.to_csv(OUT, index=False)
     vc = out["ms_verdict"].value_counts()
