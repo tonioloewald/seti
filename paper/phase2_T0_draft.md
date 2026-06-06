@@ -27,9 +27,10 @@ directly in the limit. The result bounds the rate of **detectable anomalous tran
 within the searched range** (period < 13 d, depth ≳ 0.3%, shape matching a forward-modelled family):
 **f_max ≈ 2.8×10⁻⁴ for flat-occulter ("megastructure-like") morphologies and ≈ 3.4×10⁻⁴ for
 disintegrating-tail-like ones** at 1% depth. These are signature rates, not occurrence rates of the
-structures; the two relate as f_signature = f_structure · P_transit with P_transit ~ R⋆/a (a factor
-~30–300 across plausible orbits), so we show the conversion but decline to quote a structure-
-occurrence rate the data do not license. As a by-product the search flags
+structures; the two relate as f_signature = f_structure · P_transit, and within the searched range
+(a ≲ 0.1 AU) the geometric transit probability P_transit ~ R⋆/a runs ~3–30%, so a structure-occurrence
+rate would be larger by at most ~30× — while orbits beyond ~0.1 AU are unsampled and unconstrained
+entirely. We show the conversion but decline to quote an occurrence rate the data do not license. As a by-product the search flags
 6 eclipsing-binary and 10 transiting-planet candidates among K dwarfs not previously catalogued as
 such; a further 273 candidates are carried explicitly as recurrence-untestable, sub-resolution, or
 uncentroidable **follow-up targets**, none a detection and none in the resolvable regime. We frame the result not as a one-off null but as the initial
@@ -53,7 +54,13 @@ transit light curves whose shape (asymmetry, flat-bottomedness, box-versus-U, an
 variable depth) cannot be reproduced by any natural occulter after those are explicitly fitted and
 excluded. The one retained assumption is the precondition for there being anything to find: a star
 must have existed long enough for life to have had the chance to originate. We cannot measure a
-field K dwarf's age directly, so this enters as an activity-based youth-proxy floor, stated as such.
+field K dwarf's age directly; the registration implements this as an activity-based youth-proxy floor
+(excluding fast rotators, X-ray-saturated stars, and the most photometrically variable). **In this
+first tier that floor is not yet applied** — the rotation, X-ray, and variability cross-matches it
+requires are deferred (§2) — so T0 searches the full main-sequence manifest and the life prior is
+realized only softly, through the lower completeness, and hence reduced f_max weight, that active
+(generally younger) stars receive. The hard floor is a documented deviation from the registered plan,
+carried to the next tier; the present limit is over the full main-sequence population.
 
 The differentiator is not the transit channel, which is well-trodden, but the discipline: thresholds
 fixed by a registered procedure rather than by inspecting candidates, and a mandatory, uniform
@@ -70,6 +77,13 @@ expansion trigger being available compute rather than any result. This paper rep
 upward-only outlier clip so transits are preserved. The remaining ~400 of the tier are
 saturated-bright stars absent from standard photometric processing, recorded as unanalysable and
 self-weighting to zero in the limit.
+
+The registered activity-based youth floor (§1) is **not applied in T0**: it requires rotation-period,
+X-ray (eROSITA/ROSAT), and Gaia-variability cross-matches that are deferred to a later pass, so this
+tier searches the full main-sequence K-dwarf manifest. The deviation is logged in the amendments
+record; its only effect is to include young, active stars that would otherwise be cut — these already
+carry low completeness and so contribute little to the limit, and the result below is reported, and
+should be read, as a constraint on the full main-sequence population rather than an old-only subset.
 
 ## 3. Methods
 
@@ -157,12 +171,16 @@ whose light curve shows such a transit — and three qualifiers travel with the 
 below 13 days (the BLS grid), the depth is above the ~0.3% resolution floor, and the shape matches one
 of the forward-modelled families. It is **not** an occurrence rate of the occulting structures. The
 two relate as f_signature = f_structure · P_transit, with P_transit ~ R⋆/a the geometric transit
-probability (~0.3–6% across plausible orbits), so a structure-occurrence rate would be f_max /
-P_transit — larger by a factor ~30–300. We do not quote one: P_transit is unconstrained without an
-orbital-distribution assumption the data do not provide, and the conversion compounds further
-conditionality, since f_max / P_transit bounds only the occurrence of structures that *would* produce
-an in-range, detectable signature *if* they transited (and assumes at most one per star), not the
-structures full stop. Reporting the signature rate, with the conversion shown but not performed, is
+probability. Critically, the conversion is valid only over the orbits the search actually samples:
+across the searched range (P < 13 d, hence a ≲ 0.1 AU for a 0.7 M⊙ K dwarf) P_transit runs from ~30%
+at the shortest periods to ~3% at P = 13 d, so a structure-occurrence rate would be f_max / P_transit
+— larger by **at most ~30×**. We do *not* extend this to wider orbits: at a ≈ 1 AU the factor would be
+~240×, but P = 13 d is the period ceiling of the BLS grid, so structures on orbits beyond ~0.1 AU are
+not sampled and are entirely unconstrained, not loosely constrained by a large conversion. Even within
+range we decline to quote an occurrence number: P_transit needs an orbital-distribution assumption the
+data do not provide, and the conversion compounds further conditionality, since f_max / P_transit
+bounds only the occurrence of structures that *would* produce an in-range, detectable signature *if*
+they transited (and assumes at most one per star), not the structures full stop. Reporting the signature rate, with the conversion shown but not performed, is
 the limit the data license. The search is in this sense agnostic about an anomaly's origin but
 specific to its *shape*: detection and flagging are template-free — any sufficiently deep departure
 the battery cannot explain is reported as a residual (§3.3) — but the completeness, and hence f_max,
@@ -176,8 +194,11 @@ established quantitatively on the synthetic injection grid (the statistical vali
 family × depth × period). Two named, published systems then serve as real-data spot-checks — not a
 classifier validation set: the pipeline fires on the disintegrating planet KIC 12557548 /
 Kepler-1520 (asymmetry and depth-variability both elevated) and stays quiet on the clean transiting
-planet Kepler-8 b, the same discipline by which Phase 1 validated on WD 1856+534 b. A broader
-real-data control set is a natural extension.
+planet Kepler-8 b, the same discipline by which Phase 1 validated on WD 1856+534 b. These Kepler
+spot-checks exercise only the morphology classifier; the TESS-specific stages — the 21″ difference-
+image centroid gate and multi-sector recurrence — are instead exercised on the survey candidates
+themselves (§4.1), where they remove background blends and single-sector red noise at scale. A broader
+real-data control set spanning all stages is a natural extension.
 
 ## 4. Results
 
