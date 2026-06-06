@@ -28,11 +28,12 @@ import pandas as pd
 warnings.filterwarnings("ignore")
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.join(ROOT, "pipeline"))
+sys.path.insert(0, os.path.join(ROOT, "pipeline")); sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from core.detect import bls_detect, single_event_detect                      # noqa: E402
 from core.stats import empirical_null, cohort_threshold, fwer_sigma, poisson_fmax  # noqa: E402
 from core.noise import cohort_edges, assign_cohorts                          # noqa: E402
 from core.transit import make_transit, multi_epoch_depths                    # noqa: E402
+from k04_search import battery                                               # noqa: E402
 
 NOISE = os.path.join(ROOT, "data", "derived", "kdwarf_noise_floor.parquet")
 LCDIR = os.path.join(ROOT, "data", "lightcurves")
@@ -83,10 +84,19 @@ def _recover(task):
         ep = np.minimum(ep - ep.min(), len(ed) - 1)
         inj = 1.0 - (1.0 - inj) * (ed[ep] / dep)
     fi = f * inj
-    det = bls_detect(t, fi, PERIODS, DURS)["sde"] > threshold
+    r = bls_detect(t, fi, PERIODS, DURS)
+    det = r["sde"] > threshold
     if fam == "tail":
         det = det or single_event_detect(t, fi, scatter)["best_snr"] > z
-    return (cohort, bool(det))
+    if not det:
+        return (cohort, False)
+    # classification-aware completeness: an injected ANOMALY counts as recovered only if it also
+    # SURVIVES the battery as a residual. A flat occulter mislabelled 'planet', or a tail labelled
+    # 'disintegrating_body', is explained away -> not recovered (no f_max credit). This bounds the
+    # battery's anomaly->natural leakage directly in C_i. (The natural-control 'planet' family is
+    # expected to classify as planet and so earns ~0 anomaly-completeness, by design.)
+    verdict = battery(t, fi, r["period"], r["t0"], scatter)["verdict"]
+    return (cohort, verdict == "RESIDUAL")
 
 
 def main():
