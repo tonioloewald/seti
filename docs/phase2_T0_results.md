@@ -54,14 +54,18 @@ planet-regime recurring set.
 
 ## Inconclusive / follow-up sets (documented, not detections)
 
-- **78 single-sector-only** — one TESS sector exists, so recurrence is untestable; await
-  further TESS coverage.
-- **64 no-data** — transient multi-sector fetch failures; retry.
-- **70 sub-resolution recurring** — real repeating dips below the shape-resolving depth;
-  characterisable only with more/deeper photometry.
+- **142 recurrence-untestable** — 78 with only one TESS SPOC sector, plus 64 whose cached
+  light curve is a QLP (FFI) product rather than SPOC, so multi-sector SPOC recurrence cannot
+  be tested (a retry confirmed these are not transient failures). Await further coverage /
+  SPOC processing, or a QLP-inclusive recurrence pass.
+- **70 sub-resolution recurring** — real repeating dips below the shape-resolving depth
+  (<0.3%); characterisable only with more/deeper photometry.
 
-These are flagged for conventional follow-up, never presented as detections — per the
-registered stopping rule.
+None is a detection, and none sits in the morphology-resolvable regime: all 142
+recurrence-untestable candidates and all 70 sub-resolution ones are either below 0.3% depth
+or single-sector marginal. They are flagged for conventional follow-up per the registered
+stopping rule. The resolvable-regime result — zero unexplained anomalies — is unaffected by
+them.
 
 ## Provenance
 
