@@ -59,9 +59,9 @@ def centroid_offset(ra, dec, period, t0, duration, dldir):
     t = tpf.time.value
     flux = np.asarray(tpf.flux.value, float)                       # (T, ny, nx)
     ph = ((t - t0) / period + 0.5) % 1.0 - 0.5
-    hw = 0.5 * duration / period                                   # in-transit half-width (phase)
+    hw = min(0.5 * duration / period, 0.25)                        # in-transit half-width (phase)
     intr = np.abs(ph) < hw
-    oot = (np.abs(ph) > 3 * hw) & (np.abs(ph) < 0.3)
+    oot = (np.abs(ph) > 1.5 * hw) & (np.abs(ph) < 0.48)            # away from transit + secondary
     if intr.sum() < 3 or oot.sum() < 5:
         return None, "too_few_cadences"
     diff = np.nanmedian(flux[oot], axis=0) - np.nanmedian(flux[intr], axis=0)  # +ve = flux lost
