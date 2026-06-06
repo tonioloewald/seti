@@ -52,15 +52,22 @@ registration: a living star's cool photosphere is bright in the infrared, so the
 that anchored Phase 1 loses its contrast. Phase 2 is therefore **transit-anchored**: we search for
 transit light curves whose shape (asymmetry, flat-bottomedness, box-versus-U, anomalous duration,
 variable depth) cannot be reproduced by any natural occulter after those are explicitly fitted and
-excluded. The one retained assumption is the precondition for there being anything to find: a star
-must have existed long enough for life to have had the chance to originate. We cannot measure a
-field K dwarf's age directly; the registration implements this as an activity-based youth-proxy floor
-(excluding fast rotators, X-ray-saturated stars, and the most photometrically variable). **In this
-first tier that floor is not yet applied** — the rotation, X-ray, and variability cross-matches it
-requires are deferred (§2) — so T0 searches the full main-sequence manifest and the life prior is
-realized only softly, through the lower completeness, and hence reduced f_max weight, that active
-(generally younger) stars receive. The hard floor is a documented deviation from the registered plan,
-carried to the next tier; the present limit is over the full main-sequence population.
+excluded.
+
+The registration retained one further assumption — an activity-based youth-proxy floor, on the
+premise that a host must be old enough for life to have originated. **We drop it, and declare the drop
+as a registered deviation** rather than excise it silently. The premise does not survive scrutiny: it
+is undefined (the only abiogenesis timescale is Earth's, N = 1, and the relevant clock for an enduring
+*builder* is longer and less constrained still); for K dwarfs it is nearly vacuous (their 15–40 Gyr
+main-sequence lifetimes exceed the age of the universe, so any K dwarf not conspicuously young clears
+any Earth-calibrated bar by construction); and a biological-plausibility prior is precisely the kind
+of mechanism assumption this program defines itself against. Dropping it costs nothing operationally —
+the floor was never implemented as a sample cut (§2), so no candidate changes — and the activity it
+would have keyed on is already handled where it belongs, on photometric-noise grounds: the battery
+removes stellar activity as a false-positive class, and active (noisier) stars receive lower
+completeness and so weight down in the limit. K dwarfs remain the target for the stability of their
+long-lived, quiet platform and their deep, resolvable transits — properties of the host as an
+*observing platform*, not a prior on its inhabitants.
 
 The differentiator is not the transit channel, which is well-trodden, but the discipline: thresholds
 fixed by a registered procedure rather than by inspecting candidates, and a mandatory, uniform
@@ -78,12 +85,13 @@ upward-only outlier clip so transits are preserved. The remaining ~400 of the ti
 saturated-bright stars absent from standard photometric processing, recorded as unanalysable and
 self-weighting to zero in the limit.
 
-The registered activity-based youth floor (§1) is **not applied in T0**: it requires rotation-period,
-X-ray (eROSITA/ROSAT), and Gaia-variability cross-matches that are deferred to a later pass, so this
-tier searches the full main-sequence K-dwarf manifest. The deviation is logged in the amendments
-record; its only effect is to include young, active stars that would otherwise be cut — these already
-carry low completeness and so contribute little to the limit, and the result below is reported, and
-should be read, as a constraint on the full main-sequence population rather than an old-only subset.
+The activity-based youth floor named in the registration is **dropped** (§1) — a registered deviation,
+not deferred work — so the only sample cuts are the Teff / log g / RUWE / parallax / colour-magnitude
+criteria above, and the full main-sequence K-dwarf manifest is searched. The floor was never
+implemented as a cut, so dropping it removes no candidate and changes no number. Stellar activity
+enters only on photometric-noise grounds (the battery removes it as a false-positive class, and active
+cohorts carry lower completeness); the result below is a constraint on the full main-sequence
+population.
 
 ## 3. Methods
 
