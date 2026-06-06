@@ -20,7 +20,7 @@ G < 11, executed against the frozen calibration `phase2-calibration-T0`.
 | BLS candidates above the per-cohort bar | 4,131 |
 | Light-curve battery residuals (not planet/EB/activity) | 1,358 |
 | After identity cross-check (135 known planets/TOIs/EBs/binaries/variables cleared) | 1,223 |
-| After difference-image centroid gate (546 background blends killed) | 616 on-target |
+| After difference-image centroid gate | 546 blends killed, 616 on-target, 61 uncentroidable |
 | After multi-sector recurrence (388 single-sector red-noise artifacts rejected) | 86 recurring + 78 single-sector-only + 64 no-data |
 | Deep multi-sector battery on the 86 recurring | 16 characterised natural + 70 sub-resolution |
 
@@ -64,10 +64,12 @@ planet-regime recurring set.
   SPOC processing, or a QLP-inclusive recurrence pass.
 - **70 sub-resolution recurring** — real repeating dips below the shape-resolving depth
   (<0.3%); characterisable only with more/deeper photometry.
+- **61 uncentroidable** — 52 with too few in-transit cadences for a difference image, 9
+  transient fetch failures; recovered by a re-run of the centroid gate.
 
-None is a detection, and none sits in the morphology-resolvable regime: all 142
-recurrence-untestable candidates and all 70 sub-resolution ones are either below 0.3% depth
-or single-sector marginal. They are flagged for conventional follow-up per the registered
+That is 273 follow-up candidates in all. None is a detection, and none sits in the
+morphology-resolvable regime: all are either below 0.3% depth, single-sector marginal, or
+not yet centroid-vetted. They are flagged for conventional follow-up per the registered
 stopping rule. The resolvable-regime result — zero unexplained anomalies — is unaffected by
 them.
 

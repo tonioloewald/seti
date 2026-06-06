@@ -23,12 +23,16 @@ set by the pre-registered injection pilot). Every resolvable candidate is accoun
 transiting planet, an eclipsing binary, a background blend, a single-sector red-noise artifact, or a
 catalogued object. Completeness is classification-aware — an injected anomaly is counted only if it
 both is detected and survives the battery as a residual, bounding the anomaly→natural leakage
-directly in the limit — and the resulting population upper limits are **f_max ≈ 2.8×10⁻⁴ on
-flat-occulter ("megastructure-like") anomalies and ≈ 3.4×10⁻⁴ on disintegrating-tail-like anomalies**
-at 1% transit depth. As a by-product the search flags 6 eclipsing-binary and 10 transiting-planet
-candidates among K dwarfs not previously catalogued as such; a further 212 candidates are carried
-explicitly as recurrence-untestable or sub-resolution **follow-up targets**, none a detection and
-none in the resolvable regime. We frame the result not as a one-off null but as the initial
+directly in the limit. The result bounds the rate of **detectable anomalous transit *signatures*
+within the searched range** (period < 13 d, depth ≳ 0.3%, shape matching a forward-modelled family):
+**f_max ≈ 2.8×10⁻⁴ for flat-occulter ("megastructure-like") morphologies and ≈ 3.4×10⁻⁴ for
+disintegrating-tail-like ones** at 1% depth. These are signature rates, not occurrence rates of the
+structures; the two relate as f_signature = f_structure · P_transit with P_transit ~ R⋆/a (a factor
+~30–300 across plausible orbits), so we show the conversion but decline to quote a structure-
+occurrence rate the data do not license. As a by-product the search flags
+6 eclipsing-binary and 10 transiting-planet candidates among K dwarfs not previously catalogued as
+such; a further 273 candidates are carried explicitly as recurrence-untestable, sub-resolution, or
+uncentroidable **follow-up targets**, none a detection and none in the resolvable regime. We frame the result not as a one-off null but as the initial
 calibration of a reusable screening engine whose limit tightens automatically as photometric
 precision and time baselines improve. No claim of artificiality is made.
 
@@ -84,11 +88,20 @@ Each star's out-of-transit noise is measured with an outlier-blind estimator —
 deviation of the continuum after iterative downward-only sigma-clipping — so a genuine deep dip
 cannot inflate its own baseline and mask itself. Stars are binned into three equal-count noise
 cohorts. Within each cohort, box-least-squares (BLS) is run on every star's light curve and the
-empirical null of the detection statistic (the signal-detection-efficiency SDE) is estimated from
-its bulk; the family-wise detection bar is δ0 + z·σ0 with z = Φ⁻¹(1 − 1/N_total), N_total the full
-175,968-star manifest, and σ0 carrying the genomic-control inflation. For T0 the three cohorts are
-507 ppm (λ = 0.71, bar 7.6 SDE), 938 ppm (λ = 0.68, 7.7), and 1268 ppm (λ = 1.02, 8.5), each with
-≈ 4,100 stars; the calibration is frozen at git tag `phase2-calibration-T0`. Per-star, per-cohort
+null location δ0 and scale σ0 of the detection statistic (the signal-detection-efficiency SDE) are
+estimated from the **lower bulk** of the per-star distribution (the median and the 15.9th
+percentile), so that the real transiting planets and binaries — which are common, not rare, and
+populate the *upper* tail — do not bias the null. The family-wise detection bar is δ0 + z·σ0 with
+z = Φ⁻¹(1 − 1/N_total), N_total the full 175,968-star manifest. We label σ0² as a genomic-control
+factor λ by analogy with large-scale inference, but the BLS SDE is not a z-statistic, so values of
+λ away from unity (here 0.68–1.02 across cohorts) carry no inflation/deflation meaning; λ is simply
+the per-cohort bulk scale that sets the threshold. The bar is a **white-noise candidate-generation**
+threshold: it controls pure-noise false alarms, but is deliberately permissive toward the real
+astrophysical signals and red-noise/systematic outliers that any sensitive transit survey produces
+(§4.1 — 34% of stars yield a candidate), which are removed *downstream* by the centroid and
+recurrence stages rather than by the bar. For T0 the three cohorts are 507 ppm (bar 7.6 SDE), 938 ppm
+(7.7), and 1268 ppm (8.5), each with ≈ 4,100 stars; the calibration is frozen at git tag
+`phase2-calibration-T0`. Per-star, per-cohort
 completeness C_i is measured by injecting a frozen library of forward-modelled morphologies (a flat
 occulter and a disintegrating dust-tail, against a limb-darkened-planet control) into the real light
 curves. An injection counts as recovered only if it is **both detected above the bar and survives
@@ -139,13 +152,32 @@ number. A candidate that cannot be classified — because it is too shallow to m
 recurrence cannot be tested — contributes no detection to the numerator and is carried as a follow-up
 target, not as a null.
 
+f_max so defined bounds the rate of detectable anomalous transit *signatures* — the fraction of stars
+whose light curve shows such a transit — and three qualifiers travel with the number: the period lies
+below 13 days (the BLS grid), the depth is above the ~0.3% resolution floor, and the shape matches one
+of the forward-modelled families. It is **not** an occurrence rate of the occulting structures. The
+two relate as f_signature = f_structure · P_transit, with P_transit ~ R⋆/a the geometric transit
+probability (~0.3–6% across plausible orbits), so a structure-occurrence rate would be f_max /
+P_transit — larger by a factor ~30–300. We do not quote one: P_transit is unconstrained without an
+orbital-distribution assumption the data do not provide, and the conversion compounds further
+conditionality, since f_max / P_transit bounds only the occurrence of structures that *would* produce
+an in-range, detectable signature *if* they transited (and assumes at most one per star), not the
+structures full stop. Reporting the signature rate, with the conversion shown but not performed, is
+the limit the data license. The search is in this sense agnostic about an anomaly's origin but
+specific to its *shape*: detection and flagging are template-free — any sufficiently deep departure
+the battery cannot explain is reported as a residual (§3.3) — but the completeness, and hence f_max,
+is defined only for the forward-modelled families, so an anomaly of unmodelled morphology would be
+*flagged* yet its prevalence left *unconstrained*.
+
 ### 3.5 Validation
 
-Before unblinding, the pipeline was validated on fully synthetic injections (the morphology metrics
-separate the forward-modelled families above explicit signal-to-noise floors) and on named,
-published systems: it fires on the disintegrating planet KIC 12557548 / Kepler-1520 (asymmetry and
-depth-variability both elevated) and stays quiet on the clean transiting planet Kepler-8 b — the
-same discipline by which Phase 1 validated on WD 1856+534 b.
+Before unblinding, the morphology metrics' separation of the forward-modelled families was
+established quantitatively on the synthetic injection grid (the statistical validation, spanning
+family × depth × period). Two named, published systems then serve as real-data spot-checks — not a
+classifier validation set: the pipeline fires on the disintegrating planet KIC 12557548 /
+Kepler-1520 (asymmetry and depth-variability both elevated) and stays quiet on the clean transiting
+planet Kepler-8 b, the same discipline by which Phase 1 validated on WD 1856+534 b. A broader
+real-data control set is a natural extension.
 
 ## 4. Results
 
@@ -155,10 +187,12 @@ The 12,100-star search produced 4,131 candidates above the per-cohort bar. The l
 classified 1,289 as planets, 1,215 as eclipsing binaries, 136 as activity, and 133 as disintegrating
 bodies, leaving 1,358 residuals. The identity cross-check cleared 135 known objects (29 confirmed
 planets, 17 TOIs, 8 eclipsing binaries, 54 binaries, 27 variables), leaving 1,223. The centroid gate
-killed 546 background blends, leaving 616 on-target. Multi-sector recurrence rejected 388 single-
-sector red-noise artifacts, leaving 86 recurring transits and 142 candidates for which recurrence
-could not be tested (78 with a single SPOC sector, 64 with only QLP/FFI photometry). The deep
-multi-sector triage of the 86 recurring transits returned 6 eclipsing binaries, 10 transiting
+resolved these into 546 background blends (killed), 616 on-target, and 61 uncentroidable — 52 with
+too few in-transit cadences to form a difference image and 9 transient fetch failures — carried as
+follow-up. Multi-sector recurrence sorted the 616 on-target into 388 single-sector red-noise
+artifacts (rejected), 86 recurring transits, and 142 recurrence-untestable candidates (78 with a
+single SPOC sector, 64 with only QLP/FFI photometry). The deep multi-sector triage of the 86
+recurring transits returned 6 eclipsing binaries, 10 transiting
 planets, and 70 sub-resolution detections.
 
 ### 4.2 No resolved anomaly, and the upper limit
@@ -189,16 +223,18 @@ candidates among K dwarfs not previously catalogued as such.
 
 ### 4.4 Inconclusive sets — a follow-up roadmap
 
-Two sets are carried explicitly, as incomplete observations rather than detections: 142
-recurrence-untestable candidates (one TESS SPOC sector, or QLP-only photometry) and 70 sub-resolution
-recurring dips (real, repeating, but too shallow to measure a shape). They contribute no detection to
-the limit — an unclassifiable signal is assigned no anomaly-completeness and so self-weights out of
-f_max — and none lies in the resolvable regime, so none bears on the result above. Rather than discard
-them, we publish them as a curated target list: the 142 recurrence-untestable dips are immediate
-targets for TESS extended-mission sectors (one further sector separates red noise from a long-lived
-occulter), and the 70 sub-resolution dips are targets for higher-precision photometry (CHEOPS, PLATO)
-able to resolve their morphology. The same engine, re-run as those data arrive, clears the queue and
-tightens the limit with no change of method.
+Three sets are carried explicitly, as incomplete observations rather than detections: 142
+recurrence-untestable candidates (one TESS SPOC sector, or QLP-only photometry), 70 sub-resolution
+recurring dips (real, repeating, but too shallow to measure a shape), and 61 uncentroidable
+candidates (too few in-transit cadences for a difference image, or a transient fetch failure) —
+273 in all. They contribute no detection to the limit — an unclassifiable signal is assigned no
+anomaly-completeness and so self-weights out of f_max — and none lies in the resolvable regime, so
+none bears on the result above. Rather than discard them, we publish them as a curated target list:
+the recurrence-untestable dips are immediate targets for TESS extended-mission sectors (one further
+sector separates red noise from a long-lived occulter), the sub-resolution dips are targets for
+higher-precision photometry (CHEOPS, PLATO) able to resolve their morphology, and the uncentroidable
+set is recovered by a re-run of the centroid gate. The same engine, re-run as those data arrive,
+clears the queue and tightens the limit with no change of method.
 
 ## 5. Discussion
 
@@ -224,15 +260,16 @@ method). Because the analysis is built as a population-agnostic core with a thin
 any population one wishes to stress-test. And independent of the technosignature framing, it is an
 efficient sieve that strips planets, eclipsing binaries, and instrumental artifacts from large
 photometric datasets, leaving whatever genuinely resists modelling — of value to stellar astrophysics
-regardless of the motivating question. The intended mode of operation is to leave the engine running
-as data accumulate, grinding the ceiling down until something inexplicable survives the full gauntlet.
+regardless of the motivating question. The intended mode of operation is to re-run the engine as data
+accumulate, lowering the limit as the census fills, until either the population is exhausted or a
+signal survives the full battery.
 
 ## 6. Conclusions
 
 The brightest tier of a pre-registered, mechanism-agnostic transit-anomaly search of 12,100 K dwarfs
 yields no anomaly that survives the battery in the morphology-resolvable regime, classification-aware
 population upper limits of f_max ≈ 2.8×10⁻⁴ (flat occulter) and ≈ 3.4×10⁻⁴ (disintegrating-tail) at
-1% depth, a small by-product catalogue of natural transiting systems, and a curated 212-target
+1% depth, a small by-product catalogue of natural transiting systems, and a curated 273-target
 follow-up list. We present this as the initial calibration of a living pipeline rather than a closed
 result: the null shows the natural-explanation battery is tight, and the same engine
 (`pipeline/fetch/k02`–`k08`, on the validated population-agnostic core) extends to the fainter tiers
