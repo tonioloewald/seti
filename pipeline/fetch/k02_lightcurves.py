@@ -20,11 +20,21 @@ Outputs:
   data/derived/kdwarf_noise_floor.parquet   one row/star (source_id, tier, mission, scatter...)
   data/lightcurves/<source_id>.npz          compact detrended LC (time, flux)  [gitignored]
 """
-import os, sys, time, warnings, tempfile, shutil
+import os, sys, time, warnings, tempfile, shutil, signal
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import numpy as np
 import pandas as pd
 warnings.filterwarnings("ignore")
+
+STAR_TIMEOUT = 90          # seconds per star before a hung MAST request is abandoned
+
+
+class _Timeout(Exception):
+    pass
+
+
+def _on_alarm(signum, frame):
+    raise _Timeout()
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(ROOT, "pipeline"))
@@ -84,16 +94,22 @@ def process_star(s, mission):
     sid = s["source_id"]
     rec = {"source_id": sid, "tier": tier_of(s["g_mag"]), "g_mag": float(s["g_mag"])}
     tmp = tempfile.mkdtemp(prefix="lk_")               # isolate astroquery/lightkurve cache
+    signal.signal(signal.SIGALRM, _on_alarm)           # per-star wall-clock timeout so a hung
+    signal.alarm(STAR_TIMEOUT)                          # MAST request cannot stall a worker
     try:
         tt, ff, mis, label, cad = fetch_one(float(s["ra_deg"]), float(s["dec_deg"]), mission, tmp)
         sc = robust_scatter(ff)
         np.savez_compressed(os.path.join(LCDIR, f"{sid}.npz"), time=tt, flux=ff)
         rec.update({"mission": mis, "label": label, "n_points": int(tt.size),
                     "cadence_d": cad, "scatter_ppm": sc * 1e6, "status": "ok"})
+    except _Timeout:
+        rec.update({"mission": "", "label": "", "n_points": 0, "cadence_d": np.nan,
+                    "scatter_ppm": np.nan, "status": "err:timeout"})
     except Exception as e:
         rec.update({"mission": "", "label": "", "n_points": 0, "cadence_d": np.nan,
                     "scatter_ppm": np.nan, "status": f"err:{type(e).__name__}"})
     finally:
+        signal.alarm(0)
         shutil.rmtree(tmp, ignore_errors=True)
     return rec
 
