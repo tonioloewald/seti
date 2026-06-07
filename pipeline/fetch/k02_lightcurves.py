@@ -135,6 +135,14 @@ def main():
     if os.path.exists(OUT):
         prev = pd.read_parquet(OUT); prev["source_id"] = prev["source_id"].astype(str)
         done = set(prev["source_id"]); rows = prev.to_dict("records")
+    if "--retry" in args:                  # re-attempt TRANSIENT failures only -- not
+        def transient(st):                 # err:RuntimeError (genuinely no usable light curve)
+            st = str(st)
+            return st.startswith("err:") and not st.startswith("err:RuntimeError")
+        retry_ids = {r["source_id"] for r in rows if transient(r.get("status"))}
+        rows = [r for r in rows if r["source_id"] not in retry_ids]
+        done -= retry_ids
+        print(f"  retry: re-attempting {len(retry_ids)} transient failures (not no-data)", flush=True)
     todo = man[~man["source_id"].isin(done)]
     if sample > 0:
         todo = todo.sample(min(sample, len(todo)), random_state=seed)  # representative spread
