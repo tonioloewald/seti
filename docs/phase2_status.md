@@ -19,18 +19,16 @@ we are and how to continue." Last updated 2026-06-07.
 - **Paper:** `paper/phase2_T0_draft.md` — converged after ~5 adversarial review rounds. Every number
   verified against the committed artifacts by `pipeline/runners/audit_T0_paper.py` (all PASS).
 
-## T1 (11 ≤ G < 12) — IN PROGRESS
+## T1 (11 ≤ G < 12) — PULLED, awaiting calibration
 
-- **Pull running** (background): 32,891 stars. ~0.5/s, ~97% success, 90s/star timeout.
-  - **Resume the pull** (idempotent; skips done): `.venv/bin/python pipeline/fetch/k02_lightcurves.py --gmin 11 --gmax 12 --workers 6`
-  - Writes to `data/derived/kdwarf_noise_floor.parquet` (gitignored, checkpointed every 25) and
-    `data/lightcurves/<source_id>.npz` (gitignored cache).
+- **Pull + transient retry DONE:** 32,891 processed, **32,102 ok (97.6%)** in the noise floor
+  (`data/derived/kdwarf_noise_floor.parquet`, gitignored; LCs cached in `data/lightcurves/`).
+  Remaining fails: 692 genuine no-data + ~75 persistent malformed products (not worth re-trying).
+  - Re-pull if ever needed (idempotent; skips done): `.venv/bin/python pipeline/fetch/k02_lightcurves.py --gmin 11 --gmax 12 --workers 6`
 
-## Next steps (in order), once the T1 pull completes
+## Next steps (in order)
 
-1. **Retry transients:** `k02_lightcurves.py --gmin 11 --gmax 12 --retry` (recovers timeout/Connection/etc.;
-   leaves `err:RuntimeError` = genuine no-data). Optionally run over T0 too for consistency.
-2. **Calibrate.** Open decision: recalibrate on the *combined* T0+T1 noise floor (one consistent
+1. **Calibrate.** OPEN DECISION (awaiting investigator): recalibrate on the *combined* T0+T1 noise floor (one consistent
    calibration, refines the bars with more data — data-driven, candidate-independent) **vs** per-tier
    calibration (T0 frozen as-is, T1 its own). Run `k03_calibrate.py` accordingly; freeze + tag.
 3. **Search + battery:** `k04_search.py --unblind` (against the frozen T1/combined calibration) → then

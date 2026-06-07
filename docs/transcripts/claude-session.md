@@ -10173,3 +10173,87 @@ So the final T1 noise floor will recover the transients before calibration, and 
 ### 🧑 Tonio
 
 Is there a way to make this session itself safely resumable? Is the archive of this chat up to date?
+
+### 🤖 Claude
+
+Good question to ask before relying on it. Two separate things — the durable record (git + memory) and the in-flight bits (this conversation + the running pull). Let me check the archive state first:
+
+
+_[tools: Bash]_
+
+The export brought it current — it *was* slightly stale (the last few turns weren't committed). Now let me make the session genuinely resumable. The durable record (git + memory) is solid; what's missing is a single "where are we / how to resume" anchor. Writing one:
+
+
+_[tools: Write]_
+
+Now commit the refreshed transcript + the resume anchor, and add a memory pointer so a fresh session finds it:
+
+
+_[tools: Bash]_
+
+
+_[tools: Edit]_
+
+Let me confirm the T1 pull is still alive, then give you the full picture:
+
+
+_[tools: Bash]_
+
+The T1 pull just **completed** as I was checking (good timing). First, your two questions:
+
+**Archive — yes, up to date now.** It was lagging by the last few turns; I re-exported and committed it (`4dd90f5`, `docs/transcripts/claude-session.md`, with the [a collaborator]→[a collaborator] scrub). Caveat: it always trails by roughly the current in-progress turn, since the export reads completed turns from the session log.
+
+**Resumability — yes, now properly set up.** The split:
+- **Durable / safe:** everything on `origin/main` (0 unpushed — code, paper, results, residual lists, frozen calibrations, transcripts), the OSF registration, and the `~/.claude` memory files. A fresh session loads `MEMORY.md`, which now points at the resume anchor.
+- **The resume anchor:** `docs/phase2_status.md` (committed) — registered artifacts, T0 done, T1 state, the *idempotent* resume command for the pull, and ordered next steps. A lost session recovers from that + git + memory.
+- **The T1 pull** was checkpoint-resumable throughout (re-running skipped done) — now moot since it finished.
+
+If you wanted it even more automatic, I could add a `Stop` hook that re-exports the transcript every time I finish a turn, so the archive never trails — say the word.
+
+**On T1 itself:** the pull finished — 31,847 processed. Let me check the yield and kick off the retry pass (the documented next step):
+
+
+_[tools: Bash]_
+
+T1 pull done: **31,847 ok** (96.8%), 1,044 fail — of which **353 are transient/retryable** (691 are genuine no-data). Running the retry pass to recover the 353:
+
+
+_[tools: Bash]_
+
+Launched (`b9379fdhv`). Let me confirm it's re-attempting the right set:
+
+
+_[tools: Bash]_
+
+Confirmed — re-attempting the 353 T1 transients (it found 463 transient across the full noise floor but the G 11–12 filter scopes it to T1's). ~5–15 min, it'll notify on completion.
+
+So, to close out your questions: **the session is now safely resumable** — durable record on `origin/main` (fully pushed), the OSF registration, memory pointing at `docs/phase2_status.md`, and the pull always resumable from its checkpoint. The **archive is current** (just refreshed and committed). If a session is ever lost, a fresh one reads the status doc + `MEMORY.md` + git history and picks up exactly here.
+
+**Where T1 stands:** pull complete (31,847 ok), transient retry running. When it lands, the next step is calibration — and that's the one design decision I flagged for you:
+
+- **Combined T0+T1 recalibration** — one consistent calibration over ~44k stars; the per-cohort bars refine with more data (data-driven, never candidate-driven). Cleaner cumulative limit, but it supersedes the T0-only calibration the paper reports.
+- **Per-tier** — T0 stays frozen exactly as published; T1 gets its own calibration; the cumulative `f_max` sums the two tiers' ΣC_i.
+
+I lean **combined** (it's the prereg's "calibrate from the whole manifest" intent, approached incrementally, and gives one coherent limit), but it's a judgment call about whether you'd rather keep the published T0 numbers immutable. No rush — think on it while the retry runs, and I'll proceed on your call. And the offer stands on the `Stop` hook for always-current transcripts if you want the archive to never trail.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>b9379fdhv</task-id>
+<tool-use-id>toolu_01F7NNb2SdPPfDbqgjAPj5TA</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/b9379fdhv.output</output-file>
+<status>completed</status>
+<summary>Background command "Background: retry T1 transient failures" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+The retry finished. Let me see how many recovered:
+
+
+_[tools: Bash]_
+
+T1 is effectively complete: the retry recovered ~255 stars (timeouts 154→21, connections 121→1), bringing T1 to **32,102 ok (97.6%)**. The remaining failures are 692 genuine no-data plus ~75 persistent (ValueError/LightkurveError — malformed products, not transient), not worth another pass. Let me update the resume anchor to reflect this:
+
+
+_[tools: Edit]_
