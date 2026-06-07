@@ -12,8 +12,9 @@ transit signatures around main-sequence K dwarfs. Rather than assume what an end
 would build, the search looks only for a departure from the natural transit model — most powerfully
 a transit *shape* no natural occulter can produce — and attempts to explain every candidate away
 through a fixed, pre-registered battery of natural hypotheses. Detection thresholds are not chosen
-but *computed* by a registered procedure (a per-noise-cohort empirical null with genomic-control
-inflation, plus injection-recovery completeness) and frozen before the candidate tail is unblinded.
+but *computed* by a registered procedure (a per-noise-cohort empirical null calibrated on the lower
+bulk of the statistic, plus injection-recovery completeness) and frozen before the candidate tail is
+unblinded.
 
 Applied to 12,100 bright (G < 11) K dwarfs with TESS photometry, the pipeline reduces 4,131 raw
 box-least-squares candidates, through an identity cross-check, a difference-image centroid gate, a
@@ -183,7 +184,7 @@ probability. Critically, the conversion is valid only over the orbits the search
 across the searched range (P < 13 d, hence a ≲ 0.1 AU for a 0.7 M⊙ K dwarf) P_transit runs from ~30%
 at the shortest periods to ~3% at P = 13 d, so a structure-occurrence rate would be f_max / P_transit
 — larger by **at most ~30×**. We do *not* extend this to wider orbits: at a ≈ 1 AU the factor would be
-~240×, but P = 13 d is the period ceiling of the BLS grid, so structures on orbits beyond ~0.1 AU are
+~300×, but P = 13 d is the period ceiling of the BLS grid, so structures on orbits beyond ~0.1 AU are
 not sampled and are entirely unconstrained, not loosely constrained by a large conversion. Even within
 range we decline to quote an occurrence number: P_transit needs an orbital-distribution assumption the
 data do not provide, and the conversion compounds further conditionality, since f_max / P_transit
@@ -291,7 +292,12 @@ efficient sieve that strips planets, eclipsing binaries, and instrumental artifa
 photometric datasets, leaving whatever genuinely resists modelling — of value to stellar astrophysics
 regardless of the motivating question. The intended mode of operation is to re-run the engine as data
 accumulate, lowering the limit as the census fills, until either the population is exhausted or a
-signal survives the full battery.
+signal survives the full battery. Such re-runs are sequential looks at the same hypotheses rather than
+independent trials, but they do not inflate the false-alarm rate the way naive repeated testing would:
+the decisive battery stages strengthen with more data — additional sectors make spurious recurrence
+*harder*, not easier, to pass, and deeper photometry resolves morphology that was previously
+unmeasurable — so accumulating data subjects a candidate to progressively more stringent tests, and
+the look-elsewhere cost of the re-run family is largely self-correcting.
 
 ## 6. Conclusions
 
