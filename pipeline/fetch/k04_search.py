@@ -30,9 +30,11 @@ from core.detect import bls_detect, single_event_detect            # noqa: E402
 from core.stats import poisson_fmax                                 # noqa: E402
 from core.transit import metrics, make_transit, multi_epoch_depths  # noqa: E402
 
+RUN = os.environ.get("KRUN", "T0")            # run label: T0 (default) | T0T1 (combined)
+TIERS = {"T0": [0], "T0T1": [0, 1]}.get(RUN, [0])
 NOISE = os.path.join(ROOT, "data", "derived", "kdwarf_noise_floor.parquet")
-CAL = os.path.join(ROOT, "data", "manifests", "kdwarf_calibration_T0.json")   # FROZEN, tagged
-RESID = os.path.join(ROOT, "data", "manifests", "kdwarf_T0_residuals.csv")
+CAL = os.path.join(ROOT, "data", "manifests", f"kdwarf_calibration_{RUN}.json")   # FROZEN, tagged
+RESID = os.path.join(ROOT, "data", "manifests", f"kdwarf_{RUN}_residuals.csv")
 LCDIR = os.path.join(ROOT, "data", "lightcurves")
 PERIODS = np.arange(0.5, 13.0, 0.02)
 DURS = np.array([0.05, 0.1, 0.2])
@@ -178,10 +180,10 @@ def unblind_mode():
     edges = np.array(cal["cohort_edges_scatter"])
     from core.noise import assign_cohorts
     nf = pd.read_parquet(NOISE); nf["source_id"] = nf["source_id"].astype(str)
-    ok = nf[(nf["status"] == "ok") & np.isfinite(nf["scatter_ppm"]) & (nf["tier"] == 0)].copy()
+    ok = nf[(nf["status"] == "ok") & np.isfinite(nf["scatter_ppm"]) & (nf["tier"].isin(TIERS))].copy()
     ok["cohort"] = assign_cohorts(ok["scatter_ppm"].to_numpy()/1e6, edges)
     thr = {int(c): cal["cohorts"][c]["threshold_sde"] for c in cal["cohorts"]}
-    print(f"UNBLINDING T0: {len(ok)} G<11 stars against frozen bars "
+    print(f"UNBLINDING {RUN}: {len(ok)} stars against frozen bars "
           f"{ {c: round(thr[c],1) for c in thr} } SDE ...", flush=True)
 
     tasks = [(r["source_id"], int(r["cohort"]), thr[int(r["cohort"])], r["scatter_ppm"]/1e6, z)
@@ -198,7 +200,7 @@ def unblind_mode():
                       flush=True)
 
     df = pd.DataFrame(cands)
-    print(f"\n=== T0 UNBLIND RESULT ===\n  {len(ok)} stars searched; {len(df)} candidates above the bar.")
+    print(f"\n=== {RUN} UNBLIND RESULT ===\n  {len(ok)} stars searched; {len(df)} candidates above the bar.")
     if len(df):
         vc = df["verdict"].value_counts()
         print("  battery verdicts:")
@@ -217,7 +219,7 @@ def unblind_mode():
                 print(f"    {r.source_id}  SDE={r.sde:.1f}  P={r.period:.3f}d  d={r.depth*100:.2f}%  "
                       f"flat={r.flat_bottom:.2f} asym={r.asymmetry:.3f}")
     # per-family f_max from the frozen completeness x searched cohort counts (zero-residual basis)
-    print("\n  per-family f_max (3/sum C_i over searched T0 stars; the limit IF residuals clear):")
+    print("\n  per-family f_max (3/sum C_i over searched {RUN} stars; the limit IF residuals clear):")
     for fam in cal["completeness"]:
         ds = "0.010" if "0.010" in cal["completeness"][fam] else list(cal["completeness"][fam])[0]
         sumCi = sum((cal["completeness"][fam][ds][str(c)] or 0) * int((ok["cohort"] == c).sum())

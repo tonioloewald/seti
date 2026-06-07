@@ -24,9 +24,10 @@ from astropy.coordinates import SkyCoord
 import astropy.units as u
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+RUN = os.environ.get("KRUN", "T0")            # T0 (default) | T0T1 (combined)
 MAN = os.path.join(ROOT, "data", "manifests", "kdwarf_sample.csv.gz")
-RESID = os.path.join(ROOT, "data", "manifests", "kdwarf_T0_residuals.csv")
-OUT = os.path.join(ROOT, "data", "manifests", "kdwarf_T0_residuals_identity.csv")
+RESID = os.path.join(ROOT, "data", "manifests", f"kdwarf_{RUN}_residuals.csv")
+OUT = os.path.join(ROOT, "data", "manifests", f"kdwarf_{RUN}_residuals_identity.csv")
 RAW = os.path.join(ROOT, "data", "raw", "exoarchive")
 TAP = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
 MATCH_RADIUS = 6.0          # arcsec: same-source identification

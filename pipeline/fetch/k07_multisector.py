@@ -23,12 +23,13 @@ import pandas as pd
 warnings.filterwarnings("ignore")
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+RUN = os.environ.get("KRUN", "T0")            # T0 (default) | T0T1 (combined)
 sys.path.insert(0, os.path.join(ROOT, "pipeline"))
 from core.detect import bls_detect                                  # noqa: E402
 from core.noise import robust_scatter                              # noqa: E402
 
-CEN = os.path.join(ROOT, "data", "manifests", "kdwarf_T0_residuals_centroid.csv")
-OUT = os.path.join(ROOT, "data", "manifests", "kdwarf_T0_residuals_multisector.csv")
+CEN = os.path.join(ROOT, "data", "manifests", f"kdwarf_{RUN}_residuals_centroid.csv")
+OUT = os.path.join(ROOT, "data", "manifests", f"kdwarf_{RUN}_residuals_multisector.csv")
 LCDIR = os.path.join(ROOT, "data", "lightcurves")
 PERIODS = np.arange(0.5, 13.0, 0.02)
 DURS = np.array([0.05, 0.1, 0.2])
