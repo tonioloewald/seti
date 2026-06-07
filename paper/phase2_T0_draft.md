@@ -101,7 +101,8 @@ population.
 No real candidate data are analysed before the detection thresholds are computed and frozen. The
 registered procedure computes the per-cohort empirical null and the family-wise bar on the noise
 floor and on synthetic and known-object injections only (the empirical null is estimated from the
-bulk of the statistic, so any real transit sits in the tail and cannot shift it); the candidate tail
+*lower* bulk of the statistic, so the common real transits, which populate the upper tail, cannot
+shift it); the candidate tail
 is unblinded exactly once, against the frozen calibration. Sample, query, recipe, and per-stage
 residual lists are committed in a public, branch-protected repository linked from the registration.
 
@@ -118,7 +119,8 @@ populate the *upper* tail — do not bias the null. The family-wise detection ba
 z = Φ⁻¹(1 − 1/N_total), N_total the full 175,968-star manifest. We label σ0² as a genomic-control
 factor λ by analogy with large-scale inference, but the BLS SDE is not a z-statistic, so values of
 λ away from unity (here 0.68–1.02 across cohorts) carry no inflation/deflation meaning; λ is simply
-the per-cohort bulk scale that sets the threshold. The bar is a **white-noise candidate-generation**
+the per-cohort bulk scale that sets the threshold (we retain the genomic-control reference for this
+per-cohort scaling construction, not for an inflation correction, which the SDE does not admit). The bar is a **white-noise candidate-generation**
 threshold: it controls pure-noise false alarms, but is deliberately permissive toward the real
 astrophysical signals and red-noise/systematic outliers that any sensitive transit survey produces
 (§4.1 — 34% of stars yield a candidate), which are removed *downstream* by the centroid and
