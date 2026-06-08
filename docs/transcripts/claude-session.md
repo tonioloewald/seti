@@ -10257,3 +10257,181 @@ T1 is effectively complete: the retry recovered ~255 stars (timeouts 154→21, c
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+T1 is fully pulled and ready (32,102 ok, status anchor updated and committed `8504be3`).
+
+I'm holding here for your one decision before calibrating — **combined T0+T1 recalibration** (my lean: one coherent limit, the prereg's "calibrate from the whole manifest" intent applied incrementally) **vs. per-tier** (keeps the published T0 calibration immutable, sums the tiers). Once you call it, I'll run k03 → unblind → the k05–k08 battery cascade on T1 and extend the cumulative `f_max`, same as T0.
+
+No other input needed — just that pick when you're ready.
+
+### 🧑 Tonio
+
+I think combined but no reason we can’t keep the original result in tact.
+
+### 🤖 Claude
+
+Combined it is, with the original T0 artifacts kept immutable. That's clean: recalibrate on the combined T0+T1 noise floor, **re-search both tiers against the combined calibration into new `_T0T1` output files**, and leave every T0 artifact (calibration tag, residual lists, the paper) untouched.
+
+To do that without overwriting T0's files, I'll parameterize the pipeline stages with a run label (default `T0`, so existing behavior is preserved). Let me see k04's constants and tier filter first:
+
+
+_[tools: Bash]_
+
+I'll parameterize via an env var `KRUN` (default `T0`, so T0 behavior is unchanged). Editing k04 — constants and the tier filter:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Let me catch any remaining "T0" string literals in k04 (prints, etc.):
+
+
+_[tools: Bash]_
+
+
+_[tools: Bash]_
+
+sed worked. Now parameterizing k05–k08. Let me read their constant blocks:
+
+
+_[tools: Bash]_
+
+Parameterizing k05–k08 (add `RUN` after `ROOT`, f-string the `T0` paths):
+
+
+_[tools: Bash]_
+
+All five stages parameterized (default `KRUN=T0` preserves T0 exactly; `KRUN=T0T1` → combined calibration, tiers 0+1, `_T0T1` output files). Committing, then kicking off the combined calibration (k03 calibrates on all ok stars = the combined T0+T1 noise floor):
+
+
+_[tools: Bash]_
+
+Let me confirm the combined calibration started cleanly (it should now see ~44k ok stars):
+
+
+_[tools: Bash]_
+
+Combined calibration is running on the full **44,380 ok stars** (T0+T1+proof), imports clean. ~10–15 min for this stage (44k null BLS + classification-aware injection-recovery).
+
+The combined run is now in motion, and it keeps T0 immutable by construction:
+1. **Calibrate** (running) → I'll freeze it as `kdwarf_calibration_T0T1.json` + a `phase2-calibration-T0T1` tag, leaving `kdwarf_calibration_T0.json` untouched.
+2. **Unblind** `KRUN=T0T1 k04 --unblind` — re-searches tiers 0+1 (~44k) against the combined bars, into `kdwarf_T0T1_residuals.csv`.
+3. **Battery cascade** `KRUN=T0T1` k05→k08 — identity, centroid, recurrence, triage, all writing `_T0T1` files.
+4. **Report** the combined cumulative `f_max` (ΣC_i over ~44k → a tighter limit) and the combined cascade; the T0-only paper/artifacts stay exactly as published.
+
+This whole chain is ~2–3 h (the TPF-fetch stages dominate), and it'll step through automatically as each stage completes — I'll surface the combined numbers when they land. The original T0 result remains the immutable published record alongside it.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>b5ttd32h3</task-id>
+<tool-use-id>toolu_018kU9Cjtv8ifFUgoo7ejmW2</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/b5ttd32h3.output</output-file>
+<status>completed</status>
+<summary>Background command "Commit parameterization, run combined calibration" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+The combined calibration finished. Let me read it:
+
+
+_[tools: Bash]_
+
+Combined calibration is good — and it validates the "combined" choice: the cohorts now span **595–2051 ppm** (T1's fainter stars pushed the top cohort from 1268→2051 ppm, which T0's cohorts couldn't have graded). Bars 7.3/8.1/8.7 SDE; box C_i still ~0.93 (robustly classified). With ~44k stars, ΣC_i roughly triples, so the combined `f_max(box)` will land near ~8×10⁻⁵ — ~3× tighter than T0. Let me freeze/tag it and launch the combined unblind:
+
+
+_[tools: Bash]_
+
+Launched (`b3k32vo94`). Let me confirm the combined unblind started against the right calibration and star set:
+
+
+_[tools: Bash]_
+
+Combined unblind is running correctly — **44,202 stars** (T0's 12,100 + T1's 32,102) against the combined bars 7.3/8.1/8.7. That confirms the parameterization works and it's reading the combined calibration. ~10–15 min for this stage.
+
+The combined cascade is now stepping through on its own:
+- **Unblind** (running) → `kdwarf_T0T1_residuals.csv`
+- then **identity → centroid → recurrence → triage** (`KRUN=T0T1`, ~2–3 h dominated by TPF fetches)
+
+I'll report the combined cumulative `f_max` and the full cascade when it lands — expecting roughly a 3× tighter limit (~8×10⁻⁵ for flat occulters) from the ~3.6× larger ΣC_i, with the T0 record untouched alongside it. Nothing needed from you; I'll surface the numbers as the stages complete.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>b3k32vo94</task-id>
+<tool-use-id>toolu_015Zq4bmzhJ28WCjcLHsgrgs</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/b3k32vo94.output</output-file>
+<status>completed</status>
+<summary>Background command "Freeze/tag combined cal, launch combined unblind" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+The combined unblind finished. Let me read the result and chain into the identity stage:
+
+
+_[tools: Bash]_
+
+Combined unblind done: **5,796 raw residuals** (~4.3× T0's 1,358, tracking the larger sample), and the projected limit is already in: **`f_max(box) = 8.1×10⁻⁵`** (ΣC_i = 37,036) and **`f_max(tail) = 9.5×10⁻⁵`** — ~3.4× tighter than T0, exactly as the larger ΣC_i predicts. The top residuals are the same mundane population (P=0.5 d edge artifacts, shallow). Chaining into identity:
+
+
+_[tools: Bash]_
+
+Identity is running on the 5,796 (`b09eqa0y3`) — catalog matches plus ~5,500 SIMBAD queries, ~20–25 min. It'll chain to centroid → recurrence → triage as each completes.
+
+So the combined run is delivering what we wanted: a **3.4× tighter limit** (`f_max(box) ≈ 8.1×10⁻⁵`) from the larger ΣC_i, with every T0 artifact untouched alongside it (`kdwarf_calibration_T0.json`, the T0 residual lists, the published paper all immutable; the combined writes `_T0T1` files and the `phase2-calibration-T0T1` tag).
+
+I'll surface the full combined cascade — and confirm whether the resolvable-regime null holds at the deeper limit — once it works through to the triage stage. Nothing needed from you meanwhile.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>b09eqa0y3</task-id>
+<tool-use-id>toolu_01GGKhRV4dRSaGadcvc4sDgN</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/b09eqa0y3.output</output-file>
+<status>completed</status>
+<summary>Background command "Background: combined identity cross-check" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Bash]_
+
+Combined identity: 361 known cleared, **5,435 survive** → centroid. That's 4.4× T0's centroid load (~5,400 TPF fetches, ~2 h), so before launching it I'll add the same SIGALRM timeout to the centroid and recurrence stages — at this scale, hung TPF fetches could consume workers. Adding it to k06:
+
+
+_[tools: Read]_
+
+
+_[tools: Bash]_
+
+Timeout wired into both. Let me commit and launch the combined centroid gate (~5,400 stars, ~2 h, resumable):
+
+
+_[tools: Bash]_
+
+Let me confirm it's progressing:
+
+
+_[tools: Bash]_
+
+The combined centroid gate is running well — 1,150/5,435, ~35% on-target so far (tracking T0's rate). At ~0.38 stars/s it's a **~4 h stage** (TPF fetches are slower than light curves), resumable. Let me update the resume anchor to reflect the combined run is mid-cascade:
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_

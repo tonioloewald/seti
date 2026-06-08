@@ -26,14 +26,20 @@ we are and how to continue." Last updated 2026-06-07.
   Remaining fails: 692 genuine no-data + ~75 persistent malformed products (not worth re-trying).
   - Re-pull if ever needed (idempotent; skips done): `.venv/bin/python pipeline/fetch/k02_lightcurves.py --gmin 11 --gmax 12 --workers 6`
 
-## Next steps (in order)
+## Combined T0+T1 run — IN PROGRESS (decision: combined; T0 kept immutable)
 
-1. **Calibrate.** OPEN DECISION (awaiting investigator): recalibrate on the *combined* T0+T1 noise floor (one consistent
-   calibration, refines the bars with more data — data-driven, candidate-independent) **vs** per-tier
-   calibration (T0 frozen as-is, T1 its own). Run `k03_calibrate.py` accordingly; freeze + tag.
-3. **Search + battery:** `k04_search.py --unblind` (against the frozen T1/combined calibration) → then
-   `k05_identity` → `k06_centroid` → `k07_multisector` → `k08_triage`, same as T0.
-4. **Report:** extend the cumulative `f_max` (Σ C_i grows), update the paper, re-run the audit.
+Stages parameterized by env `KRUN` (default `T0` = published run; `T0T1` = combined). Done so far:
+combined calibration frozen (`kdwarf_calibration_T0T1.json`, tag `phase2-calibration-T0T1`; cohorts
+595/1262/2051 ppm, bars 7.3/8.1/8.7 SDE, 44,380 stars); unblind 5,796 residuals, projected
+**f_max(box) ≈ 8.1e-5 / tail ≈ 9.5e-5** (~3.4× tighter than T0); identity → 5,435 survive.
+
+**Resume the cascade** (each resumable; in order, env `KRUN=T0T1 --workers 6`):
+`k06_centroid.py` (running) → `k07_multisector.py` → `k08_triage.py`. Combined lists:
+`data/manifests/kdwarf_T0T1_residuals*.csv`. T0 artifacts (`kdwarf_calibration_T0.json`,
+`kdwarf_T0_residuals*.csv`, the paper) are untouched.
+
+**After the cascade:** extend the cumulative `f_max`, update the paper with the combined tier,
+re-run `pipeline/runners/audit_T0_paper.py` (and add a T0T1 audit).
 
 ## What is and isn't durable
 
