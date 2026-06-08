@@ -16,11 +16,15 @@ transit depth + SNR in each sector independently. Verdict:
 
 Parallel, resumable. Output: data/manifests/kdwarf_T0_residuals_multisector.csv
 """
-import os, sys, time, tempfile, shutil, warnings
+import os, sys, time, tempfile, shutil, warnings, signal
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import numpy as np
 import pandas as pd
 warnings.filterwarnings("ignore")
+
+VET_TIMEOUT = 120
+class _Timeout(Exception): pass
+def _on_alarm(signum, frame): raise _Timeout()
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 RUN = os.environ.get("KRUN", "T0")            # T0 (default) | T0T1 (combined)
@@ -70,6 +74,7 @@ def fetch_sectors(ra, dec, dldir):
 
 def _vet(task):
     sid, ra, dec = task
+    signal.signal(signal.SIGALRM, _on_alarm); signal.alarm(VET_TIMEOUT)
     dldir = tempfile.mkdtemp(prefix="ms_")
     try:
         period, t0, duration = _ephemeris(sid)
@@ -105,6 +110,7 @@ def _vet(task):
     except Exception as e:
         return {"source_id": sid, "n_sectors": -1, "n_detected": 0, "ms_verdict": f"err:{type(e).__name__}"}
     finally:
+        signal.alarm(0)
         shutil.rmtree(dldir, ignore_errors=True)
 
 
