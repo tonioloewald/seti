@@ -2,7 +2,7 @@
 
 A single place to recover the state of work if a session is lost. The authoritative record is
 the git history + the OSF registration + the AI transcripts; this is the human-readable "where
-we are and how to continue." Last updated 2026-06-07.
+we are and how to continue." Last updated 2026-06-09.
 
 ## Registered
 
@@ -11,35 +11,42 @@ we are and how to continue." Last updated 2026-06-07.
 - Pipeline (population-agnostic core + K-dwarf plugin): `pipeline/core/`, `pipeline/populations/k_dwarf.py`,
   stages `pipeline/fetch/k01`–`k08`. Deviations logged in `AMENDMENTS.md` (notably: youth floor **dropped**).
 
-## T0 (G < 11) — DONE
+## Battery v2 (2026-06-09) — applied to both tiers
 
-- 12,100 stars searched; cascade → no resolved anomaly; `f_max` ≈ 2.8×10⁻⁴ (flat occulter) / 3.4×10⁻⁴ (tail);
-  by-product 6 EB + 10 planet; 273 follow-up. Calibration frozen: tag `phase2-calibration-T0`,
-  `data/manifests/kdwarf_calibration_T0.json`. Residual lists: `data/manifests/kdwarf_T0_residuals*.csv`.
-- **Paper:** `paper/phase2_T0_draft.md` — converged after ~5 adversarial review rounds. Every number
-  verified against the committed artifacts by `pipeline/runners/audit_T0_paper.py` (all PASS).
+Two candidate-independent battery refinements (`AMENDMENTS.md`, commit history): a depth→radius
+**eclipsing-binary criterion** (depth > 0.13 ⟹ R_occ > ~2.5 R_J ⟹ stellar companion) and a
+**noise-aware depth-variability** test (per-epoch depth-CV judged against scatter/√n_in, so photon
+noise no longer diverts real planets out of `natural_planet`). Injection-recovery confirms
+box→RESIDUAL and tail→RESIDUAL preserved, so **C_i, the detection bars, and f_max are unchanged**;
+only by-product labelling is refined. Both tiers re-run from k04 with this battery.
 
-## T1 (11 ≤ G < 12) — PULLED, awaiting calibration
+## T0 (G < 11) — DONE (battery v2)
 
-- **Pull + transient retry DONE:** 32,891 processed, **32,102 ok (97.6%)** in the noise floor
-  (`data/derived/kdwarf_noise_floor.parquet`, gitignored; LCs cached in `data/lightcurves/`).
-  Remaining fails: 692 genuine no-data + ~75 persistent malformed products (not worth re-trying).
-  - Re-pull if ever needed (idempotent; skips done): `.venv/bin/python pipeline/fetch/k02_lightcurves.py --gmin 11 --gmax 12 --workers 6`
+- 12,100 stars; cascade 4,131 cand → 1,023 residual → 912 identity-survive → 463 on-target →
+  61 recurring → triage (6 EB, 13 planet, 9 disint, 33 RESIDUAL). **0 resolvable-regime residuals**
+  (all 33 RESIDUAL < 0.3% depth, max 0.186%) — clean null preserved. `f_max` ≈ 2.8×10⁻⁴ (box) /
+  3.4×10⁻⁴ (tail), unchanged. Calibration frozen: `kdwarf_calibration_T0.json`, tag
+  `phase2-calibration-T0`. Lists: `data/manifests/kdwarf_T0_residuals*.csv`, `kdwarf_T0_recurring_triage.csv`.
 
-## Combined T0+T1 run — IN PROGRESS (decision: combined; T0 kept immutable)
+## T1 (11 ≤ G < 12) — PULLED (noise floor in combined run)
 
-Stages parameterized by env `KRUN` (default `T0` = published run; `T0T1` = combined). Done so far:
-combined calibration frozen (`kdwarf_calibration_T0T1.json`, tag `phase2-calibration-T0T1`; cohorts
-595/1262/2051 ppm, bars 7.3/8.1/8.7 SDE, 44,380 stars); unblind 5,796 residuals, projected
-**f_max(box) ≈ 8.1e-5 / tail ≈ 9.5e-5** (~3.4× tighter than T0); identity → 5,435 survive.
+- 32,102 ok (97.6%) in `data/derived/kdwarf_noise_floor.parquet` (gitignored; LCs in `data/lightcurves/`).
+  Re-pull if needed (idempotent): `.venv/bin/python pipeline/fetch/k02_lightcurves.py --gmin 11 --gmax 12 --workers 6`
 
-**Resume the cascade** (each resumable; in order, env `KRUN=T0T1 --workers 6`):
-`k06_centroid.py` (running) → `k07_multisector.py` → `k08_triage.py`. Combined lists:
-`data/manifests/kdwarf_T0T1_residuals*.csv`. T0 artifacts (`kdwarf_calibration_T0.json`,
-`kdwarf_T0_residuals*.csv`, the paper) are untouched.
+## Combined T0+T1 — DONE (battery v2)
 
-**After the cascade:** extend the cumulative `f_max`, update the paper with the combined tier,
-re-run `pipeline/runners/audit_T0_paper.py` (and add a T0T1 audit).
+Stages parameterized by env `KRUN` (`T0` default | `T0T1` combined). Calibration frozen
+(`kdwarf_calibration_T0T1.json`, tag `phase2-calibration-T0T1`; cohorts 595/1262/2051 ppm, bars
+7.3/8.1/8.7 SDE, 44,202 stars). Cascade: 15,451 cand → 4,223 residual → 3,956 identity-survive →
+1,607 on-target → 198 recurring → triage (25 EB, 45 planet, 30 disint, 98 RESIDUAL).
+**7 resolvable-regime residuals** (depth > 0.3%): all U-shaped (**none a flat-bottomed occulter** →
+f_max(box) holds on zero-flat-residual basis), all sub-stellar radius (< 1.31 R_J); 5 are
+depth-variable beyond the noise floor, 2 asymmetric — genuine morphologically-anomalous **follow-up
+candidates**, not detections. `f_max(box) ≈ 8.1×10⁻⁵ / tail ≈ 9.5×10⁻⁵` (~3.4× tighter than T0).
+Lists: `data/manifests/kdwarf_T0T1_*`.
+
+**Next:** paper (`paper/phase2_T0_draft.md`) updated with battery v2 + combined tier + the 7
+follow-up residuals; audit refreshed. Then next adversarial review round (Gemini + Claude).
 
 ## What is and isn't durable
 

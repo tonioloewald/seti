@@ -10848,3 +10848,179 @@ This is the honest outcome: battery v2 removed the 8 explainable cases (deep EBs
 
 
 _[tools: Bash]_
+
+Artifacts regenerated; the frozen calibration JSONs are untouched (the limit is unchanged, as expected). Let me commit the k06 fix + regenerated cascade artifacts, then update the docs:
+
+
+_[tools: Bash]_
+
+Now the docs. Let me read the current paper to plan the updates — its numbers need refreshing and the combined tier + battery-v2 amendment need integrating:
+
+
+_[tools: Read]_
+
+This is a substantial paper update — the T0 cascade numbers shift with battery v2, and the combined T0+T1 tier plus the 7 follow-up residuals need integrating. Let me first capture the durable state in the status doc, then gather the exact cascade numbers for both tiers before rewriting. Let me pull the full cascade numbers:
+
+
+_[tools: Bash]_
+
+The printed value-counts are stale-inflated (resume cache from the larger old runs counts extra rows), but the final written CSVs are correctly filtered to the new input. Let me compute the true cascade funnel from the CSVs themselves:
+
+
+_[tools: Bash]_
+
+The cascade funnel is now clean. One thing to firm up before finalizing: the T0+T1 recurrence has 301 `no_data` + 38 timeouts — transient MAST failures that left those on-target candidates recurrence-untestable (conservatively carried as inconclusive, but worth recovering since a recovered one could recur and change the residual set). Let me retry them and re-triage, for both tiers:
+
+
+_[tools: Bash]_
+
+
+_[tools: Bash]_
+
+The retry chain runs detached; I'll get final numbers when it completes. Meanwhile let me update the live status doc to reflect the completed battery-v2 re-run of both tiers:
+
+
+_[tools: Read]_
+
+Let me hold the status/paper edits until the retry finalizes the numbers, and meanwhile read the audit script to know what I'll need to update there:
+
+
+_[tools: Read]_
+
+The audit hardcodes the old T0 cascade counts (calibration + `f_max` checks stay valid since the limit is unchanged; only the cascade funnel numbers need updating). I'll refresh those after the retry. Let me check the retry progress:
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+The retry is re-fetching the transient failures (~340 for T0+T1, ~45 for T0) and will re-triage. I'll get the final cascade numbers when it completes, then update the paper, status doc, and audit together in one pass. Waiting on the retry.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bmbs4n4fi</task-id>
+<tool-use-id>toolu_01HGBYSnUceQt38X4Cydvthr</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/bmbs4n4fi.output</output-file>
+<status>completed</status>
+<summary>Background command "Wait for retry chain" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Read]_
+
+Retry recovered 11 more recurring transits in T0+T1 (187→198); the remaining `no_data` persist on retry (genuinely SPOC-absent / QLP-only stars → carried as inconclusive). Let me recompute the final funnel and resolvable-residual lists from the CSVs:
+
+
+_[tools: Bash]_
+
+Final numbers are consistent now. The complete picture:
+
+| Stage | T0 (12,100 stars) | T0+T1 (44,202 stars) |
+|---|---|---|
+| candidates above bar | 4,131 | 15,451 |
+| → RESIDUAL (battery) | 1,023 | 4,223 |
+| → survive identity | 912 | 3,956 |
+| → on-target (centroid) | 463 | 1,607 |
+| → recurring | 61 | 198 |
+| → triage RESIDUAL | 33 | 98 |
+| **resolvable (>0.3%)** | **0** | **7** |
+| `f_max` box / tail | 2.8e-4 / 3.4e-4 | 8.1e-5 / 9.5e-5 |
+
+Now let me update the three docs. First the status anchor:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now the paper — the substantive update. Let me rewrite the abstract to cover both tiers, the battery-v2 refinement, and the 7 follow-up residuals:
+
+
+_[tools: Edit]_
+
+
+_[tools: TaskUpdate]_
+
+
+_[tools: TaskUpdate]_
+
+
+_[tools: TaskUpdate]_
+
+Now the abstract body — both tiers, the 7 residuals, and the tightened limit:
+
+
+_[tools: Edit]_
+
+Now §2 (Sample) — add the combined tier:
+
+
+_[tools: Edit]_
+
+Now §3.2 — add the combined-calibration figures alongside T0's:
+
+
+_[tools: Edit]_
+
+Now §3.3 — fold the two battery-v2 criteria into the light-curve battery description:
+
+
+_[tools: Edit]_
+
+Now the Results. Let me rewrite §4.1 (the cascade) with the battery-v2 T0 numbers and the combined-tier cascade:
+
+
+_[tools: Edit]_
+
+Now §4.2 — the crux: the clean T0 null, the seven combined-tier residuals characterised honestly, and the limit for both tiers:
+
+
+_[tools: Edit]_
+
+§4.3 (by-product) and §4.4 (follow-up) — update counts for both tiers:
+
+
+_[tools: Edit]_
+
+§4.4 (follow-up roadmap) — the 7 resolvable residuals are now a distinct top-priority set, and the counts change:
+
+
+_[tools: Edit]_
+
+Now the Discussion and Conclusions. Let me update §5's framing — the deeper tier is still a non-detection but now yields the first follow-up candidates:
+
+
+_[tools: Edit]_
+
+§6 Conclusions — both tiers, the tightened limit, the seven follow-up residuals:
+
+
+_[tools: Edit]_
+
+§7 (data availability) — add the combined artifacts:
+
+
+_[tools: Edit]_
+
+Now the audit — it needs the new T0 cascade counts and a parallel T0+T1 section. Let me first pull the exact calibration values so the audit's expected numbers match the artifacts:
+
+
+_[tools: Bash]_
+
+Now let me rewrite the audit to verify both tiers against the artifacts:
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+All 47 checks pass for both tiers. Let me sweep the paper for any stale numbers I might have missed:
+
+
+_[tools: Bash]_
