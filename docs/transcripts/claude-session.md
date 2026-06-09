@@ -10623,3 +10623,228 @@ _[tools: Read]_
 
 
 _[tools: Edit]_
+
+Now let me commit the battery change + amendment, then launch the re-run. First the transcript export and commit:
+
+
+_[tools: Bash]_
+
+Now the re-run. Let me check how `k04` unblind works — whether it re-runs the BLS search or can re-classify cached detections (the BLS is the expensive part; only the battery changed):
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+`k04` re-runs the BLS search + new battery (the BLS is ~7 min for the combined set; deterministic). The cascade stages `k06`/`k07` are resumable and will hit their caches since the new (smaller) RESIDUAL set ⊆ the old one. Let me set up tracking and launch the combined re-run, starting with the unblind — this is the key test of whether the 15 residuals collapse:
+
+
+_[tools: ToolSearch]_
+
+
+_[tools: TaskCreate]_
+
+
+_[tools: TaskCreate]_
+
+
+_[tools: TaskCreate]_
+
+
+_[tools: Bash]_
+
+
+_[tools: TaskUpdate]_
+
+
+_[tools: Read]_
+
+The nohup detached correctly. Let me watch the actual k04 log for completion:
+
+
+_[tools: Bash]_
+
+I'll wait for the combined unblind to complete (BLS over 44k cached light curves, ~7 min). The cascade stages depend on its output, so I'll proceed once it lands.
+
+
+_[tools: Read]_
+
+Running at ~2000 stars / 21s → ~8 min for the full set. Waiting for completion.
+
+
+_[tools: Read]_
+
+I'll wait for the background watcher to notify on completion.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bhfad4y9n</task-id>
+<tool-use-id>toolu_01JYuUi3LLmjA4irEfxaUZQE</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/bhfad4y9n.output</output-file>
+<status>completed</status>
+<summary>Background command "Wait for k04 T0T1 unblind to finish" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Read]_
+
+The new battery worked exactly as intended:
+- **RESIDUAL: 5,796 → 4,223** — the deep EBs and noise-mislabelled planets reclassified out.
+- `eclipsing_binary` 4,674, `natural_planet` 5,504 (both up, absorbing the reclassified candidates).
+- **`f_max` identical: box 8.10e-05, tail 9.48e-05** — confirming `C_i`, the bars, and the limit are untouched, exactly as the injection test predicted.
+
+Now the cascade on the new 4,223 list. Let me chain k05→k06→k07→k08 for T0T1 (k06/k07 resume from cache; only genuinely-new residuals re-fetch), and launch T0's unblind in parallel (CPU-bound, won't contend with the network-bound cascade):
+
+
+_[tools: Bash]_
+
+Both launched and detached. Let me watch the T0 unblind (quick, CPU-bound) and the T0T1 cascade (longer) — first the T0 result:
+
+
+_[tools: Bash]_
+
+The launcher returned; the cascade and T0 unblind run detached. Waiting for the T0 unblind result and the T0T1 cascade to progress.
+
+
+_[tools: Read]_
+
+k05 (identity) is running SIMBAD on 4,136 residuals. Waiting on the T0 unblind result and then the cascade.
+
+
+_[tools: Read]_
+
+I'll wait for the T0 unblind watcher to notify.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bobv25ryi</task-id>
+<tool-use-id>toolu_01Lkohkk3ncSYSeLZQA6hoHe</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/bobv25ryi.output</output-file>
+<status>completed</status>
+<summary>Background command "Wait for T0 unblind result" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Read]_
+
+T0 unblind with battery v2:
+- **RESIDUAL: 1,358 → 1,023** (deep EBs + mislabelled planets reclassified out).
+- **`f_max` box 2.76e-04, tail 3.35e-04 — identical to the published T0 values** (the limit is exactly preserved).
+
+Both tiers confirm the limit is untouched. Now I need the T0 cascade on the new 1,023 list, but I'll let the T0T1 cascade finish first to avoid MAST contention. Let me set up a watcher for the T0T1 cascade and check its progress:
+
+
+_[tools: Bash]_
+
+Both unblinds are done and confirm the limit is preserved on both tiers. The T0T1 cascade (k05→k08) is running on the new 4,223-residual list and will take ~1 hour (SIMBAD + the genuinely-new residuals that need centroid/recurrence fetches; the rest resume from cache). I'll run the T0 cascade once it finishes to avoid MAST contention, then update the paper and audit.
+
+Status so far:
+
+| | RESIDUAL (k04) | f_max box | f_max tail |
+|---|---|---|---|
+| T0 (old → new battery) | 1,358 → **1,023** | 2.76e-04 (unchanged) | 3.35e-04 (unchanged) |
+| T0+T1 (old → new battery) | 5,796 → **4,223** | 8.10e-05 (unchanged) | 9.48e-05 (unchanged) |
+
+The reclassified candidates moved cleanly into `eclipsing_binary` (deep, R_occ > 2.5 R_J) and `natural_planet` (noise-aware depth stability) — and the `f_max` limits are byte-for-byte identical, exactly as the injection test predicted. I'll report the resolvable-regime residual lists once the cascades complete.
+
+### 🧑 Tonio
+
+How are we doing?
+
+### 🤖 Claude
+
+Let me check where the cascades stand.
+
+
+_[tools: Bash]_
+
+The cascade hit a bug at k07: `KeyError: 'ra_deg'`. Let me diagnose — this is the resume-merge column collision (same class as the k07 fix from before, but in k06's resume path this time):
+
+
+_[tools: Bash]_
+
+Confirmed — every column got `_x`/`_y` duplicated because k06's resume carried the old CSV's full (already-merged) columns into a second merge. The fix is to project the cached rows to just the centroid result columns before re-merging, exactly like k07's existing fix. Let me apply it:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+The centroid CSV's verdicts themselves are correct — only the column naming got mangled, and the result columns (`centroid_verdict` etc.) are present, so re-running k06 with the fix will reuse the cached verdicts (fast) and write a clean CSV. The k07 failure tripped `set -e`, so the chain stopped and the stale watcher is waiting on a marker that'll never come. Let me stop it and re-launch the corrected cascade:
+
+
+_[tools: ToolSearch]_
+
+
+_[tools: TaskStop]_
+
+Stale watcher stopped. Let me verify the k06 fix on T0T1 in the foreground (fast — all cached) before chaining the rest:
+
+
+_[tools: Bash]_
+
+k06 fix confirmed — clean columns, 1607 on-target. Now let me chain the rest of T0T1 (k07→k08) and then the full T0 cascade, in the background:
+
+
+_[tools: Bash]_
+
+
+_[tools: Bash]_
+
+Here's where we are.
+
+**Both unblinds are done and confirm the headline result holds:** the battery v2 changes reclassified candidates cleanly and left `f_max` byte-for-byte identical on both tiers (T0 box 2.76e-04 / tail 3.35e-04; T0+T1 8.10e-05 / 9.48e-05). RESIDUAL counts dropped as intended (T0 1,358→1,023, T0+T1 5,796→4,223) as deep transits went to `eclipsing_binary` and noise-mislabelled planets went to `natural_planet`.
+
+**One bug hit and fixed along the way:** the combined cascade tripped at k07 with `KeyError: 'ra_deg'` — k06's resume path was carrying the old CSV's already-merged columns into a second merge, suffixing everything `_x`/`_y`. I projected the cached rows to just the centroid result columns before re-merging (the same fix k07 already had), re-ran k06 (cached, fast — clean columns now, 1607 on-target), and chained the rest.
+
+**Now running in the background:** the tail of the T0+T1 cascade (k07 recurrence → k08 triage) followed by the full T0 cascade (k05→k08). k07 resumes from the prior multi-sector cache, so only genuinely-new on-target candidates re-fetch. The k08 triage re-runs the new battery on the recurring survivors — this is where I'll confirm the 15 resolvable residuals collapse to their natural classes (deep→EB, planets→planet). I'll report the final resolvable-residual lists for both tiers when the chain finishes, then update the paper and audit.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bgu5ncsfo</task-id>
+<tool-use-id>toolu_01TPQd4eLdzPXJM7Q1xmtapX</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/bgu5ncsfo.output</output-file>
+<status>completed</status>
+<summary>Background command "Wait for full cascade chain completion" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Read]_
+
+Both cascades completed. The k08 RESIDUAL tables show all depths well under 0.3% — let me pull the full triage summaries and confirm the resolvable-regime count for both tiers:
+
+
+_[tools: Bash]_
+
+Cascades complete. The result:
+
+- **T0: 0 resolvable-regime residuals** (max RESIDUAL depth 0.186%) — headline unchanged, now via the more complete battery.
+- **T0+T1: 7 resolvable residuals** (down from 15) — the deep faint-companion EBs and noise-mislabelled planets correctly reclassified.
+
+Let me characterize the surviving 7 precisely (the battery features that keep each out of the natural classes) — this is what goes in the paper:
+
+
+_[tools: Bash]_
+
+The 7 are well-characterized and the result is clean and defensible:
+
+**T0+T1 — 7 resolvable residuals (from 15):**
+- **5 are depth-variable** (per-transit depth varies >2.5σ beyond the noise floor) — U-shaped, symmetric, sub-stellar radius (0.55–1.31 R_J). Real recurring transits whose depth changes transit-to-transit — genuinely unusual, correctly *not* auto-explained.
+- **2 are asymmetric** (asym 0.14 and 0.67).
+- **Zero are flat-bottomed occulters** (max flat_bottom 0.667) — so the cleanest technosignature morphology has *zero* residuals, and `f_max(box)` holds on a zero-residual basis. All 7 are sub-stellar radius (no hidden EB).
+
+This is the honest outcome: battery v2 removed the 8 explainable cases (deep EBs + noise-mislabelled planets), leaving 7 genuinely morphologically-anomalous transiting signals as the follow-up by-product. Let me commit the pipeline fix + regenerated artifacts, then update the paper, status, and audit:
+
+
+_[tools: Bash]_

@@ -111,10 +111,12 @@ def main():
     res = pd.read_csv(IDENT, dtype={"source_id": str})
     surv = res[res["identity"] == "unknown"].copy()
     print(f"identity survivors to centroid-vet: {len(surv)} on {workers} workers", flush=True)
+    rcols = ["source_id", "offset_pix", "offset_arcsec", "centroid_status", "centroid_verdict"]
     done = {}
     if os.path.exists(OUT):
         prev = pd.read_csv(OUT, dtype={"source_id": str})
-        done = {r.source_id: r._asdict() for r in prev.itertuples(index=False)}
+        have = [c for c in rcols if c in prev.columns]
+        done = {r["source_id"]: {c: r[c] for c in have} for _, r in prev.iterrows()}
     todo = surv[~surv["source_id"].isin(done)]
     tasks = [(r["source_id"], r["ra_deg"], r["dec_deg"]) for _, r in todo.iterrows()]
 
@@ -127,7 +129,7 @@ def main():
                 pd.DataFrame(rows).to_csv(OUT, index=False)
                 ot = sum(1 for r in rows if r.get("centroid_verdict") == "on_target")
                 print(f"  {n}/{len(tasks)} ({time.time()-t0:.0f}s, {ot} on-target so far)", flush=True)
-    out = pd.DataFrame(rows)
+    out = pd.DataFrame(rows).reindex(columns=rcols)   # result cols only, so re-merge can't collide
     full = surv.merge(out, on="source_id", how="left")
     full.to_csv(OUT, index=False)
     vc = out["centroid_verdict"].value_counts()
