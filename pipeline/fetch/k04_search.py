@@ -38,6 +38,10 @@ RESID = os.path.join(ROOT, "data", "manifests", f"kdwarf_{RUN}_residuals.csv")
 LCDIR = os.path.join(ROOT, "data", "lightcurves")
 PERIODS = np.arange(0.5, 13.0, 0.02)
 DURS = np.array([0.05, 0.1, 0.2])
+# A transit deep enough to imply an occulter R > ~2.5 R_Jupiter is a stellar companion, not a
+# planet or structure: depth = (R_occ/R_star)^2, R_star ~ 0.7 R_sun = 6.96 R_J, so R_occ = 2.5 R_J
+# at depth ~0.13. Bigger than any planet/brown dwarf -> eclipsing binary. (Physical, not tuned.)
+DEEP_EB_DEPTH = 0.13
 
 
 def _fold(t, f, period, t0):
@@ -83,23 +87,33 @@ def battery(t, f, period, t0, scatter):
                          np.cos(4*np.pi*x), np.sin(4*np.pi*x)])
     coef, *_ = np.linalg.lstsq(A, f, rcond=None)
     feat["sin_r2"] = float(1 - np.sum((f - A @ coef)**2) / np.sum((f - f.mean())**2))
-    # per-epoch depth coefficient of variation (disintegrating body)
-    deps = [base - np.median(f[intr & (epoch == e)]) for e in np.unique(epoch)
-            if (intr & (epoch == e)).sum() >= 3]
-    deps = np.array([x for x in deps if np.isfinite(x)])
-    feat["depth_cv"] = float(np.std(deps) / np.mean(deps)) if len(deps) >= 4 and np.mean(deps) > 0 else np.nan
+    # per-epoch depth variability, NOISE-AWARE: a real planet's per-epoch depth scatter is just
+    # photon/systematic noise (~scatter/sqrt(n_in_transit)); only an EXCESS beyond that is genuine
+    # variability (a disintegrating body). Using raw depth-CV mislabels noisy real planets.
+    edeps, en = [], []
+    for e in np.unique(epoch):
+        m = intr & (epoch == e)
+        if m.sum() >= 3:
+            edeps.append(base - np.median(f[m])); en.append(int(m.sum()))
+    edeps = np.array([x for x in edeps if np.isfinite(x)])
+    if len(edeps) >= 4 and np.mean(edeps) > 0:
+        feat["depth_cv"] = float(np.std(edeps) / np.mean(edeps))
+        noise_std = scatter / np.sqrt(max(np.median(en), 1))          # expected per-epoch depth scatter
+        feat["depth_variable"] = bool(np.std(edeps) > 2.5 * noise_std and feat["depth_cv"] > 0.5)
+    else:
+        feat["depth_cv"] = np.nan; feat["depth_variable"] = False
 
     # ---- verdict (conservative; prior knowledge only explains away) -------------------
     if feat["sin_r2"] > 0.6:
         v = "activity/variability"
-    elif feat["secondary_depth"] > 0.3 * d or feat["odd_even"] > 0.5:
-        v = "eclipsing_binary"
-    elif np.isfinite(feat["depth_cv"]) and feat["depth_cv"] > 0.5 and feat["asymmetry"] > 0.15:
+    elif feat["secondary_depth"] > 0.3 * d or feat["odd_even"] > 0.5 or d > DEEP_EB_DEPTH:
+        v = "eclipsing_binary"             # secondary/odd-even, OR a depth implying R_occ > ~2.5 R_J
+    elif feat["depth_variable"] and feat["asymmetry"] > 0.15:
         v = "disintegrating_body"
-    elif feat["flat_bottom"] < 0.75 and feat["asymmetry"] < 0.1 and (not np.isfinite(feat["depth_cv"]) or feat["depth_cv"] < 0.4):
-        v = "natural_planet"
+    elif feat["flat_bottom"] < 0.75 and feat["asymmetry"] < 0.1 and not feat["depth_variable"]:
+        v = "natural_planet"               # U-shaped, symmetric, stable depth (noise-aware)
     else:
-        v = "RESIDUAL"                      # flat-bottomed / asymmetric / structured beyond natural
+        v = "RESIDUAL"                     # flat-bottomed / asymmetric / genuinely variable beyond natural
     return {"verdict": v, **feat}
 
 

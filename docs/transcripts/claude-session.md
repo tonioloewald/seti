@@ -10435,3 +10435,191 @@ _[tools: Read]_
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Resume anchor updated and committed (`be23216`). The combined run is progressing on its own:
+
+- **Calibration** ✅ frozen + tagged (`phase2-calibration-T0T1`), 3× tighter limit
+- **Unblind** ✅ 5,796 residuals, `f_max(box) ≈ 8.1×10⁻⁵`
+- **Identity** ✅ 5,435 survive
+- **Centroid** ⏳ running (~4 h, ~35% on-target so far)
+- then **recurrence** (~2–3 h) → **triage**
+
+So the full combined cascade is ~6–8 more hours — it'll run overnight in the background, chaining stage to stage as each completes, and I'll report the final combined result (the cumulative cascade + whether the resolvable null holds at `f_max ≈ 8×10⁻⁵`) when it lands. The resume anchor in `docs/phase2_status.md` is current, so this is fully recoverable if the session drops.
+
+Nothing needed from you — keep the reviews coming, and I'll surface the combined T0+T1 numbers when the cascade finishes.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bq5q9wj5d</task-id>
+<tool-use-id>toolu_01EGA9aWgo7teEgYotfjwgyJ</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/bq5q9wj5d.output</output-file>
+<status>completed</status>
+<summary>Background command "Commit timeout, launch combined centroid gate" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+The combined centroid gate finished. Let me read it and chain to recurrence:
+
+
+_[tools: Bash]_
+
+Centroid done: **2,924 blends killed, 2,155 on-target**, 356 uncentroidable (339 too-few-cadences + 17 errors). The new timeout caught 10 hangs that would otherwise have stalled the run — it paid off. Chaining to recurrence (2,155 candidates, all-sectors fetch each, ~2–3 h):
+
+
+_[tools: Bash]_
+
+Recurrence launched (`br81lajxp`) on the 2,155 on-target — the last big stage, ~2–3 h, then triage. The combined cascade so far:
+
+| Stage | Combined (T0T1) | (T0 for comparison) |
+|---|---|---|
+| Unblind residuals | 5,796 | 1,358 |
+| After identity | 5,435 | 1,223 |
+| After centroid | 2,155 on-target + 356 uncentroidable | 616 + 61 |
+| Recurrence | ⏳ running | — |
+
+It's tracking ~3.5× the T0 counts, as expected from the larger sample. When recurrence + triage finish (~3–4 h more), I'll have the full combined cascade and can confirm whether the resolvable-regime null holds at the tighter `f_max ≈ 8×10⁻⁵`. Running overnight; I'll surface the result when it lands.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>br81lajxp</task-id>
+<tool-use-id>toolu_01N3iZ1mfxceU8ZNUZy18UGW</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/br81lajxp.output</output-file>
+<status>completed</status>
+<summary>Background command "Background: combined recurrence test" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+Recurrence finished. Let me read it and chain to the final triage:
+
+
+_[tools: Bash]_
+
+Recurrence done: **1,136 single-sector artifacts rejected, 254 recurring** (the rest: 297 single-sector + 399 no-data + 69 transient — recoverable later). The 254 are ~3× T0's 86, as expected. Running the final triage on them:
+
+
+_[tools: Bash]_
+
+Triage launched (`b7usua7qw`) on the 254 recurring — the final stage, ~30–60 min. This is the one that decides the headline: whether any resolvable-regime anomaly survives at the deeper `f_max ≈ 8×10⁻⁵`.
+
+The combined cascade, nearly complete:
+
+| Stage | T0T1 | T0 |
+|---|---|---|
+| Unblind | 5,796 | 1,358 |
+| Identity | 5,435 | 1,223 |
+| Centroid | 2,155 on-target | 616 |
+| Recurrence | 254 recurring | 86 |
+| Triage | ⏳ running | (6 EB + 10 planet + 70 sub-res) |
+
+When it lands I'll characterize the 254 the same way as T0 — and unless something genuinely structured at >0.3% depth shows up (the expectation remains it won't), the combined result is a clean resolvable-regime null with a 3.4× tighter limit, T0 record intact alongside it. I'll report the moment triage finishes.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>b7usua7qw</task-id>
+<tool-use-id>toolu_0163aVcw4SUaKfwqT5r88Miz</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/b7usua7qw.output</output-file>
+<status>completed</status>
+<summary>Background command "Background: combined triage" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+The triage finished — the combined cascade is complete. Let me read the verdicts and check the resolvable regime:
+
+
+_[tools: Bash]_
+
+This is the most interesting result of the run, and it needs care: **the combined cascade surfaced 15 RESIDUALs in the resolvable regime (depth > 0.3%)** — unlike T0, which had zero. Let me look closely before drawing conclusions, because *how* I handle this is an integrity question, not just a reporting one. Let me commit the cascade outputs and characterize the 15 by what their depths physically imply:
+
+
+_[tools: Bash]_
+
+Now it resolves cleanly — and importantly, it does **not** overturn the limit. Here's what the 15 actually are, by what their transit depth physically implies (depth = (R_occulter/R_star)²):
+
+- **4 are stellar/substellar companions** (R_occulter 2.1–4.0 R_Jupiter — bigger than any planet): the 32.6%, 13.3%, 13.0%, 9.4% transits. These are **eclipsing binaries** with a faint companion — a deep primary but a secondary too shallow to detect, which is exactly the case the secondary-eclipse / odd-even tests miss. Their depth alone is the giveaway.
+- **11 are planet-regime** (R 0.5–1.3 R_Jupiter): real transiting planets, flagged RESIDUAL because their per-epoch depth-variability metric is noise-inflated (so the battery's strict "natural_planet" gate rejects them) — not because they're anomalous.
+
+**The key point: none is an anomaly, and the per-family limit is untouched.** All 15 are **U-shaped** transits (flat_bottom 0.18–0.67), not flat-bottomed occulters. The `f_max(box) ≈ 8×10⁻⁵` limit bounds *flat-occulter* anomalies — and there are **zero** of those. The 15 are natural eclipsing binaries and planets that the automated battery left in its catch-all "RESIDUAL" bin, surfaced now only because the 3.6× larger sample contains more of them.
+
+So the combined result is consistent with T0: **no anomaly in any modelled family**, the limit holds ~3.4× tighter, plus a richer by-product catalogue.
+
+This is a juncture I won't auto-resolve, because it's an integrity call:
+
+- **Option A — report as-is:** the 15 are "residuals consistent with natural EB/planet systems by transit depth," flagged for follow-up. No battery change. Conservative; avoids any post-unblind rule.
+- **Option B — close the battery gap:** add a physically-motivated depth→radius criterion (an occulter implying R ≳ 2.5 R_Jupiter is stellar → eclipsing binary), applied *uniformly* to T0 and T0T1, documented as a methods amendment. It would formally reclassify the 4 deep ones as EBs and is candidate-independent physics — but it's a post-unblind battery change, which the discipline treats cautiously.
+
+I lean **B** (the gap is real and the criterion is principled, not tuned — a deep transit *is* a measurement of occulter size), but only done openly as an amendment and re-run on both tiers. Which way do you want to go? The limit and the "no anomaly" conclusion hold either way; this is about how the 15 are presented.
+
+### 🧑 Tonio
+
+So basically we’re classifying really deep occlusions as potential brown dwarf likes which we hadn’t thought of.
+
+### 🤖 Claude
+
+Exactly — and that's the cleanest way to see it. A transit depth *is* a measurement of the occulter's radius (`depth = (R_occ/R_star)²`), and once it implies something bigger than any planet, the thing eclipsing the star has to be another star. Our battery only ever looked for eclipsing binaries via the *secondary* eclipse and odd–even depth differences — which silently fails exactly when the companion is a faint M dwarf: a deep primary eclipse, but a secondary too shallow to see and identical odd/even depths. The depth itself was a discriminator we never used.
+
+One small physics tweak to your framing: brown dwarfs are actually *Jupiter-sized* (~1 R_J — they're degenerate, so more mass doesn't add radius). So these 2.5–4 R_J occulters are small **M-dwarf companions** (genuine stars), not brown dwarfs — eclipsing binaries, full stop. The 9.4% / 2.1 R_J one is the genuinely ambiguous case (an inflated giant planet *or* a borderline M dwarf).
+
+So this points to **Option B**, and it's a principled new battery dimension rather than a post-hoc patch:
+
+- Add a **depth→radius eclipsing-binary criterion**: an occulter implying R ≳ 2.5 R_Jupiter (depth ≳ ~13% on a K dwarf) is stellar → eclipsing binary. That formally reclassifies the 3 deep ones (32%, 13%, 13%); the 2.1 R_J case stays flagged as an ambiguous large companion.
+- Apply it **uniformly** to T0 and T0T1, document it in `AMENDMENTS.md` as a methods refinement (candidate-independent — it's a physical size cut, not tuned to these objects), and re-run both cascades.
+
+That leaves a separate, smaller issue I'd handle too: the **11 planet-regime residuals** are real Jupiter-and-smaller transits that got dumped into RESIDUAL because their per-epoch depth-variability metric is noise-inflated — i.e. the battery is mislabeling genuine planets, not finding anomalies. I'd robustify that depth-CV test so real planets classify as planets.
+
+Net effect of both: the deep ones → eclipsing binary, the planet-regime ones → planet, and the resolvable-regime residual list collapses toward the same clean "no anomaly" as T0 — but now *because the battery is more complete*, not because we cut anything to get there. The per-family `f_max` limits are unchanged.
+
+Want me to implement the depth→radius EB criterion (and the depth-CV robustness fix), log them as amendments, and re-run T0 + T0T1?
+
+### 🧑 Tonio
+
+I think let’s make the change and own it.
+
+### 🤖 Claude
+
+On it — making the change and owning it. Two battery improvements, both physically principled:
+
+1. **Depth→radius eclipsing-binary criterion** — a transit implying an occulter R ≳ 2.5 R_Jupiter (depth ≳ 13% on a K dwarf) is a stellar companion → eclipsing binary. Catches the faint-companion EBs the secondary/odd-even tests miss.
+2. **Noise-aware depth-variability** — only count per-epoch depth scatter as *real* variability when it exceeds the noise expectation, so genuine planets stop getting dumped into RESIDUAL by noisy depth-CV (while a true variable-depth tail still triggers).
+
+Let me implement both in the battery, carefully preserving the injection-recovery semantics (a box stays RESIDUAL, a tail stays RESIDUAL):
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now the `DEEP_EB_DEPTH` constant:
+
+
+_[tools: Edit]_
+
+Before the expensive re-run, let me verify the new battery preserves the injection semantics (box→RESIDUAL, tail→RESIDUAL, planet→planet, deep→EB):
+
+
+_[tools: Bash]_
+
+The new battery is correct: **planet→planet** (the noise-aware fix works), **box→RESIDUAL** and **tail→RESIDUAL** (so `f_max(box)` and `f_max(tail)` are preserved — `C_i` doesn't change, no recalibration needed), and **deep→eclipsing_binary**. Let me log the amendment and commit:
+
+
+_[tools: Read]_
+
+Now let me add the amendment entry. The key point to capture: this changes **classification only** — the detection bars and `C_i` for box/tail are unchanged (both still classify as RESIDUAL), so `f_max` is unaffected; only which real candidates get labelled EB vs planet vs residual changes.
+
+
+_[tools: Edit]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
