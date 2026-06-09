@@ -11088,3 +11088,60 @@ No standing convention — prior rounds shared the paper markdown directly with 
 
 
 _[tools: Write]_
+
+Now let me commit the brief and — rather than just hand you a document — actually run the **separate-Claude adversarial review** myself via a reviewer agent, so you only need to take the brief to Gemini. The agent gets the paper, the brief, and full repo access to run its own diagnostics:
+
+
+_[tools: Bash]_
+
+
+_[tools: Agent]_
+
+The separate-Claude review is back, and it's a strong one — the agent didn't just critique, it **fetched the multi-sector data from MAST and ran the decisive test** on the 7. The result deflates the headline, in the honest direction you were already suspecting.
+
+## The key finding: most of the 7 are noise-model artifacts, not oddities
+
+The agent measured, per sector, both the transit depth *and* the photometric scatter, then correlated them. A real depth-variable object varies for reasons unrelated to how noisy each sector is; a noise artifact has depth that just tracks scatter. Results:
+
+| source_id | type | corr(depth, scatter) | read |
+|---|---|---|---|
+| 1864765162307057024 | depth-variable | **+0.97** | artifact (depth = noise) |
+| 5316921989201452288 | depth-variable | **+0.99** | artifact (99.6th-pct scatter star) |
+| 3788580279456572928 | depth-variable | +0.77 | mostly noise |
+| 5427691493560560000 | depth-variable | +0.09 | weak; 2 sectors have 0 in-transit points |
+| 1129490881755217152 | depth-variable | **+0.07** | **NOT noise — smooth ramp, real follow-up** |
+| 93357127133226496 | asymmetric | −0.70 | depth ~0.2%, at the resolution floor |
+| 1834102703593748864 | asymmetric | — | the threshold-gap artifact (asym 0.137 in the 0.1–0.15 dead zone) |
+
+**Root cause:** my noise-aware depth-variability test scales by `scatter/√n` — a *white-noise* floor. TESS faint-star photometry is red, so per-epoch depth inherits sector-level correlated scatter the white floor doesn't predict, and the 2.5σ test over-triggers exactly where red noise is worst — at faint G. That's why all 5 sit in T1. It answers my own framing question empirically: **(b) the noise model under-estimates faint-star systematics**, not (a) faint K dwarfs being more variable.
+
+**The honest tally: of 7, ~3–4 are noise over-triggers, 1 is the asymmetry-gap seam, and only ~1 (1129…152) is a real follow-up target — and even that is most likely an ephemeris walk-off** (its period is unstable; the smooth depth ramp is consistent with the transit drifting through a fixed phase window across sectors). So "probably just minor oddities" was generous — they're mostly the noisiest stars in the tier.
+
+## Other substantive hits (all fair)
+
+- **Post-data amendment is still a forking path** — even with no tuned constant, I *chose which two refinements to derive* by looking at what the 15 residuals were. Fix: show the result both ways (v1's 15 → v2's 7) as a committed artifact, and make the OSF-amendment-before-rerun ordering explicit.
+- **7-in-44k isn't surprising** — should state the null expectation quantitatively (inject pure-noise faint stars, count how many the battery flags).
+- **`f_max`-unchanged holds** at the evaluated ≤2% grid (verified — the EB cut at 13% can't touch it), **but** the injection grid stops at 2% while three residuals are at 2.7–3.5%; extend it to 5–10% to close the corner.
+- **Factual:** `n_sectors` disagrees between artifacts (triage says 20, recurrence says 10 for 1129); the implied "<1.31 R_J" leans on a noise-inflated depth; the 15→7 mapping isn't committed.
+
+The agent's verdict: **T0 null and the limit machinery are solid; the overstatement is localized entirely to the interpretation of the 7.** Reframing them from "anomaly-candidates" to "mostly noise-flagged, ~1 real follow-up" makes the paper *stronger* — it shows the engine catching its own artifacts.
+
+## What I'd do
+
+The decisive test is cheap and it should become part of the pipeline, not just a review footnote. My recommendation:
+
+1. **Add the per-sector depth-vs-scatter check as a vetting stage** (red-noise-aware): demote the high-correlation cases, re-derive the depth-variability flag against a measured per-epoch uncertainty rather than the white-noise floor.
+2. **Re-triage** — the 7 should collapse to ~1–2; reframe §4.2 accordingly.
+3. **Commit the v1→v2 (15→7) reclassification artifact** and fix the factual inconsistencies.
+4. Then send the *revised* draft to Gemini (the brief is ready for you to paste there).
+
+This is a real second iteration, but it's the right one — and it's mostly implementing a test the reviewer already proved works. Want me to go ahead and build the red-noise-aware vetting stage and re-run, or hold for Gemini's pass first so we batch both reviews' fixes together?
+
+### 🧑 Tonio
+
+Have you pushed? I can’t see the brief in the repo.
+
+### 🤖 Claude
+
+
+_[tools: Bash]_
