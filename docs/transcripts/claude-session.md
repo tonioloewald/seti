@@ -11024,3 +11024,67 @@ All 47 checks pass for both tiers. Let me sweep the paper for any stale numbers 
 
 
 _[tools: Bash]_
+
+Clean sweep — no stale numbers, no "honest", redaction intact. The paper is internally consistent and audit-verified. Let me commit the paper, status doc, and audit:
+
+
+_[tools: Bash]_
+
+
+_[tools: TaskUpdate]_
+
+Everything committed and audit-clean. Let me push (the workflow has been pushing to origin/main, and you've authorized committing/pushing freely):
+
+
+_[tools: Bash]_
+
+Done — the change is made and owned, end to end. Here's the complete picture:
+
+## What changed
+**Battery v2** — two candidate-independent refinements, validated on the injection grid *before* application and logged in `AMENDMENTS.md`:
+1. **Depth→radius EB criterion** — depth > 0.13 ⟹ R_occ > ~2.5 R_J ⟹ stellar companion → `eclipsing_binary`. Catches faint-companion EBs the secondary/odd-even tests miss.
+2. **Noise-aware depth-variability** — per-epoch depth-CV judged against scatter/√n, so photon noise no longer diverts real planets to RESIDUAL.
+
+Injection-recovery confirmed box→RESIDUAL and tail→RESIDUAL are preserved, so **the bars, completeness, and `f_max` are all unchanged** — only by-product labelling improved.
+
+## Final results (both tiers re-run, audit-verified, 47/47 PASS)
+
+| | T0 (G<11) | T0+T1 (G<12) |
+|---|---|---|
+| stars | 12,100 | 44,202 |
+| resolvable residuals | **0** | **7** (was 15) |
+| `f_max` box / tail | 2.8e-4 / 3.4e-4 | **8.1e-5 / 9.5e-5** |
+
+The combined tier's **7 resolvable residuals** are the first the search has produced: all U-shaped, **none a flat-bottomed occulter** (so the megastructure-morphology limit holds on a zero-flat-residual basis), all sub-stellar radius (<1.31 R_J → no hidden EB). Five are depth-variable beyond the noise floor, two asymmetric — carried as difference-imaging **follow-up candidates, not detections**.
+
+## Along the way
+- Fixed a k06 resume-merge column collision (`_x`/`_y` suffixing that broke k07).
+- Retried transient MAST failures, recovering 11 more recurring transits.
+
+## Delivered
+Paper retitled to **Bright-Tier (G<12)** and rewritten across abstract/sample/methods/results/discussion/conclusions; status doc and audit updated; all committed and **pushed to `origin/main`**.
+
+The honest headline shift worth flagging for the next review round: **T0 is a clean resolvable null, but the deeper combined sample is not** — it surfaces 7 genuinely odd transiting signals. That's the engine working as designed (tighter limit *and* a real follow-up yield), but reviewers will rightly probe the 5 depth-variable ones (astrophysical vs. sector-dependent dilution). The natural next step is the next adversarial review round (Gemini + a separate Claude instance) on the updated draft — want me to prep that?
+
+### 🧑 Tonio
+
+Yes please. Having some actual anomalies is pretty exciting even if they’re probably just minor oddities.
+
+### 🤖 Claude
+
+Having real candidates to chew on is the fun part — and exactly why the review round matters. Before I write the reviewer framing, let me gather the one diagnostic a sharp reviewer will demand first: **which tier and brightness the 7 residuals come from** (if they cluster in the fainter T1 tier, that points to noise-driven oddities; if some are bright T0 stars, that's more interesting):
+
+
+_[tools: Bash]_
+
+**Key diagnostic: all 7 are in the fainter T1 tier (G 11.1–12.0); the bright T0 tier is empty.** That cuts both ways and is exactly what the reviewers should chew on — it's reassuring that the cleanest-photometry tier is clean, but it also raises the sharpest question against my own framing: if the depth-variability test is *truly* noise-aware, why do all 5 depth-variable residuals sit at faint magnitudes? Either faint K dwarfs are genuinely more variable, or the per-point noise model underestimates faint-star systematics and the test over-triggers. I'll hand them that question with the diagnostic already done.
+
+Let me check the existing review-file convention so the brief matches it:
+
+
+_[tools: Bash]_
+
+No standing convention — prior rounds shared the paper markdown directly with a framing note. Let me write a self-contained review brief to hand to both Gemini and the separate Claude instance alongside the paper:
+
+
+_[tools: Write]_
