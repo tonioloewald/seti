@@ -84,19 +84,19 @@ def main():
 
     audit_tier("T0", dict(
         bars=[7.6, 7.7, 8.5], scatter=[507, 938, 1268], tiers=[0], searched=12100,
-        residuals=1023, survive=912, cleared=111,
-        on_target=463, blend=430, uncentroidable=19,
-        recurs=61, artifact=289, untestable=113,
-        EB=6, planet=13, disint=9, RESIDUAL=33, resolvable=0,
-        fmax=[("box", 2.76e-4, 0.2e-4), ("tail", 3.35e-4, 0.2e-4)]))
+        residuals=765, survive=666, cleared=99,
+        on_target=337, blend=310, uncentroidable=19,
+        recurs=53, artifact=194, untestable=90,
+        EB=5, planet=35, disint=1, RESIDUAL=12, resolvable=2,
+        fmax=[("box", 2.75e-4, 0.25e-4), ("tail", 4.17e-4, 0.35e-4)]))
 
     audit_tier("T0T1", dict(
         bars=[7.3, 8.1, 8.7], scatter=[595, 1262, 2051], tiers=[0, 1], searched=44202,
-        residuals=4223, survive=3956, cleared=267,
-        on_target=1607, blend=2211, uncentroidable=138,
-        recurs=198, artifact=868, untestable=541,
-        EB=25, planet=45, disint=30, RESIDUAL=98, resolvable=7,
-        fmax=[("box", 8.10e-5, 0.3e-5), ("tail", 9.48e-5, 0.3e-5)]))
+        residuals=3036, survive=2821, cleared=215,
+        on_target=1121, blend=1580, uncentroidable=120,
+        recurs=140, artifact=578, untestable=403,
+        EB=17, planet=92, disint=4, RESIDUAL=27, resolvable=2,
+        fmax=[("box", 8.34e-5, 0.35e-5), ("tail", 1.19e-4, 0.12e-4)]))
 
     print("\n" + ("ALL CHECKS PASS -- paper and artifacts agree." if ok_all
                   else "** DISCREPANCY -- paper and artifacts disagree; investigate **"))

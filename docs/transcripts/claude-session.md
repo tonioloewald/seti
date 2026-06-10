@@ -11530,3 +11530,135 @@ T0 triage running (53 candidates re-fetching multi-sector). I'll wait for both t
 
 
 _[tools: Read]_
+
+The coherence diagnostic cleanly characterizes all three:
+
+| residual | G | sectors | frac detected | depth CV (per-sector) | read |
+|---|---|---|---|---|---|
+| 1397924585409290240 | 10.7 | 12 | **1.0** (12/12) | 0.25 | coherent — real transit, but active host |
+| 5615925139763813248 | 9.6 | 2 | 1.0 (2/2) | 0.41 | marginal — only 2 sectors |
+| 93357127133226496 | 11.7 | 7 | **0.71** (5/7) | 0.47 | intermittent — flagged |
+
+That's exactly the transparency the reviewer asked for. Let me commit the pipeline + v3 artifacts, then rewrite the paper:
+
+
+_[tools: Bash]_
+
+Now the paper rewrite to v3. Let me re-read the current (v2) draft to update each section precisely:
+
+
+_[tools: Read]_
+
+This is a substantial reframe from the v2 narrative ("7 follow-up candidates") to the v3 reality ("handful of residuals, all examined, none compelling; tail limit corrected"). Let me rewrite section by section. First the intro line and abstract:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now §3.2 — refresh the completeness numbers to v3 and note bars-frozen / completeness-refreshed:
+
+
+_[tools: Edit]_
+
+Now §3.3 — replace the v2 depth-variability description with the v3 red-noise-aware floor and the single asymmetry boundary, and correct the "limit unchanged" claim:
+
+
+_[tools: Edit]_
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now §3.5 — add the per-sector coherence diagnostic and the activity-metric limitation:
+
+
+_[tools: Edit]_
+
+Let me pull the authoritative v3 funnel numbers (post-coherence-rerun) and the identity breakdowns straight from the current CSVs, so the paper §4.1 is exact:
+
+
+_[tools: Bash]_
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+Authoritative v3 numbers in hand. Let me rewrite §4.1 (cascade) for both tiers:
+
+
+_[tools: Edit]_
+
+Now §4.2 — the central reframe. Let me read its current state (line numbers shifted) and replace it:
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now §4.3 (by-product) — update counts and note the deep transiter:
+
+
+_[tools: Edit]_
+
+Now §4.4 (follow-up roadmap) — update counts and reframe (the resolvable residuals are now examined, not pending):
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now §5 (Discussion) — reframe the opening for the v3 null and the iterative-refinement story:
+
+
+_[tools: Edit]_
+
+Now §6 (Conclusions) — update for v3:
+
+
+_[tools: Edit]_
+
+Let me fix the abstract by-product count (6→5) and the §7 "two refinements" wording, then update the audit:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now update the audit to the v3 numbers:
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Audit passes all checks for v3. Let me sweep the paper for stale v2 numbers and any residual "honest":
+
+
+_[tools: Bash]_
+
+Line 391 is intentional (the §5 iteration narrative); line 455 in §7 is stale. Let me fix it:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
