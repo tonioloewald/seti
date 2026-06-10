@@ -11145,3 +11145,176 @@ Have you pushed? I can’t see the brief in the repo.
 
 
 _[tools: Bash]_
+
+You're right — the brief is committed (483edec) but I never pushed it; `main` is 1 ahead of `origin/main`. The earlier paper/audit push went through, but the brief commit came after. Pushing now:
+
+
+_[tools: Bash]_
+
+Pushed — `origin/main` is now up to date (`465698b..e14bd1e`). The brief is live at `paper/phase2_review_brief.md` on GitHub, along with the updated paper, audit, and status doc.
+
+For what it's worth on cadence: I commit as I go but only push when you ask or at a natural stopping point, so there can be a lag like this one. If you'd rather I push after every commit so the remote always matches, say the word and I'll do that for the rest of this work.
+
+The brief is ready to paste to Gemini. And my question from the last turn still stands: build the red-noise-aware per-sector vetting stage and re-run now (which should collapse the 7 to ~1–2), or hold for Gemini's pass so we batch both reviews' fixes?
+
+### 🧑 Tonio
+
+In my view Claude has been much more effective as an adversarial reviewer than Gemini and now you’ve automated that process so I think let’s make the changes you suggest and run another round of adversarial review past Claude. Then once we have handled that we bring in Gemini, which is a flip of the process we used with the previous paper.
+
+### 🤖 Claude
+
+This is exactly the right call — the automated Claude review is sharp and fast, so tightening the loop on it first (then Gemini as the final external pass) makes sense. Let me implement the reviewer's fixes, the most important being the **root cause**: replacing the white-noise depth-variability floor with a red-noise-aware empirical one.
+
+Let me read the current `battery()` to integrate cleanly:
+
+
+_[tools: Read]_
+
+Now the root-cause fix. Let me replace the white-noise depth-variability floor with a red-noise-aware empirical one — measuring the epoch-to-epoch depth scatter at *off-transit* phases as the control, so it inherits the star's correlated/sector noise — and close the asymmetry-threshold gap at a single 0.15 cut:
+
+
+_[tools: Edit]_
+
+Let me verify the injection semantics are preserved (box→RESIDUAL, tail→RESIDUAL, planet→planet) — critical for the `f_max`-unchanged claim — plus a multi-sector-style test where the red-noise floor matters:
+
+
+_[tools: Bash]_
+
+Injection semantics fully preserved — and the decisive new test passes: a **constant-depth planet on a multi-sector red-noise star** (per-sector scatter varying 8× ) now correctly stays `natural_planet` (excess 2.16, below threshold), whereas the old white-noise floor would have flagged it RESIDUAL. The tail's real variability still registers (excess 17.9 → RESIDUAL). So box/tail/planet all preserved.
+
+The reviewer specifically challenged whether the limit is *really* unchanged under this new test, so let me prove it rigorously — re-run the calibration and confirm `C_i` is identical to the frozen values. Let me check k03's cost first:
+
+
+_[tools: Bash]_
+
+k03's completeness loop is what uses `battery()`; the null (bars) doesn't. Let me write a focused check that recomputes `C_i` with the new battery on the *same* seeded subsample and diffs it against the frozen calibration — proving the limit is untouched without disturbing the frozen files. Let me read k03's completeness internals:
+
+
+_[tools: Read]_
+
+k03 uses `battery()` for completeness, so the red-noise floor could shift `C_i` — particularly for the *tail* family, where a larger (correct) red-noise floor may make shallow tails on noisy stars no longer register as variable. That would weaken the tail limit (honestly), while the box limit (flat-bottom-driven, not depth-variable-driven) should be untouched. I need to measure this, not assume it. Let me check how k03 scopes its tiers so I re-calibrate correctly:
+
+
+_[tools: Read]_
+
+
+_[tools: Bash]_
+
+k03 calibrates on the whole noise floor with no tier filter (the two frozen calibrations were produced at different times and renamed). The logic guarantees **`C_i(box)` is exactly unchanged** (box is RESIDUAL via flat-bottom, independent of the depth-variability floor); only **`C_i(tail)` can shift** (and only downward — the red-noise floor makes "variable" harder to trigger, so the tail limit can only weaken, honestly). Let me measure it with a focused recompute on the same seeded subsample, reusing the frozen bars:
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+Let me track this iteration's work while the C_i verification runs:
+
+
+_[tools: TaskCreate]_
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+The launcher detached; the verification runs in `/tmp/verify_ci.log`. Let me wait for it:
+
+
+_[tools: Bash]_
+
+I'll wait for the verification to finish both tiers.
+
+
+_[tools: Read]_
+
+I'll wait for the watcher notification on the C_i verification.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bly5ewblm</task-id>
+<tool-use-id>toolu_01PcxFnsoR17NtkvEGkds1Jr</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/bly5ewblm.output</output-file>
+<status>completed</status>
+<summary>Background command "Wait for C_i verification both tiers" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Read]_
+
+The C_i verification reveals the honest impact, and it's exactly as predicted by the logic:
+
+- **`f_max(box)` unchanged** (the megastructure/flat-occulter limit — the one that matters): T0 2.76e-4→2.75e-4, T0+T1 8.1e-5→8.3e-5. Identical within subsample noise.
+- **`f_max(tail)` weakens** under the red-noise floor: T0 3.4e-4→4.2e-4, T0+T1 9.5e-5→1.2e-4. The white-noise floor was over-claiming our ability to tell disintegrating tails from red noise; the honest tail limit is ~25% looser.
+
+So the limit *does* move for the tail family — I need to re-freeze the calibrations (battery v3) and report it, not claim "unchanged." But first let me resolve a confound in my check (I filtered tiers, but k03 froze on all-ok including "proof" stars). Let me see what "proof" is and how tiers are labelled:
+
+
+_[tools: Bash]_
+
+"Proof" is tier 2 — just 178 validation spot-check stars. The original T0+T1 freeze included them; my check excluded them, which is why the *box* numbers wobble ~2% (different subsample draw) while the *tail* drop (~20%, consistent across all cohorts and both tiers) is the real battery effect. 
+
+To re-freeze cleanly I'll make k03 tier-aware (like k04–k08), which also correctly excludes the 178 validation stars from calibration. Let me read k03's main to add the KRUN scoping:
+
+
+_[tools: Read]_
+
+I should **not** recompute the bars — those are the registered detection thresholds and the reviewer didn't challenge them; the null is battery-independent anyway. I only need to refresh `C_i` (completeness) with the red-noise battery, keeping the frozen bars/edges. Let me write a re-freeze that recomputes the full completeness grid on the tier-appropriate population and writes it back, preserving everything else:
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+
+_[tools: Bash]_
+
+The re-freeze runs detached (~20–30 min for both tiers). It recomputes the full completeness grid with the red-noise battery while keeping the registered bars frozen. I'll continue once it lands. Let me check interim progress:
+
+
+_[tools: Read]_
+
+Good — bars confirmed frozen (7.63/7.74/8.47 → 7.6/7.7/8.5). Waiting for the re-freeze to complete both tiers.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>b4j34hpzv</task-id>
+<tool-use-id>toolu_01REZn51wSCPu4n1bcVkRMKt</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/b4j34hpzv.output</output-file>
+<status>completed</status>
+<summary>Background command "Wait for C_i re-freeze both tiers" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Read]_
+
+Re-freeze complete. The honest limit picture under battery v3:
+
+| | `f_max(box)` frozen→v3 | `f_max(tail)` frozen→v3 |
+|---|---|---|
+| T0 | 2.76e-4 → **2.75e-4** | 3.35e-4 → **4.17e-4** |
+| T0+T1 | 8.10e-5 → **8.34e-5** | 9.48e-5 → **1.19e-4** |
+
+**The box (flat-occulter / megastructure) limit holds** within injection sampling; **the tail limit honestly weakens ~25%** — the white-noise floor was over-claiming our ability to separate disintegrating tails from red noise. Bars stayed frozen. Now let me re-run the full cascade for both tiers with battery v3 + the refreshed calibration (the 7 should collapse):
+
+
+_[tools: Bash]_
+
+
+_[tools: Bash]_
+
+The cascade runs detached (~1 hr). Let me commit a durable checkpoint now — the battery v3 code, the re-freeze script, and the re-frozen calibrations — with the amendment logged. First the AMENDMENTS entry:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_

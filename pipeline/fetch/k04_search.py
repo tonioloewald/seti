@@ -87,33 +87,47 @@ def battery(t, f, period, t0, scatter):
                          np.cos(4*np.pi*x), np.sin(4*np.pi*x)])
     coef, *_ = np.linalg.lstsq(A, f, rcond=None)
     feat["sin_r2"] = float(1 - np.sum((f - A @ coef)**2) / np.sum((f - f.mean())**2))
-    # per-epoch depth variability, NOISE-AWARE: a real planet's per-epoch depth scatter is just
-    # photon/systematic noise (~scatter/sqrt(n_in_transit)); only an EXCESS beyond that is genuine
-    # variability (a disintegrating body). Using raw depth-CV mislabels noisy real planets.
-    edeps, en = [], []
-    for e in np.unique(epoch):
-        m = intr & (epoch == e)
-        if m.sum() >= 3:
-            edeps.append(base - np.median(f[m])); en.append(int(m.sum()))
-    edeps = np.array([x for x in edeps if np.isfinite(x)])
+    # per-epoch depth variability, RED-NOISE-AWARE: compare the epoch-to-epoch scatter of the
+    # in-transit depth against the same scatter measured at OFF-transit phases (control "depths").
+    # The control inherits the star's correlated/sector-to-sector noise, so only variability that
+    # EXCEEDS it is genuine (a disintegrating body). A white-noise floor (scatter/sqrt(n)) under-
+    # predicts red noise and over-flags noisy faint stars whose per-epoch depth merely tracks their
+    # per-sector scatter; the empirical control floor measured here does not.
+    phw = ((t - t0) / period + 0.5) % 1.0 - 0.5
+
+    def _epoch_depths(center, hw=0.04):
+        out = []
+        for e in np.unique(epoch):
+            mm = (np.abs(phw - center) < hw) & (epoch == e)
+            if mm.sum() >= 3:
+                out.append(base - np.median(f[mm]))
+        return np.array([x for x in out if np.isfinite(x)])
+
+    edeps = _epoch_depths(0.0)
+    ctrl = [_epoch_depths(c) for c in (0.18, -0.18, 0.30, -0.30)]      # off-transit, off-secondary
+    cstds = [np.std(c) for c in ctrl if len(c) >= 4]
+    ctrl_std = float(np.median(cstds)) if cstds else np.nan
     if len(edeps) >= 4 and np.mean(edeps) > 0:
         feat["depth_cv"] = float(np.std(edeps) / np.mean(edeps))
-        noise_std = scatter / np.sqrt(max(np.median(en), 1))          # expected per-epoch depth scatter
-        feat["depth_variable"] = bool(np.std(edeps) > 2.5 * noise_std and feat["depth_cv"] > 0.5)
+        floor = ctrl_std if (np.isfinite(ctrl_std) and ctrl_std > 0) else scatter / np.sqrt(max(len(edeps), 1))
+        feat["depth_excess"] = float(np.std(edeps) / floor) if floor > 0 else np.nan   # std / red-noise floor
+        feat["depth_variable"] = bool(np.std(edeps) > 2.5 * floor and feat["depth_cv"] > 0.5)
     else:
-        feat["depth_cv"] = np.nan; feat["depth_variable"] = False
+        feat["depth_cv"] = np.nan; feat["depth_variable"] = False; feat["depth_excess"] = np.nan
 
     # ---- verdict (conservative; prior knowledge only explains away) -------------------
+    # Asymmetry uses a SINGLE 0.15 boundary (planet below, anomalous above) -- no dead zone between
+    # the planet and disintegrating cuts that would manufacture residuals from a threshold seam.
     if feat["sin_r2"] > 0.6:
         v = "activity/variability"
     elif feat["secondary_depth"] > 0.3 * d or feat["odd_even"] > 0.5 or d > DEEP_EB_DEPTH:
         v = "eclipsing_binary"             # secondary/odd-even, OR a depth implying R_occ > ~2.5 R_J
     elif feat["depth_variable"] and feat["asymmetry"] > 0.15:
         v = "disintegrating_body"
-    elif feat["flat_bottom"] < 0.75 and feat["asymmetry"] < 0.1 and not feat["depth_variable"]:
-        v = "natural_planet"               # U-shaped, symmetric, stable depth (noise-aware)
+    elif feat["flat_bottom"] < 0.75 and feat["asymmetry"] < 0.15 and not feat["depth_variable"]:
+        v = "natural_planet"               # U-shaped, symmetric, stable depth (red-noise-aware)
     else:
-        v = "RESIDUAL"                     # flat-bottomed / asymmetric / genuinely variable beyond natural
+        v = "RESIDUAL"                     # flat-bottomed / asymmetric (>0.15) / genuinely variable
     return {"verdict": v, **feat}
 
 
