@@ -6,7 +6,7 @@ The OSF registration is an immutable, timestamped snapshot of the *original plan
 **authoritative record of every post-registration amendment is this file plus the public git
 history** (on `main`, force-push-protected) in the repository that is **linked from the accepted
 OSF registration**: each commit is timestamped and tamper-evident, which establishes the order
-of every decision relative to the data — and that is what keeps the work honest. (OSF's native
+of every decision relative to the data — and that is what keeps the work accountable. (OSF's native
 registration-Update mechanism is unavailable for this Open-Ended Registration, so the linked
 repository *is* the amendment record rather than a mere companion to it. A separate OSF
 registration per amendment is optional and not required for confirmatory status.)

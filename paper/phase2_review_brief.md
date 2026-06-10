@@ -35,7 +35,7 @@ The previous round reviewed a **T0-only (G < 11) clean null**. Two things are ne
 2. **A combined bright sample T0+T1 (G < 12; 44,202 stars)**, re-calibrated from scratch. f_max
    tightens ~3.4× (box 2.8e-4 → 8.1e-5; tail 3.4e-4 → 9.5e-5).
 
-## The honest headline shift you must scrutinise
+## The headline shift you must scrutinise
 
 - **T0 (G < 11): clean** — 0 morphology-resolvable residuals (deepest RESIDUAL 0.186%).
 - **Combined T0+T1 (G < 12): 7 resolvable residuals** (depth > 0.3%) — the first the search has

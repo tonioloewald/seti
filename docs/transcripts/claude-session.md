@@ -11318,3 +11318,215 @@ _[tools: Read]_
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Checkpoint committed. Let me push it (keeping the remote current as you flagged), then wait for the cascade:
+
+
+_[tools: Bash]_
+
+
+_[tools: TaskUpdate]_
+
+
+_[tools: Read]_
+
+Pushed (`e14bd1e..4c67c81`). The v3 cascade is still running. Let me set up the remaining tasks for this round and wait for it:
+
+
+_[tools: TaskCreate]_
+
+Noted — dropping it, and I'll scrub it from the artifacts too. Let me check where it's crept in:
+
+
+_[tools: Bash]_
+
+Three labeling-style uses plus one in the other paper. Let me read the contexts and scrub them:
+
+
+_[tools: Bash]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Scrubbed — `paper/phase2_review_brief.md`, `AMENDMENTS.md`, and `paper/draft.md` no longer use it (these fold into the next commit). And I'll keep it out of my own writing from here; I'll just state the result rather than label it.
+
+While the v3 cascade runs (it'll collapse the 7 residuals and is the last piece before I update the paper), here's where things stand on the substance you'll care about: the red-noise fix the reviewer demanded is in, and it moved the limit exactly where the physics said it should — the flat-occulter (megastructure) limit holds, the disintegrating-tail limit loosens ~25% because the old white-noise floor was over-claiming. That tail-limit loosening is the correction the reviewer's per-sector test forced, and it's logged as battery v3 in `AMENDMENTS.md`. I'll report the collapsed residual count, update the paper and audit, then fire the next Claude review round once the cascade lands.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bab0mg8t8</task-id>
+<tool-use-id>toolu_01PbsjwnpeSzUs69u8PdNeXT</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/bab0mg8t8.output</output-file>
+<status>completed</status>
+<summary>Background command "Wait for v3 cascade completion" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Read]_
+
+v3 cascade complete. The k04 RESIDUAL counts dropped further (T0 1023→765, T0+T1 4223→3036) as the red-noise floor moved depth-variable cases into `natural_planet`. Let me compute the final funnel and — the key number — how the resolvable residuals collapsed:
+
+
+_[tools: Bash]_
+
+The collapse happened — but with a twist I need to investigate before touching the paper. The v3 resolvable residuals are **2 in T0 and 2 in T0+T1** (3 distinct objects), and they're *different* objects than the v2 seven (the depth-variable ones correctly became planets). Critically, one is now **flat-bottomed** (flat_bottom=1.0) — which would contradict the "none is a flat occulter" claim — but it also has depth_cv=1.56 (a "transit" whose per-epoch depth swings 156%), which smells like a few-epoch artifact.
+
+I will not report these without the same per-sector test the reviewer used. Let me run it on all three:
+
+
+_[tools: Bash]_
+
+
+_[tools: Bash]_
+
+
+_[tools: Read]_
+
+The per-sector test is decisive and changes the picture in an interesting way:
+
+- **1397924585409290240** (T0, G=10.7): **real and notable.** Depth is *stable* at ~3.5% across **all 12 sectors** (per-sector CV 0.25, corr with scatter only +0.39 — not noise). The battery's high depth_cv was per-epoch noise; the actual signal is a deep, flat-bottomed, **asymmetric** transit recurring cleanly over 12 sectors on a bright star, sub-stellar radius (1.1 R_J). This is *not* an artifact — it's the strongest candidate the search has produced, and it only surfaced because the red-noise fix moved it out of the (wrong) "disintegrating body" bin.
+- **5615925139763813248** (G=9.6): marginal — only 2 sectors, depths 0.42% vs 1.0% (the thin sector has 18 in-transit points), mild asymmetry just over the cut.
+- **93357127133226496** (G=11.7): **suspect** — shallow (0.34%, at the floor), *intermittent* (present in 4 sectors, absent in 3 with depth ~0), high asymmetry. Near-floor, likely marginal/blend.
+
+So the red-noise fix didn't just delete the v2 noise — it cleared the way to a genuine flat-bottomed candidate. Let me look at 1397924585409290240's actual folded light curve before I get excited, since flat_bottom=1.0 is the metric's ceiling:
+
+
+_[tools: Bash]_
+
+
+_[tools: Bash]_
+
+
+_[tools: Read]_
+
+
+_[tools: Bash]_
+
+The fetch of 12 sectors takes a bit; the watcher is waiting on the PNG. Let me check progress:
+
+
+_[tools: Read]_
+
+I'll wait for the plot watcher to fire.
+
+
+_[tools: Read]_
+
+I'll wait for the watcher notification on the plot.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bkxhzl60a</task-id>
+<tool-use-id>toolu_01Pn3V85GxmrnwMFFzxsspCb</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/bkxhzl60a.output</output-file>
+<status>completed</status>
+<summary>Background command "Wait for candidate plot" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Bash]_
+
+
+_[tools: Read]_
+
+Now I can see it clearly — and it tempers the excitement. Let me show you:
+
+
+_[tools: SendUserFile]_
+
+
+_[tools: SendUserFile]_
+
+Here's the clear-eyed read on the v3 result.
+
+**The red-noise fix worked as intended**: the v2 "anomalies" (5 depth-variable ones) correctly became planets. But it cleared the way to 3 *different* resolvable residuals, and on inspection none is a clean anomaly:
+
+- **1397924585409290240** (pictured): a **real, deep (~3.9%) transit, stable across all 12 sectors** — but the right panel shows the host is **photometrically active** (those wavy out-of-transit bands). That variability — plus the long-period detrending — is what corrupts the shape metrics into "flat_bottom=1.0, asym=0.32." The transit dip itself looks more V/U-shaped than flat. So it's a genuine uncatalogued deep transiter (a real by-product find), but its "flat-occulter anomaly" flag is most likely an **activity/detrending artifact**, not a megastructure. Notably, the battery's activity gate (`sin_r2` at the period) missed it because the variability isn't a clean sinusoid.
+- **5615925139763813248**: marginal — only 2 sectors, depths 0.4% vs 1.0% (thin sector unreliable).
+- **93357127133226496**: suspect — shallow (0.34%, at the floor), *intermittent* (present in 4 sectors, gone in 3), high asymmetry.
+
+So the realistic verdict matches your instinct and the reviewer's thesis: **no compelling anomaly survives** — the resolvable residuals all have mundane front-runners (active host, marginal SNR, near-floor intermittency). The exciting flat occulter dissolved into "deep transit on a spotty star." That's the honest null, reached more rigorously than v2.
+
+It also exposed a real methodological gap the next reviewer would pounce on: **morphology metrics are unreliable on active stars, and `sin_r2` doesn't catch non-sinusoidal variability.**
+
+My recommendation for this round:
+1. **Add the per-sector depth-coherence check as a recorded vetting column** (the reviewer's explicit ask — it confirms 1397's stable depth and flags 93357's intermittency).
+2. **Reframe the paper to the v3 null**: ~3 resolvable residuals, each examined, none a clean anomaly; report 1397 as a real deep transiter on an active star (by-product, not anomaly); note the activity-metric limitation as a stated weakness.
+3. **Run the next Claude review** on that.
+
+I'd *not* chase an activity-robust-morphology rewrite in-loop — that's whack-a-mole; better to state the limitation and let the review decide if it's load-bearing. Want me to proceed on that plan, or would you rather I push harder on the activity angle (e.g., re-detrend 1397 properly to see if the asymmetry survives) before we write it up?
+
+### 🧑 Tonio
+
+I think state the limitation.
+
+### 🤖 Claude
+
+Stating the limitation it is. Let me implement the plan: (1) bake the per-sector depth-coherence check into k08 as a recorded vetting column, (2) re-run triage, (3) reframe the paper to the v3 null with the limitation stated, (4) update audit + amendments, (5) run the next Claude review.
+
+First, the coherence metrics in k08's triage:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now re-run k08 for both tiers to populate the coherence columns (the verdicts are unchanged — battery is the same v3 — only the diagnostic columns are added):
+
+
+_[tools: Bash]_
+
+
+_[tools: Bash]_
+
+The k08 coherence re-run is detached; the watcher will return the residual table with the new coherence columns. While it runs, let me note the v3 funnel is internally consistent (both tiers sum correctly), and the by-product planet catalogue grew (T0 13→35, T0+T1 45→92 planets) as the red-noise floor moved depth-variable cases into the planet class. I'll fold all this into the paper once the coherence numbers land. Waiting for the run.
+
+
+_[tools: Read]_
+
+
+_[tools: TaskUpdate]_
+
+I'll wait for the coherence re-run to complete with the residual table.
+
+
+_[tools: Read]_
+
+T0 triage running (53 candidates re-fetching multi-sector). I'll wait for both tiers to finish.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bpkzvrnld</task-id>
+<tool-use-id>toolu_0145mEyRVUvHUDBYoJpAZAMA</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/a0e2a823-9e2b-4060-96b5-b54df2c68c39/tasks/bpkzvrnld.output</output-file>
+<status>completed</status>
+<summary>Background command "Wait for k08 coherence + show residuals" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Read]_

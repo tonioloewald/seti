@@ -31,6 +31,33 @@ PERIODS = np.arange(0.5, 13.0, 0.02)
 DURS = np.array([0.05, 0.1, 0.2])
 
 
+def _sector_coherence(secs, period, t0, dur):
+    """Per-sector depth-coherence diagnostic (for the follow-up list). A clean recurring transit has
+    a stable per-sector depth uncorrelated with per-sector scatter; a noise/systematics-driven flag
+    shows depth tracking scatter (corr -> 1) or an intermittent depth (detected in a fraction of
+    sectors). Returns (n_with_dip, frac_detected, depth_cv_sector, depth_scatter_corr)."""
+    hw = min(0.5 * dur / period, 0.2)
+    deps, scs = [], []
+    n_obs = 0
+    for _, tt, ff in secs:
+        ph = ((tt - t0) / period + 0.5) % 1.0 - 0.5
+        intr = np.abs(ph) < hw
+        oot = (np.abs(ph) > 1.5 * hw) & (np.abs(ph) < 0.45)
+        if intr.sum() < 3 or oot.sum() < 10:
+            continue
+        n_obs += 1
+        sc = robust_scatter(ff); dep = np.median(ff[oot]) - np.median(ff[intr])
+        snr = dep * np.sqrt(intr.sum()) / sc if sc > 0 else 0
+        if dep > 0 and snr > 3:
+            deps.append(dep); scs.append(sc)
+    deps, scs = np.array(deps), np.array(scs)
+    n_det = len(deps)
+    frac = float(n_det / n_obs) if n_obs else np.nan
+    cv = float(np.std(deps) / np.mean(deps)) if n_det >= 2 and np.mean(deps) > 0 else np.nan
+    corr = float(np.corrcoef(deps, scs)[0, 1]) if n_det >= 3 else np.nan
+    return n_det, frac, cv, corr
+
+
 def _triage(task):
     sid, ra, dec = task
     dldir = tempfile.mkdtemp(prefix="tri_")
@@ -42,11 +69,15 @@ def _triage(task):
         o = np.argsort(t); t, f = t[o], f[o]
         r = bls_detect(t, f, PERIODS, DURS)
         b = battery(t, f, r["period"], r["t0"], robust_scatter(f))
+        n_det, frac, scv, corr = _sector_coherence(secs, r["period"], r["t0"], r["duration"])
         return {"source_id": sid, "n_sectors": len(secs), "period": r["period"],
                 "depth": b.get("depth", np.nan), "verdict": b["verdict"],
                 "flat_bottom": b.get("flat_bottom", np.nan), "asymmetry": b.get("asymmetry", np.nan),
                 "secondary_depth": b.get("secondary_depth", np.nan), "odd_even": b.get("odd_even", np.nan),
-                "depth_cv": b.get("depth_cv", np.nan), "sin_r2": b.get("sin_r2", np.nan)}
+                "depth_cv": b.get("depth_cv", np.nan), "sin_r2": b.get("sin_r2", np.nan),
+                # per-sector coherence diagnostic (follow-up vetting; not a hard gate)
+                "sec_detected": n_det, "sec_frac_detected": frac,
+                "sec_depth_cv": scv, "sec_depth_scatter_corr": corr}
     except Exception as e:
         return {"source_id": sid, "n_sectors": -1, "verdict": f"err:{type(e).__name__}"}
     finally:

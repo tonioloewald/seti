@@ -407,7 +407,7 @@ the v1 excess search used AllWISE *detections* only; the deeper CatWISE2020 exte
 has now addressed this, finding that deeper W1/W2 extends the warm-excess census but leaves the
 cold limit unchanged — so the binding limitation is wavelength, not depth. (iii) WISE cannot see genuinely cold
 (≲50 K) excess; that regime requires far-infrared data (Herschel, JWST/MIRI) and is
-honestly outside our reach. (iv) Channel B is secondary and bright-limited; a calibrated,
+genuinely outside our reach. (iv) Channel B is secondary and bright-limited; a calibrated,
 fainter, all-sector transit search is a natural extension. (v) Most fundamentally, the search
 is a *defined, falsifiable slice*: a disequilibrium
 expressed only through channels we do not survey (e.g. narrow-band, polarimetric, or
