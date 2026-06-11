@@ -69,11 +69,14 @@ def main():
     old = cal["completeness"]
     print("\n  C_i @1%   family   frozen -> v3   (f_max@1%)")
     for fam in k03.FAMILIES:
-        o = [old[fam]["0.010"][str(c)] or 0 for c in range(3)]
         n = [Cgrid[fam]["0.010"][c] or 0 for c in range(3)]
-        sCo = sum(o[c] * int((ok.cohort == c).sum()) for c in range(3))
-        print(f"    {fam:7s} {[round(x,3) for x in o]} -> {[round(x,3) for x in n]}   "
-              f"{poisson_fmax(sCo):.2e} -> {fmax[fam]:.2e}")
+        if fam in old and "0.010" in old[fam]:
+            o = [old[fam]["0.010"][str(c)] or 0 for c in range(3)]
+            sCo = sum(o[c] * int((ok.cohort == c).sum()) for c in range(3))
+            print(f"    {fam:7s} {[round(x,3) for x in o]} -> {[round(x,3) for x in n]}   "
+                  f"{poisson_fmax(sCo):.2e} -> {fmax[fam]:.2e}")
+        else:
+            print(f"    {fam:7s} (new) -> {[round(x,3) for x in n]}   f_max {fmax[fam]:.2e}")
 
     cal["completeness"] = Cgrid
     cal["illustrative_fmax_at_1pct"] = fmax

@@ -63,6 +63,9 @@ def audit_tier(run, E):
     chk(f"{run} triage total = recurring", len(tri), E["recurs"])
     r = tri[tv == "RESIDUAL"]
     chk(f"{run} resolvable-regime residuals (depth>0.3%)", int((r.depth > 0.003).sum()), E["resolvable"])
+    # verify the resolvable residuals' depths match the prose (catches mis-quoted per-object numbers)
+    chk(f"{run} resolvable residual depths (%)",
+        sorted(round(float(d) * 100, 2) for d in r[r.depth > 0.003].depth), E["resolvable_depths_pct"])
 
     # f_max recomputed from frozen completeness x searched cohort counts (zero-detection basis)
     nf = pd.read_parquet(os.path.join(ROOT, "data", "derived", "kdwarf_noise_floor.parquet"))
@@ -87,16 +90,16 @@ def main():
         residuals=765, survive=666, cleared=99,
         on_target=337, blend=310, uncentroidable=19,
         recurs=53, artifact=194, untestable=90,
-        EB=5, planet=35, disint=1, RESIDUAL=12, resolvable=2,
-        fmax=[("box", 2.75e-4, 0.25e-4), ("tail", 4.17e-4, 0.35e-4)]))
+        EB=5, planet=35, disint=1, RESIDUAL=12, resolvable=2, resolvable_depths_pct=[1.2, 2.69],
+        fmax=[("box", 2.75e-4, 0.25e-4), ("tail", 4.17e-4, 0.35e-4), ("triangle", 5.57e-3, 1.0e-3)]))
 
     audit_tier("T0T1", dict(
         bars=[7.3, 8.1, 8.7], scatter=[595, 1262, 2051], tiers=[0, 1], searched=44202,
         residuals=3036, survive=2821, cleared=215,
         on_target=1121, blend=1580, uncentroidable=120,
         recurs=140, artifact=578, untestable=403,
-        EB=17, planet=92, disint=4, RESIDUAL=27, resolvable=2,
-        fmax=[("box", 8.34e-5, 0.35e-5), ("tail", 1.19e-4, 0.12e-4)]))
+        EB=17, planet=92, disint=4, RESIDUAL=27, resolvable=2, resolvable_depths_pct=[0.3, 1.2],
+        fmax=[("box", 8.34e-5, 0.35e-5), ("tail", 1.19e-4, 0.12e-4), ("triangle", 9.40e-4, 1.5e-4)]))
 
     print("\n" + ("ALL CHECKS PASS -- paper and artifacts agree." if ok_all
                   else "** DISCREPANCY -- paper and artifacts disagree; investigate **"))

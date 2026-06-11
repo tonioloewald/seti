@@ -50,6 +50,26 @@
         "0": 0.016666666666666666,
         "1": 0.03,
         "2": 0.04666666666666667
+      },
+      "0.040": {
+        "0": 0.0033333333333333335,
+        "1": 0.0,
+        "2": 0.023333333333333334
+      },
+      "0.080": {
+        "0": 0.0033333333333333335,
+        "1": 0.0,
+        "2": 0.013333333333333334
+      },
+      "0.120": {
+        "0": 0.0033333333333333335,
+        "1": 0.0,
+        "2": 0.013333333333333334
+      },
+      "0.150": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
       }
     },
     "box": {
@@ -67,6 +87,26 @@
         "0": 0.9733333333333334,
         "1": 0.9266666666666666,
         "2": 0.7266666666666667
+      },
+      "0.040": {
+        "0": 0.9766666666666667,
+        "1": 0.94,
+        "2": 0.7966666666666666
+      },
+      "0.080": {
+        "0": 0.98,
+        "1": 0.9466666666666667,
+        "2": 0.8466666666666667
+      },
+      "0.120": {
+        "0": 0.98,
+        "1": 0.95,
+        "2": 0.8633333333333333
+      },
+      "0.150": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
       }
     },
     "tail": {
@@ -84,15 +124,73 @@
         "0": 0.5733333333333334,
         "1": 0.5866666666666667,
         "2": 0.5533333333333333
+      },
+      "0.040": {
+        "0": 0.5633333333333334,
+        "1": 0.5766666666666667,
+        "2": 0.5166666666666667
+      },
+      "0.080": {
+        "0": 0.5,
+        "1": 0.5333333333333333,
+        "2": 0.47
+      },
+      "0.120": {
+        "0": 0.3433333333333333,
+        "1": 0.41,
+        "2": 0.3466666666666667
+      },
+      "0.150": {
+        "0": 0.19666666666666666,
+        "1": 0.27,
+        "2": 0.20333333333333334
+      }
+    },
+    "triangle": {
+      "0.005": {
+        "0": 0.24666666666666667,
+        "1": 0.12666666666666668,
+        "2": 0.08333333333333333
+      },
+      "0.010": {
+        "0": 0.07333333333333333,
+        "1": 0.07333333333333333,
+        "2": 0.07
+      },
+      "0.020": {
+        "0": 0.016666666666666666,
+        "1": 0.043333333333333335,
+        "2": 0.03666666666666667
+      },
+      "0.040": {
+        "0": 0.0033333333333333335,
+        "1": 0.006666666666666667,
+        "2": 0.023333333333333334
+      },
+      "0.080": {
+        "0": 0.0033333333333333335,
+        "1": 0.0,
+        "2": 0.016666666666666666
+      },
+      "0.120": {
+        "0": 0.0033333333333333335,
+        "1": 0.0,
+        "2": 0.013333333333333334
+      },
+      "0.150": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
       }
     }
   },
   "illustrative_fmax_at_1pct": {
     "planet": 0.0010180016627360491,
     "box": 8.343588994806116e-05,
-    "tail": 0.00011883958689246891
+    "tail": 0.00011883958689246891,
+    "triangle": 0.0009397240134986133
   },
-  "note": "Frozen Phase-2 detection calibration (T0 / G<11). Noise floor + synthetic injections only; no real candidate revealed. Step 4 applies threshold_sde. | Battery-v3 C_i refresh (T0T1, tiers [0, 1]): bars/edges/nulls unchanged; completeness recomputed with the red-noise-aware depth-variability test. C_i(box) unchanged within sampling; C_i(tail) reduced (more conservative floor).",
+  "note": "Frozen Phase-2 detection calibration (T0 / G<11). Noise floor + synthetic injections only; no real candidate revealed. Step 4 applies threshold_sde. | Battery-v3 C_i refresh (T0T1, tiers [0, 1]): bars/edges/nulls unchanged; completeness recomputed with the red-noise-aware depth-variability test. C_i(box) unchanged within sampling; C_i(tail) reduced (more conservative floor). | Battery-v3 C_i refresh (T0T1, tiers [0, 1]): bars/edges/nulls unchanged; completeness recomputed with the red-noise-aware depth-variability test. C_i(box) unchanged within sampling; C_i(tail) reduced (more conservative floor).",
   "grids": {
     "periods": [
       0.5,

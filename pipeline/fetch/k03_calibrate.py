@@ -42,9 +42,9 @@ MANIFEST_N = 175968                          # N_total: the whole frozen manifes
 N_COHORTS = 3
 PERIODS = np.arange(0.5, 13.0, 0.02)
 DURS = np.array([0.05, 0.1, 0.2])
-DEPTHS = [0.005, 0.01, 0.02]
-INJ_PERIODS = [3.1, 7.3]
-FAMILIES = ["planet", "box", "tail"]
+DEPTHS = [0.005, 0.01, 0.02, 0.04, 0.08, 0.12, 0.15]   # spans the 0.13 depth->EB cut, to MEASURE
+INJ_PERIODS = [3.1, 7.3]                                # the upper depth boundary, not extrapolate past it
+FAMILIES = ["planet", "box", "tail", "triangle"]        # triangle = asymmetric-occulter anomaly
 INJ_DUR = 0.12
 
 

@@ -11675,3 +11675,245 @@ Now the v3 review brief, then I'll run the next Claude adversarial round. The sh
 
 
 _[tools: Write]_
+
+Let me commit the brief and launch the round-2 Claude adversarial review (full repo access so it can run the false-negative injection test itself):
+
+
+_[tools: Bash]_
+
+
+_[tools: Agent]_
+
+Round 2 is back, and it's even sharper — the reviewer built an independent injection harness and **tested my lead worry empirically**. Key results:
+
+**The good news (the lead question, answered with numbers):** v3 did **not** over-correct into false negatives. Tail recovery is flat across magnitude — at the faintest stars v3 actually keeps *more* real tails as residuals than the old v2 floor would. The "pendulum swung too far" fear is empirically false. That strengthens the paper.
+
+**But it found real problems, two of them hard errors:**
+
+1. **Factual error (must fix):** the paper says the `1397` residual is **3.9% deep**, but the authoritative artifact (the triage CSV) says **2.69%** — and the "1.1 R_J" radius I quoted is consistent with 2.69%, not 3.9%. So the paper contradicts itself. (The 3.9% came from a fresh BLS on the re-fetched stitched curve; the committed triage value is what governs.)
+2. **`5615` is over-sold.** I called it a "marginal two-sector detection." The artifact says SDE 2.30 (way under the bar 8.7), centroid 0.89 px off-target, high-proper-motion star — it's not a credible transit at all. I should downgrade it, not dress it up.
+3. **Structural point on the tail limit:** C_i(tail)≈0.58 is held up by tails whose folded asymmetry washes out below 0.15 — the *strongly* asymmetric tails (the real anomaly) get correctly called "disintegrating body" and earn zero credit. So the tail bound is loose *by construction* (tails are near-degenerate with their natural explanation), not merely "25% loosened." Should say that plainly.
+4. **Completeness grid stops at 2%, but the residual is at 2.69% and the EB cut is at 13%** — the 2–13% corner is never injected. Fix: add 4% and 8% rows.
+5. **The `triangle` (asymmetric occulter) injection is misclassified as `natural_planet` 18/24** — a modelled anomaly the battery buries as a planet, contradicting "template-free flagging." Report its C_i or declare asymmetric occulters below 0.15 unbounded.
+6. Minor: `f_max(box)` should say "moved <3%, within the ±1.7% injection SE" rather than "unchanged"; the per-object dismissals are post-hoc and should be labeled as such; the audit never checks the residual depth/asym values (which is why the 3.9% error slipped through).
+
+**The strategic verdict:** two rounds of post-data refinement are *still* legitimate but **at the boundary** — and the "can only weaken the limit" guarantee isn't structural, it just happened to hold. The reviewer's recommendation, which matches your "state the limitation" instinct: **freeze the battery now, declare the remaining weaknesses (tail degeneracy, asymmetry-blind triangles, activity-corrupted shapes), state an explicit stopping rule, and do not refine again in-loop.**
+
+So the convergence pass I'd run — none of it touches the (now-frozen) battery:
+- **Fix the factual errors** (1397 depth → 2.69%, downgrade 5615, drop the unverifiable per-sector depths, reconcile 93357's sector count) + **add audit assertions** on the residual depth/asym so prose errors get caught.
+- **Reframe**: tail looseness as structural; box SE; "verified per-change" not "can only weaken"; post-hoc dispositions labeled; explicit stopping rule.
+- **Extend the completeness grid to 4%+8% and add `triangle` as a reported family** (one k03 re-freeze, ~30 min — this is reporting completeness, not a battery change), closing gaps #4 and #5.
+
+Then one more Claude review to confirm convergence, and hand to Gemini.
+
+Want me to run that convergence pass? The only real compute is the grid/triangle re-freeze; everything else is text + a couple of audit assertions.
+
+### 🧑 Tonio
+
+I also ran the draft past Gemini:
+
+This is exactly the kind of hostile methodological review you requested. You are right to be paranoid about the pendulum swinging from false positives to false negatives.
+Here is the adversarial breakdown of the v3 battery. The most critical failure is not the code, but a fatal philosophical contradiction in how you are reporting the final three residuals.
+### Executive Verdict: The Post-Data Refinement Loop
+To answer your second question immediately: **You are dangerously close to a fishing expedition.** "Monotone-weakening plus frozen bars" is a strong defense, but tweaking the battery a second time to kill a specific subset of false positives (the faint, noisy stars from v2) means you are implicitly conditioning your classification logic on the unblinded candidate tail.
+If you do this, you must formally define a stopping rule in AMENDMENTS.md. You stop when the synthetic injection-recovery (k03_calibrate.py) tells you the classifier is calibrated, not when the candidate list looks "clean" to your astrophysical intuition. If v3 is the final battery, state that no further iterations will be made regardless of what the faint-tier (G 11-13) data produces.
+### Ranked Flaws & Required Fixes
+#### 1. The Fatal Contradiction: Manual Adjudication of the Final Three
+**The Flaw:** This is the deadliest vulnerability in the paper. Your core thesis is: *"thresholds fixed by a registered procedure rather than by inspecting candidates."* Yet, v3 leaves 3 distinct objects as resolvable residuals, and you proceed to manually wave them away in the text (calling one active, one marginal, one intermittent).
+If they survived the automated battery, **they are unexplained anomalies according to your pipeline.** You cannot claim "no candidate survives unexplained" while using manual, post-hoc human examination to explain away the survivors. This is exactly the kind of candidate-by-candidate rationalization your pre-registration was built to destroy.
+**The Fix:** You have two mathematically honest choices:
+ * **Option A (The Bitter Pill):** Report the 3 objects as genuine, unexplained residuals. State that they cleared the automated battery but appear to be edge-case artifacts, highlighting a known limitation in the pipeline. You do not claim a pure null.
+ * **Option B (The Algorithmic Fix):** If 1397924585409290240 is purely the result of photometric activity corrupting the shape metric, your automated activity gate (sin_r2) is broken. You must upgrade the activity metric in the code (e.g., adding a Gaussian Process variance threshold or a broader out-of-transit scatter metric) so the *pipeline* kills it automatically, then re-run the synthetic checks.
+#### 2. The Red-Noise Over-Correction (The False Negative Trap)
+**The Flaw:** To answer Q1: **Yes, v3 has almost certainly under-flagged.** By using off-transit scatter as an empirical control for in-transit depth variation, you assume TESS red noise is stationary. It isn't. You are likely penalizing genuine asymmetric or variable transits simply because the local background noise is high.
+The massive jump in "planet" classifications (combined 45 \rightarrow 92) and the drop in tail C_i to ~0.58 proves the depth-variability metric is now failing to trigger on true disintegrating tails. If C_i drops to 0.58, your pipeline is effectively blind to half the anomalies it claims to constrain.
+**The Test (To execute locally):** Run _recover in k03_calibrate.py injecting a KIC 12557548-style disintegrating tail into the bottom quartile of your G<12 stars (the faintest, noisiest subset). If the v3 battery labels them natural_planet instead of RESIDUAL, your red-noise floor is too aggressive.
+**The Fix:** You must scale the limit back. If the faint stars cannot support the morphology metrics without triggering false negatives, you must raise the resolution floor from \approx 0.3\% to whatever depth C_i(tail) restores to a mathematically defensible level (e.g., > 0.80).
+#### 3. The Incomplete Completeness Grid (Extrapolating Beyond bounds)
+**The Flaw:** (Addressing Q6). Object 1397924585409290240 has a 3.9% transit depth. Your synthetic completeness grid stops at 2%. You are reporting on the behavior of massive transits without having mathematically bounded your completeness for them. Extrapolating C_i beyond the tested grid is statistically invalid.
+**The Fix:** Expand the injection grid in k03_calibrate.py to 15% depth. It is computationally cheap and completely closes the loophole.
+### Direct Answers to Specific Prompts
+**Q3: Is the activity-metric limitation load-bearing?**
+It is critically load-bearing. Irregular activity (faculae, flaring) that evades a simple sine-wave fit (sin_r2) will constantly corrupt transit morphology. If you ship with this as "future work," a reviewer will rightly point out that any real megastructure in your sample could be masked by a host star with high facular variance.
+*Fix:* Do the cheap test. Cross-match the sub-resolution residual list against Gaia photometric variability amplitude. If the residuals cluster heavily in the high-variability quartile, your sub-resolution bucket is largely an artifact of unhandled stellar activity.
+**Q4: Is the per-object examination cherry-picking?**
+Yes. See Flaw 1. Waving away 5615... because it only has 2 sectors directly contradicts your pre-registered recurrence rule, which explicitly defines \ge 2 sectors as sufficient. Waving away 93357... for being intermittent (5/7 sectors) ignores the fact that a massive louvered array or a non-equatorial megastructure *would* be intermittent depending on its orbital precession. Do not rationalize the algorithm's failures in prose.
+**Q5: Is f_{max}(box) "essentially unchanged"?**
+No. A shift from 8.10 \times 10^{-5} to 8.34 \times 10^{-5} is a \approx 3\% shift.
+| Metric | v2 Value | v3 Value | Shift | Assessment |
+|---|---|---|---|---|
+| f_{max}(box) | 8.10 \times 10^{-5} | 8.34 \times 10^{-5} | +3.0\% | Real, albeit small. Do not smooth it over. |
+| f_{max}(tail) | 1.20 \times 10^{-4} | 4.20 \times 10^{-4} | +250.0\% | Massive decay in sensitivity. Requires defense. |
+| C_i(tail) | Higher | \approx 0.58 | Severe Drop | Pipeline is struggling to identify tails. |
+*Fix:* State clearly: "The v3 correction reduced sensitivity to tail-like morphologies (C_i falling to ~0.58), resulting in a loosened f_{max}, but marginally impacted box-like completeness (~3% shift)." Honesty about degradation is the hallmark of a bulletproof methodology paper.
+
+### 🤖 Claude
+
+Both reviews are in, and reading them together is illuminating — they **converge hard on the deepest issue** and **diverge on one empirical claim that the injection test settles**.
+
+## Where Claude and Gemini agree (this is the load-bearing part)
+
+**The manual adjudication of the 3 residuals is the central flaw.** Gemini calls it "the fatal contradiction"; Claude flagged the same thing as post-hoc dispositions. The thesis is "thresholds fixed by procedure, not by inspecting candidates" — and then I inspect the 3 survivors and wave each away in prose. Both reviewers say: you can't claim a null while hand-explaining the survivors. Both also converge on: **define a formal stopping rule, freeze the battery, and declare remaining weaknesses rather than refine again in-loop**; the `f_max(box)` "unchanged" is really a +3% shift and must be stated; the completeness grid stopping at 2% while a residual sits deeper is an invalid extrapolation; and the activity metric is load-bearing (cross-match residuals against variability to bound it).
+
+## Where they disagree — and the test decides it
+
+Gemini's Flaw #2 asserts v3 has "almost certainly under-flagged… blind to half the anomalies," *inferring* this from the planet jump (45→92) and C_i(tail)→0.58. **Claude ran exactly the test Gemini recommends** — injecting real disintegrating tails into the faintest, noisiest G<12 stars — and found the opposite: tail recovery is **flat across magnitude** (0.52–0.67, no faint collapse), and v3 is if anything *more* permissive than v2 at faint G. The planet jump is real planets *correctly returning* from the v2 over-flagging, not anomalies being buried.
+
+So Gemini's inference is refuted by the measurement. **Gemini's proposed fix — "raise the resolution floor until C_i(tail) > 0.80" — rests on the wrong premise and I should not do it.** The real reason C_i(tail)=0.58 is structural, which Claude pinned down: a *strongly* asymmetric tail (the canonical anomaly) gets correctly labeled "disintegrating body" and earns zero anomaly-credit — tails are near-degenerate with their own natural explanation. That's worth stating plainly, but it's not a red-noise-floor bug, and it's not fixed by moving the depth floor.
+
+This is the value of running the harness over reasoning about it — two independent reviewers, one inferred a failure mode, the test showed it isn't there.
+
+## The one real decision: how to handle the 3 residuals
+
+Gemini frames it as A-or-B:
+- **A (report them honestly):** stop claiming a "pure null." Report the 3 as residuals the frozen battery leaves, anchored to *committed objective metrics* (1397's sin_r2 = 0.001 — the activity gate provably can't see it; 5615's stitched SDE 2.3 and 0.89-px centroid offset; 93357's 5/7-sector intermittency) rather than prose judgment, and declare the battery gaps they expose. `f_max(box)` is unaffected — none is a flat occulter.
+- **B (fix the activity gate in code and re-run):** but that's *another* post-data battery refinement — exactly what both reviewers' stopping-rule advice says to stop doing, and counter to your "state the limitation" steer.
+
+**I recommend A.** It's the honest middle (not "clean null," not "3 candidate anomalies" — "3 edge-case residuals the frozen battery can't auto-classify, reported transparently, none a flat occulter"), and it's consistent with freeze-and-declare. B re-opens the loop the reviewers want closed.
+
+## Proposed convergence pass (battery stays frozen at v3)
+
+1. **Reframe the 3 residuals → Option A**: drop the prose adjudication; report them with committed diagnostics + declare the gaps (activity-blind sin_r2; asymmetry-degenerate tails; triangle misclassification).
+2. **Formal stopping rule** in AMENDMENTS + freeze: v3 is final on these data; future tiers get fixes only *before* unblinding, re-validated on injections.
+3. **Extend completeness grid** to 4/8/15% depth + **add `triangle` as a reported family** (one k03 re-freeze, ~30 min) — closes the extrapolation gap and puts the asymmetric-occulter C_i on the record.
+4. **Fix factual errors** (1397 depth → 2.69%; downgrade 5615) + **audit assertions** on residual depth/asym so prose errors get caught; state the `f_max(box)` +3%; add the tail-degeneracy framing and the empirical "not under-flagging" result.
+5. One more Claude review to confirm convergence, then it's Gemini's turn on a much harder target.
+
+Want me to run this — with Option A — or do you want to take the bitter pill further toward B (actually upgrading the activity gate) despite the freeze recommendation?
+
+### 🧑 Tonio
+
+I think we should definitely report what we find and not overclaim vindication of our hypothesis.
+
+### 🤖 Claude
+
+Agreed — report what we find, no overclaiming in either direction. Let me run the convergence pass with Option A. I'll start the compute-heavy piece (grid extension + triangle family) first so it runs while I do the text.
+
+First, extend the injection grid and add the `triangle` family in k03 — and the grid deliberately spans the 13% EB-cut so we *measure* the upper depth boundary rather than extrapolate past it:
+
+
+_[tools: Edit]_
+
+k03b's comparison print will hit a KeyError on the new `triangle` family (no prior frozen value). Let me guard it:
+
+
+_[tools: Edit]_
+
+Now launch the grid+triangle re-freeze for both tiers, and in parallel compute the activity cross-match (host variability + sin_r2 for all residuals — to bound the activity limitation with numbers):
+
+
+_[tools: Bash]_
+
+Now the activity cross-match — to bound the limitation with numbers (how many residuals are high-variability hosts), using both the `sin_r2` in the triage and the per-star scatter from the noise floor:
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+The activity bounding is concrete and supports Option A:
+- The `sin_r2` gate **never fires** on any residual (0/12 T0, 0/27 T0+T1 even above 0.3, threshold is 0.6) — confirming it's blind to the irregular variability.
+- Residual hosts skew high-variability: **5/12 (T0) and 4/27 (T0+T1) sit above the planet-host 90th-percentile scatter**; the resolvable ones are all at the 79th–97th percentile.
+
+So the activity limitation isn't a one-off — it's a bounded, measurable fraction. Let me set a watcher on the grid re-freeze and start the text edits in parallel:
+
+
+_[tools: Bash]_
+
+The grid re-freeze runs in the background. Let me start the text edits — the central one is the §4.2 Option A reframe. Let me re-read its current state:
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+Grid extension done — and it gives two important measured results:
+- **box C_i holds ~0.93 from 1% to 12% depth, then drops to 0 at 15%** — cleanly documenting the 13% EB-cut ceiling (deeper occulters are reclassified as stellar companions, so the flat-occulter search is bounded *above* at ~13% as well as below at 0.3%).
+- **triangle (asymmetric occulter) C_i ≈ 0.06** — the search poorly constrains asymmetric occulters (f_max(triangle) ~1–6e-3), now on the record.
+
+The 1% values are unchanged (same seed). Now the §4.2 Option A reframe — report the residuals, don't adjudicate them:
+
+
+_[tools: Edit]_
+
+Now align the abstract to Option A (it still has the "each reduces to an ordinary cause" adjudication framing, and a stale "none in the brightest tier" claim). Let me read and fix it:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now the intro line still has the adjudication framing. Let me fix it:
+
+
+_[tools: Edit]_
+
+Now §3.3 (the deep-occulter ceiling trade-off) and §5 (stopping rule + the "verified-per-change not structural" correction + freeze). Let me read the §5 iteration paragraph first:
+
+
+_[tools: Read]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now §3.3 — note the deep-occulter ceiling trade-off in the depth→radius criterion:
+
+
+_[tools: Edit]_
+
+Now the AMENDMENTS entry for the stopping rule + grid extension + freeze:
+
+
+_[tools: Edit]_
+
+Now add the reviewer-requested audit assertions on the resolvable-residual depths (so prose errors like the 3.9%/2.69% slip get caught), and verify the new f_max:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+All audit checks pass — including the new resolvable-depth assertions that would now catch a mis-quoted depth. Let me sweep for stale numbers and the old adjudication phrasing:
+
+
+_[tools: Bash]_
+
+Three fixes — the §4.3 depth, the §6 adjudication phrasing, and one stray "honest". Let me handle them:
+
+
+_[tools: Edit]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+
+_[tools: Edit]_
+
+Let me verify §3.4's depth qualifier reflects the new upper bound, then re-run the audit and commit:
+
+
+_[tools: Bash]_
+
+Let me add the upper bound to the §3.4 depth qualifier for consistency:
+
+
+_[tools: Edit]_
