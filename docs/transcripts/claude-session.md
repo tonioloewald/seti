@@ -11917,3 +11917,13 @@ Let me add the upper bound to the §3.4 depth qualifier for consistency:
 
 
 _[tools: Edit]_
+
+Everything consistent and audit-clean. Let me commit + push the convergence pass, then update the brief and run the (hopefully convergence-confirming) review:
+
+
+_[tools: Bash]_
+
+Now the round-3 brief — focused on whether the round-2 fixes actually landed, plus a fresh look:
+
+
+_[tools: Write]_

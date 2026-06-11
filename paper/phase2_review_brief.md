@@ -1,93 +1,73 @@
-# Adversarial review brief — Phase 2 bright-tier paper (battery v3, round 2)
+# Adversarial review brief — Phase 2 bright-tier paper (round 3, convergence check)
 
-**For:** a separate Claude instance (and then Gemini) as independent adversarial reviewers.
-**Paper under review:** `paper/phase2_T0_draft.md` (share this brief alongside it).
-**Your job:** try to break the result. Hostile referee, not friendly. Every criticism comes with how
-you'd prove it or how to fix it. You have full repo access — run diagnostics, don't just speculate.
+**For:** a separate Claude instance, then Gemini, as independent adversarial reviewers.
+**Paper:** `paper/phase2_T0_draft.md`. **You have full repo access — run diagnostics, don't speculate.**
+**Your job:** hostile referee. Two tasks: (1) verify the round-2 fixes actually landed and didn't
+introduce new problems; (2) find anything still broken. Every criticism comes with a test or a fix.
 
 ---
 
 ## What this is
 
-A pre-registered (OSF [osf.io/2akn3](https://osf.io/2akn3/)), mechanism-agnostic search for
-anomalous transit *shapes* around K dwarfs (TESS). Departures from the natural transit model that
-survive a fixed battery of natural explanations (activity, EB, disintegrating body, planet,
-background blend, red noise); Poisson upper limit `f_max = 3/ΣC_i` per morphology family. Two tiers:
-T0 (G<11, 12,100 stars) and combined T0+T1 (G<12, 44,202 stars).
+Pre-registered (OSF [osf.io/2akn3](https://osf.io/2akn3/)), mechanism-agnostic search for anomalous
+transit *shapes* around K dwarfs (TESS). Fixed battery of natural explanations; Poisson limit
+f_max = 3/ΣC_i per morphology family. Two tiers: T0 (G<11, 12,100 stars), combined T0+T1 (G<12,
+44,202). Audit: `.venv/bin/python3 pipeline/runners/audit_T0_paper.py` (51/51 PASS).
 
-## What changed since your last review (this is round 2 — attack the new moves)
+## What changed since round 2 (verify each actually fixes what it claims)
 
-The **previous round's** automated review (you, effectively) found that the depth-variability test
-over-flagged faint noisy stars (per-sector depth tracked per-sector scatter, corr up to 0.99). That
-critique was implemented as **battery v3**:
+Round 2 (you + Gemini) converged on five demands. The responses:
 
-1. **Red-noise-aware depth-variability floor** (§3.3): in-transit per-epoch depth scatter is now
-   compared to the same scatter at *off-transit* phases (empirical control inheriting correlated
-   noise), not to a white-noise `scatter/√n`. Only excess over that control counts as variability.
-2. **Single 0.15 asymmetry boundary** (removed the 0.1–0.15 dead zone).
-3. **C_i refreshed**, bars kept frozen (`k03b_refreeze_completeness.py`). Effect: `f_max(box)` held
-   (2.75e-4 / 8.3e-5); **`f_max(tail)` loosened ~25%** (4.2e-4 / 1.2e-4) — reported as a correction.
-4. **Per-sector coherence diagnostic** added to the triage (`sec_detected`, `sec_frac_detected`,
-   `sec_depth_cv`, `sec_depth_scatter_corr`) — every resolvable residual now carries it.
+1. **Stop adjudicating the 3 resolvable residuals in prose ("fatal contradiction").** Response
+   ("Option A"): §4.2 now *reports* them as residuals the frozen battery cannot auto-classify, with
+   committed diagnostic metrics, and explicitly declines to explain them away object-by-object; no
+   "pure null" is claimed. **Check: is this genuinely non-adjudicating, or just reworded
+   adjudication?** The metrics cited (sin_r2=0.001 for the active host; SDE 2.3 / 0.89-px centroid for
+   the near-blend; 5/7-sector intermittency) are in the committed CSVs — verify them, and judge
+   whether "report with diagnostics + defer disposition" escapes the candidate-by-candidate objection
+   or merely launders it.
+2. **Define a stopping rule; freeze the battery.** Response: §5 + AMENDMENTS declare the battery frozen
+   at v3 for these data, weaknesses declared-not-patched, fixes re-validated on injections *before*
+   unblinding fainter tiers. The paper also **retracts** the earlier "refinement can only weaken the
+   limit" claim as not a structural guarantee. **Check: is the stopping rule actually a constraint, or
+   an escape hatch? Is the retraction complete?**
+3. **f_max(box) "unchanged" is really +3%.** Response: now stated as "~3% move, within the ~1.7%
+   per-cohort injection SE." **Check the SE claim** (300 injections/cohort, C_i≈0.9).
+4. **Completeness grid stops at 2% while a residual is deeper.** Response: grid extended to
+   {0.5,1,2,4,8,12,15}% and a `triangle` (asymmetric occulter) family added. This *measured* two
+   boundaries now in the paper: box C_i holds to ~12% then →0 at 15% (the 13% depth→EB cut is an
+   **upper bound** on the flat-occulter search); triangle C_i≈0.06 → f_max(asymmetric occulter)
+   ~6e-3/9e-4. **Check: are these completeness numbers real (re-run k03b or spot-check), and is the
+   13% ceiling a genuine blind spot the paper now honestly owns?**
+5. **Factual errors.** 1397's depth was mis-stated 3.9%; now 2.69% (matches its 1.1 R_J and the triage
+   CSV). 5615 was oversold as a "marginal detection"; now reported as a weak-statistic near-blend
+   (SDE 2.3, centroid 0.89px, high-PM star). **Verify both against the artifacts.** An audit assertion
+   on resolvable-residual depths was added to catch future mis-quotes.
 
-**Result shift:** the v2 "seven resolvable residuals" (the depth-variable ones) correctly returned to
-the planet class. v3 leaves **2 resolvable residuals per tier, 3 distinct objects**, each examined
-per-object and found ordinary:
-- `1397924585409290240` (G10.7): real deep 3.9% transit, **coherent 12/12 sectors**, but the host is
-  **photometrically active** — variability corrupts the shape metrics (flat_bottom=1.0, asym=0.32).
-  Called a by-product transiter + an **activity-metric limitation** (§3.5), not an anomaly.
-- `5615925139763813248` (G9.6): marginal, only 2 sectors (depths 0.4% vs 1.0%).
-- `93357127133226496` (G11.7): intermittent (5/7 sectors), shallow (0.34%, at floor), asym 0.67.
+## Fresh attack surface (find what round 2 missed)
 
-## The sharpest questions for THIS round (go hardest here)
+- **The 13% upper-bound blind spot.** The depth→radius EB cut means a flat occulter larger than
+  ~2.5 R_J is auto-classified a stellar companion and never flagged. A large megastructure is exactly
+  such an object. Is "we are blind to flat occulters deeper than 13%" adequately surfaced, or buried?
+  Is the whole megastructure framing undercut by a 13%-depth ceiling the abstract should state plainly?
+- **Triangle C_i≈0.06 is devastating if taken seriously.** The search recovers only ~6% of asymmetric
+  occulters (it calls them planets). If "asymmetry no natural occulter can produce" is a core
+  selling-point morphology, a 6% completeness means the search is nearly blind to it. Does the paper
+  honestly reckon with the fact that two of its three anomaly morphologies (tail, triangle) are weakly
+  constrained, leaving essentially only the flat occulter — over a 0.3–13% depth window?
+- **Is reporting-not-adjudicating actually weaker science, not stronger?** A skeptic could say: you
+  now have 3 unexplained residuals and a pipeline that admits it can't classify them. Have you traded
+  an overclaimed null for an underclaimed non-result? Is the limit still meaningful if the classifier
+  leaves objects it cannot judge?
+- **Anything in the prose vs artifacts** — re-run the audit, spot-check the cascade counts and the new
+  triangle/deep-depth completeness in `data/manifests/kdwarf_*_calibration_*.json`.
 
-1. **Did the pendulum swing from over-flagging to UNDER-flagging?** v2 over-flagged noise as anomalies;
-   v3 may now hide real anomalies. The planet by-product count jumped (T0 13→35, combined 45→92) and
-   the tail C_i fell to ~0.58. **Is the red-noise floor now so conservative it produces false
-   negatives** — classifying a genuine variable-depth or shallow anomaly as a planet or as noise?
-   Test it: inject a real disintegrating-tail signal (or a genuinely depth-varying occulter) into
-   faint TESS light curves and check whether v3 still recovers it as RESIDUAL, or now buries it in
-   `natural_planet`. The injection machinery is `pipeline/fetch/k03_calibrate.py` (`_recover`,
-   families planet/box/tail) and the battery is `pipeline/fetch/k04_search.py` (`battery()`). If the
-   tail recovery has collapsed at faint magnitude, the limit is being held up by a test that no longer
-   fires — say so.
+## Verify against
 
-2. **Two rounds of post-data battery refinement — is this still disciplined or now a fishing
-   expedition?** The defense (AMENDMENTS.md): each change is candidate-independent, the registered
-   bars are never touched, and each can only *weaken* the limit. Is "monotone-weakening + bars frozen"
-   a sufficient guardrail against an unbounded sequence of post-hoc refinements, or should the whole
-   battery have been frozen pre-data? At what round does this stop being legitimate?
+- `pipeline/runners/audit_T0_paper.py` (51/51); `AMENDMENTS.md` (v2/v3 + the freeze/stopping-rule
+  entry); `pipeline/fetch/k04_search.py` `battery()`; `data/manifests/kdwarf_{T0,T0T1}_recurring_triage.csv`
+  (residuals + coherence columns); `data/manifests/kdwarf_calibration_{T0,T0T1}.json` (completeness grid).
 
-3. **Is the activity-metric limitation load-bearing — and is stating-not-fixing acceptable?** The
-   `1397...` case shows shape metrics fail on active stars and the `sin_r2` activity gate misses
-   irregular variability. **How many OTHER residuals (resolvable or sub-resolution) are active stars
-   with corrupted metrics?** Could activity be masking a real anomaly elsewhere, or inflating the
-   sub-resolution residual count? Is it defensible to ship with this stated as future work, or does it
-   undercut the headline null? Cheap test: cross-match the residual lists against a variability/CDPP
-   metric and report how many residuals are high-variability hosts.
-
-4. **Is the per-object examination cherry-picking?** Each of the 3 gets a one-line "ordinary"
-   explanation. Pressure-test each: is `5615...` ("marginal, 2 sectors") genuinely marginal or a real
-   asymmetric transit being waved off? Is `93357...`'s intermittency real or a period/ephemeris error?
-   Re-fetch and check.
-
-5. **`f_max(box)` "unchanged" — true?** The box C_i cohort values moved ~2% (e.g. 0.93→0.907) and
-   `f_max(box)` went 8.10→8.34e-5. Is "essentially unchanged within injection sampling" honest, or
-   should the ~3% shift be owned as a real (if small) change from the population/subsample difference?
-
-6. **Anything else** — the completeness grid stops at 2% while a residual is at 2.7% (no injection
-   tests the 2%→13% depth corner); validation is still 2 Kepler spot-checks with zero faint-TESS
-   active-star control; the signature-vs-occurrence conversion (§3.4); look-elsewhere for re-runs (§5).
-
-## Where to verify
-
-- Numbers: `pipeline/runners/audit_T0_paper.py` (47/47 PASS, both tiers, reconstructs every figure).
-- Battery: `pipeline/fetch/k04_search.py` `battery()` (red-noise floor ~lines 90–120).
-- Amendments + provenance of v2/v3: `AMENDMENTS.md`.
-- Residuals + coherence columns: `data/manifests/kdwarf_{T0,T0T1}_recurring_triage.csv`.
-- Cached light curves: `data/lightcurves/<source_id>.npz` (keys time, flux). Venv: `.venv/bin/python3`.
-
-Return: (a) ranked flaws/overclaims with fixes; (b) the result of the false-negative injection test
-(Q1) — does v3 still recover a real tail/variable anomaly at faint G, or did the fix over-correct?;
-(c) verdict on whether two rounds of post-data refinement remain legitimate; (d) any
-factual/internal-consistency errors vs the artifacts.
+Return: (A) for each of the 5 round-2 fixes, did it land — yes/no/partial, with evidence; (B) ranked
+NEW or still-open flaws with fixes; (C) verdict: is the paper now defensible for external (Gemini)
+review, or is there a remaining must-fix?
