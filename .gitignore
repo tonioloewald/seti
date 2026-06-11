@@ -40,3 +40,6 @@ env/
 preregistration.html
 data/lightcurves/
 data/derived/kdwarf_noise_floor.parquet
+
+# personal Claude Code permissions (do not commit)
+.claude/settings.local.json
