@@ -43,7 +43,10 @@ depth-variability test needed a red-noise-aware floor (§3.3), and intrinsically
 strongly-asymmetric tail is near-degenerate with a natural disintegrating body; an injection test
 confirms the red-noise floor does not over-suppress (tail recovery is flat with host brightness).
 Asymmetric occulters that are not tails are weakly constrained (C_i ≈ 0.06; f_max ~ 10⁻³), a bound we
-report rather than omit. These are signature rates, not
+report rather than omit. We state plainly what this leaves: of the three modelled anomaly
+morphologies only the **flat occulter** is tightly bounded, and only over a 0.3% ≲ depth ≲ 13% window
+— above ~13% (R_occ ≳ 2.5 R_J) a flat occulter is reclassified a stellar companion and **left
+unconstrained**, a deliberate blind spot toward the largest occulters. These are signature rates, not
 occurrence rates of the structures; the two relate as f_signature = f_structure · P_transit, and
 within the searched range (a ≲ 0.1 AU) the geometric transit probability P_transit ~ R⋆/a runs
 ~3–30%, so a structure-occurrence rate would be larger by at most ~30× — while orbits beyond ~0.1 AU
@@ -326,8 +329,9 @@ object: that would be the candidate-by-candidate reasoning the pre-registration 
 report them as the residuals the frozen v3 battery cannot auto-classify, and give the committed
 diagnostic metrics that place each at the margins:
 
-- **`1397924585409290240`** (G = 10.7, depth 2.69%, P = 11.7 d, T0): depth stable and detected in
-  all 12 sectors (coherent — a real transit), sub-stellar radius ≈ 1.1 R_J. Its host is among the
+- **`1397924585409290240`** (G = 10.7, depth 2.69%, P = 11.7 d, T0): detected in all 12 sectors with
+  a moderately stable depth (per-sector CV ≈ 0.25) uncorrelated with per-sector scatter (corr 0.39 —
+  a real transit, not a noise artifact), sub-stellar radius ≈ 1.1 R_J. Its host is among the
   most variable in the residual set — single-sector scatter at the 94th percentile of planet hosts —
   yet its sinusoid-activity index is sin_r2 = 0.001, so the activity gate (which fires only on
   coherent sinusoidal modulation) registers nothing while the irregular variability that drives its
@@ -339,7 +343,7 @@ diagnostic metrics that place each at the margins:
   off-target (near the 1-pixel blend threshold), on a high-proper-motion star; it survived via its
   single-sector discovery. These are the diagnostics of a marginal or near-blend signal, not a clean
   transit.
-- **`93357127133226496`** (G = 11.7, depth 0.34%, P = 3.2 d, combined): at the resolution floor and
+- **`93357127133226496`** (G = 11.7, depth 0.30%, P = 3.2 d, combined): at the resolution floor and
   intermittent — detected in 5 of 7 sectors (absent, at ≈ 0% depth, in the other two), strongly
   asymmetric — the diagnostics of a marginal or blended signal.
 
@@ -356,8 +360,9 @@ sinusoid gate fires on none of them — bounding the activity weakness as real b
 battery's anomaly→natural leakage, small for the flat occulter (recovered-and-classified at
 C_i ≈ 0.95). The zero-detection bounds at 1% depth are, for flat-occulter anomalies, **f_max ≈ 2.8×10⁻⁴
 in T0** (Σ C_i ≈ 10,900) tightening to **≈ 8.3×10⁻⁵ in the combined sample** (Σ C_i ≈ 36,000); the
-combined value moved ~3% (8.1 → 8.3×10⁻⁵) from the battery refinement, within the ≈ 1.7% per-cohort
-injection standard error — a sampling-level change, stated rather than smoothed. For
+combined value moved ~3% (8.1 → 8.3×10⁻⁵) from the battery refinement, comparable to the injection
+sampling error (≈ 1.7% per cohort, ≈ 1.5% on the summed Σ C_i) — a sampling-level change, stated
+rather than smoothed. For
 disintegrating-tail-like anomalies the bounds are **≈ 4.2×10⁻⁴ → ≈ 1.2×10⁻⁴** (Σ C_i ≈ 7,200 →
 ≈ 25,000), the tail limit having loosened ~25% when the depth-variability test was made red-noise-aware
 (§3.3). That tail bound is intrinsically loose for a structural reason beyond the loosening: a
@@ -412,7 +417,11 @@ battery, and we report them as residuals it cannot classify, characterised by co
 their disposition deferred to declared battery improvements applied uniformly. What the list exposes
 is more useful than a tally — it shows exactly where the fixed metrics fail (high-variability hosts
 the sinusoid gate cannot see; asymmetric shapes the classifier calls planets), and those failures are
-declared as limitations (§3.5), not patched mid-analysis.
+declared as limitations (§3.5), not patched mid-analysis. Crucially, leaving the three residuals
+unclassified does not undercut the one tight bound: all three fall in the activity-corrupted,
+asymmetric, or near-floor regimes the limit *already* declares weak, and none is a flat occulter — so
+f_max(box), the search's only strong constraint, is independent of how they are eventually resolved.
+The unclassified residuals erode the weak bounds, which we already report as weak, not the strong one.
 
 This draft is the product of two rounds of post-data refinement, and the discipline that governs them
 is worth stating because it is also where the method is most exposed. An earlier version reported seven
@@ -475,8 +484,13 @@ by one; their disposition is deferred to declared, uniformly-applied battery imp
 §4.2). The classification-aware population upper limits on flat-occulter ("megastructure-like") signatures
 tighten from f_max ≈ 2.8×10⁻⁴ to ≈ 8.3×10⁻⁵ at 1% depth (and ≈ 4.2×10⁻⁴ → ≈ 1.2×10⁻⁴ for
 disintegrating-tail-like ones, the tail bound loosened by a red-noise-aware correction reported in
-§3.3). The search also yields a by-product catalogue of natural transiting systems (5 + 35 in T0,
-17 + 92 combined) and a curated, data-limited follow-up list. We present this as the calibration of a
+§3.3). We are explicit about how narrow this tight constraint is: of the three modelled anomaly
+morphologies, only the flat occulter is strongly bounded, and only over 0.3% ≲ depth ≲ 13% and
+P < 13 d (a ≲ 0.1 AU) — disintegrating tails are near-degenerate with their natural class, asymmetric
+occulters recover at C_i ≈ 0.06, and a flat occulter deeper than ~13% (R_occ ≳ 2.5 R_J) is
+reclassified a stellar companion and left unconstrained. The search also yields a by-product catalogue
+of natural transiting systems (5 + 35 in T0, 17 + 92 combined) and a curated, data-limited follow-up
+list. We present this as the calibration of a
 living pipeline rather than a closed result: the limit holds where it has teeth, the battery surfaces
 what its fixed metrics cannot classify (for a per-object look to resolve), and the same engine
 (`pipeline/fetch/k02`–`k08`, on the validated population-agnostic core) extends to the fainter tiers

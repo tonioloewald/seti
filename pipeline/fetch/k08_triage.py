@@ -98,6 +98,13 @@ def main():
             if n % 25 == 0:
                 print(f"  {n}/{len(tasks)} ({time.time()-t0:.0f}s)", flush=True)
     out = pd.DataFrame(rows)
+    # attach the host's single-sector scatter (variability proxy), so the residuals' activity
+    # comparison (vs planet hosts) is reconstructable from this committed file alone.
+    nfp = os.path.join(ROOT, "data", "derived", "kdwarf_noise_floor.parquet")
+    if os.path.exists(nfp):
+        nf = pd.read_parquet(nfp); nf["source_id"] = nf["source_id"].astype(str)
+        out = out.merge(nf[["source_id", "scatter_ppm"]].rename(columns={"scatter_ppm": "host_scatter_ppm"}),
+                        on="source_id", how="left")
     out.to_csv(OUT, index=False)
     print("\n=== RECURRING-CANDIDATE TRIAGE (multi-sector battery) ===")
     for k, v in out["verdict"].value_counts().items():

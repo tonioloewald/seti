@@ -11927,3 +11927,88 @@ Now the round-3 brief — focused on whether the round-2 fixes actually landed, 
 
 
 _[tools: Write]_
+
+
+_[tools: Bash]_
+
+
+_[tools: Agent]_
+
+Round 3 is near-convergence: the reviewer **independently reproduced** the key results (box holds to 12% / collapses at 15%; triangle≈0.06; the SE arithmetic) and confirmed **4 of 5 fixes LANDED, 1 PARTIAL**. There's one MUST-FIX and a few cheap framing fixes. Notably it caught a *new* instance of the exact error class — and made the sharp point that the audit passing while the prose is wrong is itself the finding. Let me knock them all out.
+
+First the MUST-FIX (93357 depth 0.34%→0.30%) and the per-object audit hardening:
+
+
+_[tools: Bash]_
+
+
+_[tools: Edit]_
+
+Now harden the audit — check per-object depth (source_id → depth), so a per-object prose quote is verified, not just the set:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now the §4.2 wording fixes — "depth stable" overstates a 25% CV, and the box-SE phrasing:
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now the framing-integrity fixes — surface the 13% blind spot in the abstract and §6, and the narrow-window point. Let me read the abstract limit sentence:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now §6 — add the blind spot + narrow-window caveat to the conclusions:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now the B4 fix — make explicit in §5 why the limit stays meaningful despite the unclassified residuals:
+
+
+_[tools: Edit]_
+
+Now annotate the stale "can only weaken" claim in the 2026-06-10 AMENDMENTS row (the reviewer's PARTIAL):
+
+
+_[tools: Bash]_
+
+
+_[tools: Edit]_
+
+Now B6 — make the "5/12, 4/27" variability claim reproducible by committing the host-scatter column into the triage CSVs (and into k08 for future runs). Let me add it:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now post-process the existing triage CSVs to add the column (avoiding a full k08 re-run) and verify the 5/12, 4/27 claim reproduces from the committed file alone:
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+5/12 and 4/27 now reproduce from the committed triage files alone. Let me run the audit (with the per-object hardening) and do a final sweep:
+
+
+_[tools: Bash]_
