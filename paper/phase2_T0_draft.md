@@ -339,10 +339,11 @@ diagnostic metrics that place each at the margins:
   transiter; whether its shape is intrinsic or an activity/detrending artifact the current battery
   cannot decide.
 - **`5615925139763813248`** (G = 9.6, both tiers): on the stitched multi-sector data its detection
-  statistic is weak (SDE 2.3, below the 8.7 bar) and its difference-image centroid sits 0.89 pixel
-  off-target (near the 1-pixel blend threshold), on a high-proper-motion star; it survived via its
-  single-sector discovery. These are the diagnostics of a marginal or near-blend signal, not a clean
-  transit.
+  statistic is weak (SDE 2.3, below the 8.7 bar — i.e. the signal *lost* significance when the
+  additional sectors were added, the opposite of a real recurring transit) and its difference-image
+  centroid sits 0.89 pixel off-target (near the 1-pixel blend threshold), on a high-proper-motion
+  star; it survived via its single-sector discovery. These are the diagnostics of a marginal or
+  near-blend signal, not a clean transit.
 - **`93357127133226496`** (G = 11.7, depth 0.30%, P = 3.2 d, combined): at the resolution floor and
   intermittent — detected in 5 of 7 sectors (absent, at ≈ 0% depth, in the other two), strongly
   asymmetric — the diagnostics of a marginal or blended signal.
@@ -400,7 +401,8 @@ combined): **recurrence-untestable** dips (90 / 403; one TESS SPOC sector, or QL
 **uncentroidable** candidates (19 / 120; too few in-transit cadences for a difference image, or a
 transient fetch failure). These contribute no detection to the limit — an unclassifiable or
 sub-resolution signal is assigned no anomaly-completeness and so self-weights out of f_max. Rather
-than discard them, we publish them as a curated target list: the recurrence-untestable dips for TESS
+than discard them, we publish them as a structurally defined target list (membership set by the
+pipeline's inability to classify or to test, not by hand): the recurrence-untestable dips for TESS
 extended-mission sectors (one further sector separates red noise from a long-lived occulter); the
 sub-resolution dips for higher-precision photometry (CHEOPS, PLATO) able to resolve their morphology;
 and the uncentroidable set for a re-run of the centroid gate. The deep transiter on an active host
@@ -489,7 +491,7 @@ morphologies, only the flat occulter is strongly bounded, and only over 0.3% ≲
 P < 13 d (a ≲ 0.1 AU) — disintegrating tails are near-degenerate with their natural class, asymmetric
 occulters recover at C_i ≈ 0.06, and a flat occulter deeper than ~13% (R_occ ≳ 2.5 R_J) is
 reclassified a stellar companion and left unconstrained. The search also yields a by-product catalogue
-of natural transiting systems (5 + 35 in T0, 17 + 92 combined) and a curated, data-limited follow-up
+of natural transiting systems (5 + 35 in T0, 17 + 92 combined) and a structurally defined, data-limited follow-up
 list. We present this as the calibration of a
 living pipeline rather than a closed result: the limit holds where it has teeth, the battery surfaces
 what its fixed metrics cannot classify (for a per-object look to resolve), and the same engine

@@ -12070,3 +12070,71 @@ Gemini reviews externally (no repo access), so the brief needs to be **self-cont
 
 
 _[tools: Write]_
+
+
+_[tools: Bash]_
+
+Ready for the Gemini round. The brief is committed and pushed (`paper/phase2_gemini_brief.md`).
+
+**To run it:** paste `paper/phase2_gemini_brief.md` together with `paper/phase2_T0_draft.md` into Gemini. The brief is self-contained — it embeds the cascade, the per-family limits, the box-vs-depth completeness curve (showing the 13% ceiling), the three residuals with their diagnostics, and the activity cross-match — so Gemini can scrutinize the reasoning without repo access.
+
+**The one thing to watch in Gemini's reply:** its round-2 review confidently asserted v3 had under-flagged ("blind to half the anomalies") and told us to raise the resolution floor until C_i(tail) > 0.80. We *didn't* do that — because the injection test it recommended actually *refutes* the premise (tail recovery is flat with magnitude; the new floor is more permissive at faint G, not less). The brief lays that out and asks Gemini directly to either accept the result or say what test would change its mind. If Gemini re-asserts under-flagging without engaging the injection numbers, that's noise to discount; if it finds a flaw in the *test itself*, that's worth taking seriously.
+
+The substantive open questions I put to it: (1) is "report-don't-adjudicate" the right fix for the manual-adjudication problem, or does it still want the algorithmic activity-gate fix (which the stopping rule argues against); (2) is the now-narrow effective sensitivity (essentially just the flat occulter, 0.3–13% depth) honestly scoped or does it undercut the framing; (3) a submittability verdict.
+
+Paste me Gemini's response when you have it and I'll triage it the same way — implement what's valid, push back with evidence where it's not.
+
+### 🧑 Tonio
+
+This is an exceptional response to an adversarial review. The pushback on the red-noise floor is mathematically tight, and you brought empirical receipts to prove it. The resulting draft is structurally honest, remarkably defensible, and philosophically rigorous.
+Here is the final adversarial verdict.
+### Executive Verdict: Ready for Write-up and Submission
+**No remaining blockers.** The methodological guardrails are secure, the limitations are quantified rather than rationalized, and the core statistical claim is bounded to exactly what the pipeline actually measures.
+### Responses to Open Questions
+#### 1. Option A vs. The Algorithmic Fix
+**Verdict: Option A is the correct scientific choice.** Your defense here is absolute: invoking the stopping rule is the higher-order discipline. If you were to upgrade the activity gate *now*, specifically because it failed on object 1397924585409290240, you would be writing a custom filter for the unblinded tail. That is the literal definition of post-hoc tuning.
+"Freeze + declare + report the residuals" is not a dodge; it is the ultimate proof that you are adhering to the pre-registration. You built a machine, you turned it on, and you are reporting its outputs faithfully, even when its outputs are messy edge-cases. Deferring the algorithmic fix to the next tier (G 12–13) is the scientifically mature way to handle pipeline evolution.
+#### 2. The Narrow Effective Sensitivity
+**Verdict: The tight scoping is a feature, not a bug.**
+Does the narrow sensitivity (0.3–13% depth, P < 13 d, mostly flat occulters) undercut the "mechanism-agnostic" framing? **No.** The search *is* mechanism-agnostic; you do not care *how* or *why* the ETI built the flat occulter. However, the *completeness* (C_i) is necessarily shape-specific.
+By explicitly declaring the blind spots (the 13% depth \rightarrow radius EB classification cut, the near-degeneracy of asymmetric tails, the poor recovery of asymmetric triangles), you insulate the paper from the standard SETI critique of "selling a null you didn't actually measure."
+When an astrophysical paper states, "We are structurally blind to occulters larger than a brown dwarf," reviewers don't attack the paper; they respect the honesty. The abstract now correctly frames the result: you are bounding a specific *signature rate*, not selling a universal technosignature null.
+#### 3. The Red-Noise Injection Result
+**Verdict: Concern retired. Your empirical proof holds.**
+The injection test proving that tail recovery is flat with host brightness (≈ 0.52–0.67) directly falsifies my previous concern that the red-noise floor was burying anomalies at faint G.
+The structural insight you surfaced—that the true reason C_i(tail) is \sim 0.58 is because a highly asymmetric tail correctly triggers the *natural* disintegrating body classifier—is brilliant. It highlights a profound epistemological truth about anomaly searches: **If an artificial structure perfectly mimics a natural phenomenon, a well-calibrated pipeline *must* fail to classify it as an anomaly.** The looseness of the tail bound is a direct result of the classifier doing exactly what it was programmed to do.
+### Final Polish & Prose Notes
+The prose is tight, but here are two minor adjustments to ensure maximum clarity before submission:
+ * **In Section 4.2 (The Resolvable Residuals):** When describing 5615925139763813248, explicitly remind the reader *why* an SDE of 2.3 on the stitched data is problematic. Add a half-sentence: "...(SDE 2.3, below the 8.7 bar, **indicating the signal lost statistical significance when additional sectors were added**)..." This explicitly connects the weak statistic to the multi-sector triage logic.
+ * **In Section 6 (Conclusions):** The final sentence is excellent, but ensure the word *curated* is doing the right work regarding the follow-up list. A reviewer might ask if "curated" implies manual selection. You might prefer: "...a structurally defined 273-target follow-up list." This reinforces that the list was generated by the pipeline's inability to classify, not by human curation.
+### Final Assessment
+You have successfully ported a rigorous, large-scale inference methodology from white dwarfs to living K-dwarfs. You found the exact boundary where your pipeline's morphological metrics break down, and instead of hiding that boundary, you quantified it. You resisted the urge to explain away your residuals, and you stopped tuning the pipeline when the rules dictated you must.
+Ship it.
+
+### 🤖 Claude
+
+Gemini passed it — "Ship it," no remaining blockers, and it explicitly retired its own under-flagging concern after engaging the injection numbers (exactly the good-faith response we wanted). It validated Option A, the narrow-sensitivity scoping, and the structural tail-degeneracy insight. Two minor prose polish notes, both worth taking. Let me apply them.
+
+First, the 5615 clarification in §4.2:
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now audit (numbers unchanged) + final sweep, then commit:
+
+
+_[tools: Bash]_
+
+Clean. Let me update the status doc to mark the review milestone, then commit everything:
+
+
+_[tools: Edit]_

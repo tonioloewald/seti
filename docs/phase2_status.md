@@ -45,8 +45,18 @@ depth-variable beyond the noise floor, 2 asymmetric — genuine morphologically-
 candidates**, not detections. `f_max(box) ≈ 8.1×10⁻⁵ / tail ≈ 9.5×10⁻⁵` (~3.4× tighter than T0).
 Lists: `data/manifests/kdwarf_T0T1_*`.
 
-**Next:** paper (`paper/phase2_T0_draft.md`) updated with battery v2 + combined tier + the 7
-follow-up residuals; audit refreshed. Then next adversarial review round (Gemini + Claude).
+## Paper — REVIEW-COMPLETE (2026-06-12)
+
+`paper/phase2_T0_draft.md` converged through battery v2 → v3 (red-noise-aware depth variability,
+frozen) and three adversarial review rounds (automated Claude reviewer ×3 + Gemini ×2). Final state:
+the resolvable residuals are **reported, not adjudicated** (Option A); the battery is **frozen** with
+a declared stopping rule; the completeness grid spans 0.5–15% (measuring the 13% flat-occulter EB-cut
+ceiling and the weak asymmetric-occulter / degenerate-tail bounds); f_max(box) 2.75e-4 (T0) / 8.3e-5
+(combined), f_max(tail) 4.2e-4 / 1.2e-4. Audit `pipeline/runners/audit_T0_paper.py` = 53/53 PASS
+(now checks each resolvable residual's depth per source_id). **Gemini verdict: "Ready for write-up and
+submission — no remaining blockers."** Review briefs archived: `paper/phase2_review_brief.md` (Claude),
+`paper/phase2_gemini_brief.md` (Gemini). **Next:** author write-up / submission; fixes to the declared
+weaknesses (activity-robust morphology) deferred to the G 12–13 tiers, re-validated before unblinding.
 
 ## What is and isn't durable
 
