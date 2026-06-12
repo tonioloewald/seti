@@ -12012,3 +12012,61 @@ _[tools: Bash]_
 
 
 _[tools: Bash]_
+
+All clean — audit passes with the per-object depth assertions (which now catch exactly the class of error the reviewer found), no stale numbers, no "honest", no adjudication phrasing. Let me commit and push:
+
+
+_[tools: Bash]_
+
+Round 3 first, since it just landed: it's effectively a **pass** — the reviewer independently reproduced the key results, confirmed 4/5 fixes landed (the 5th was an amendment-log self-contradiction), and flagged one new must-fix (a *second* per-object depth mis-quote, 93357). I've fixed all of it, including hardening the audit to check residual depths **per object** so "the audit passes while the prose is wrong" can't recur. The reviewer's verdict was that these fixes clear it for external review. Committed and pushed (49814ae).
+
+Now, your question — yes, we can cut the prompts way down. The friction here is almost all **Bash**: ad-hoc `.venv/bin/python3 -c "..."` diagnostics, `git commit`/`push`, and background jobs. (Read/Grep/Edit and read-only git already don't prompt.) The lever is a project allowlist in `.claude/settings.json`. The one real decision is how wide to make it — that's your security call, so:
+
+
+_[tools: AskUserQuestion]_
+
+You chose session bypass — I'll set `defaultMode: "dontAsk"` in your personal (gitignored) project settings so it doesn't affect the repo or collaborators. Let me check the current state first:
+
+
+_[tools: Bash]_
+
+There's already an 18KB personal `settings.local.json` (your accumulated approvals — that's why it's untracked and not ignored). I'll add `defaultMode: "dontAsk"` to it and make sure that file is gitignored so your allowlist never gets committed. Let me read its head to edit precisely:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Let me validate the JSON is intact (a broken settings file would disable everything) and gitignore the personal settings file:
+
+
+_[tools: Bash]_
+
+Set and validated — `defaultMode: "dontAsk"`, your 224-entry allowlist preserved, and the personal settings file is now gitignored. Let me confirm the .gitignore wasn't clobbered and commit just that change:
+
+
+_[tools: Bash]_
+
+Done. Here's what I set, and where things stand on both threads.
+
+**Permissions** — you'll stop getting prompts:
+- Added `"defaultMode": "dontAsk"` to your personal `.claude/settings.local.json` (your 224-entry allowlist preserved, JSON validated). This means no per-command approval prompts in this repo.
+- That file was already covered by `.gitignore` (the whole `.claude/` dir is ignored), so it stays personal — nothing about your permissions gets committed.
+- **If a prompt still appears this session**, type `/permissions` once — that reloads the mode and it'll take effect immediately; otherwise it's already live (these last few commands ran without asking) and applies going forward.
+- **To dial it back later**: `/permissions`, or remove that one line. If `dontAsk` ever feels too broad, the "Targeted" allowlist from my earlier options is a safer middle ground — say the word and I'll switch it.
+
+**The SETI paper** — you have closure on the review loop too: round-3 Claude came back essentially a **pass** (4/5 round-2 fixes landed, the 5th was an amendment-log self-contradiction, plus one new per-object depth typo). I fixed everything, including hardening the audit to check residual depths *per object* so the "audit green while prose wrong" failure can't recur (53/53 PASS). The reviewer's verdict was that it now clears external review.
+
+Per your process (Claude loop first, then Gemini), the draft is at the **hand-to-Gemini** point. `paper/phase2_review_brief.md` is the round-3 brief, ready to paste alongside the paper. Want me to retarget that brief specifically for a fresh Gemini pass (it's currently framed for the Claude convergence check), or leave it and let you drive the Gemini round?
+
+### 🧑 Tonio
+
+Yes let’s do another Gemini round.
+
+### 🤖 Claude
+
+Gemini reviews externally (no repo access), so the brief needs to be **self-contained** — embedding the key results it can't run itself, showing how its round-2 points were addressed, and honestly flagging the one place we *diverged* from its advice (it inferred under-flagging and said raise the resolution floor; the injection test refuted the premise, so we documented the structural cause instead). Let me write a Gemini-specific brief:
+
+
+_[tools: Write]_
