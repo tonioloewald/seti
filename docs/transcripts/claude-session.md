@@ -12138,3 +12138,35 @@ Clean. Let me update the status doc to mark the review milestone, then commit ev
 
 
 _[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Both polish notes applied, audit 53/53, pushed (`0207d12`). 
+
+**The paper is review-complete.** It cleared three rounds of automated-Claude adversarial review (to convergence) and two Gemini rounds, ending with Gemini's "Ready for write-up and submission — no remaining blockers." Notably, Gemini retired its own under-flagging concern *after* engaging the injection numbers rather than re-asserting it — the good-faith outcome, and a sign the empirical pushback was sound.
+
+Where it landed, honestly: the "exciting anomalies" from a few days ago didn't survive scrutiny, and the paper is stronger for saying so plainly. The final result is a tight flat-occulter (megastructure-morphology) limit over a 0.3–13% depth window — `f_max` ≈ 8.3×10⁻⁵ combined — plus three reported edge-case residuals the frozen battery can't auto-classify (a deep transit on an active host, a near-blend, a floor-depth intermittent), none a flat occulter, none claimed as anything. The blind spots are measured, not hidden: deep occulters (>13%) reclassified as stellar companions, tails degenerate with their natural class, asymmetric occulters at C_i ≈ 0.06. Every number reconstructs from committed artifacts.
+
+What's preserved for whatever comes next:
+- `docs/phase2_status.md` marks the paper review-complete and records the Gemini verdict.
+- Both review briefs are archived (`paper/phase2_review_brief.md`, `paper/phase2_gemini_brief.md`).
+- The stopping rule is on the record: the declared weaknesses (activity-robust morphology especially) get fixed and re-validated on injections *before* the G 12–13 tiers are unblinded — never against the current candidates.
+
+Nothing further is queued unless you want it. Natural next steps when you're ready: the author write-up/submission, or kicking off the fainter-tier (G 12–13) pull with the activity-gate fix done up front. Just say which.
+
+### 🧑 Tonio
+
+Let’s render a PDF and commit.
+
+### 🤖 Claude
+
+Review's done, so a final PDF is appropriate now (the markdown-for-review rule was just for the review rounds). Let me build it with the existing tool:
+
+
+_[tools: Bash]_
+
+PDF built (94 KB). Let me follow the repo's convention (PDFs committed, render-HTML ignored like `preregistration.html`) — check the current state and gitignore the intermediate HTML:
+
+
+_[tools: Bash]_
