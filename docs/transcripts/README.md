@@ -6,7 +6,7 @@ Per the **Statement of Provenance and Acknowledgments** in [`../../preregistrati
 
 | File | Source | Notes |
 |------|--------|-------|
-| [`claude-session.md`](claude-session.md) | Anthropic Claude (Claude Code) | Auto-exported from the local session log by [`../../tools/export_transcript.py`](../../tools/export_transcript.py). |
+| `claude-session-<id>.md` | Anthropic Claude (Claude Code) | Auto-exported from the local session log by [`../../tools/export_transcript.py`](../../tools/export_transcript.py). **One file per session**, keyed by session id, so a new session never overwrites an earlier one. `claude-session-a0e2a823.md` is the original long development session. |
 | [`gemini-session.md`](gemini-session.md) | Google Gemini | Captured manually — pasted by the investigator (Gemini has no transcript API). |
 | [`gemini-review-session.md`](gemini-review-session.md) | Google Gemini (max / extended thinking) | Later critical review of the near-final draft and the provenance statement. |
 

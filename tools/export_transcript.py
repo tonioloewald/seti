@@ -8,17 +8,30 @@ are preserved. Personal paths/emails are scrubbed.
 
 Usage:  python3 tools/export_transcript.py [path/to/session.jsonl]
         (with no arg, picks the most recent session for this project)
+
+Each session is written to its OWN file, keyed by the session id (the JSONL
+basename): docs/transcripts/claude-session-<shortid>.md. This is deliberate —
+a single shared output file meant every fresh session's Stop-hook export
+overwrote the previous archive, silently destroying it. Per-session files mean
+no session can ever clobber another; the archive only grows.
 """
 import json, glob, os, re, sys
 from collections import Counter
 
 PROJECT_DIR = os.path.expanduser("~/.claude/projects/-home-tonio-seti")
-OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                   "docs", "transcripts", "claude-session.md")
+TRANSCRIPT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                              "docs", "transcripts")
 
 def latest_jsonl():
     files = glob.glob(os.path.join(PROJECT_DIR, "*.jsonl"))
     return max(files, key=os.path.getmtime) if files else None
+
+def out_path_for(jsonl_path):
+    """One markdown file per session, named by the session id (JSONL basename)."""
+    sid = os.path.basename(jsonl_path)
+    if sid.endswith(".jsonl"):
+        sid = sid[:-len(".jsonl")]
+    return os.path.join(TRANSCRIPT_DIR, f"claude-session-{sid[:8]}.md")
 
 def scrub(s):
     if not s:
@@ -51,6 +64,7 @@ def main():
     path = sys.argv[1] if len(sys.argv) > 1 else latest_jsonl()
     if not path:
         sys.exit("no session JSONL found")
+    OUT = out_path_for(path)
     out = [
         "# Claude Code session transcript",
         "",
@@ -107,6 +121,10 @@ def main():
                 out.append(block)
                 last_role = "assistant"
                 na += 1
+    if nh == 0:
+        # Nothing the human said survived parsing — never blank an existing file.
+        print(f"skip {OUT}: 0 human turns parsed (refusing to overwrite)")
+        return
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
         f.write("\n".join(out))
