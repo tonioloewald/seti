@@ -58,6 +58,28 @@ submission — no remaining blockers."** Review briefs archived: `paper/phase2_r
 `paper/phase2_gemini_brief.md` (Gemini). **Next:** author write-up / submission; fixes to the declared
 weaknesses (activity-robust morphology) deferred to the G 12–13 tiers, re-validated before unblinding.
 
+## Publication gap & plan (assessed 2026-06-14)
+
+"Review-complete draft" ≠ submittable manuscript. The *argument* is written and externally
+stress-tested; the *manuscript a referee could read* is not. Concrete gaps, both papers
+(`paper/phase2_T0_draft.md` K-dwarf, `paper/draft.md` white-dwarf) being internal Markdown→PDF only:
+
+1. **Figures: none.** The K-dwarf paper references zero figures (no `![`, no `.png`, no "Figure 1");
+   `figures/` holds almost only Phase-1 plots. Every result (cascade, f_max-vs-depth, completeness/
+   recovery grid incl. the 13% EB-cut ceiling, resolvable-residual light curves, injection-recovery
+   calibration) is prose-only. **Biggest gap — the planned first task.**
+2. **References are a 9-item placeholder sketch.** Missing the Gentile Fusillo catalogue, our own OSF
+   prereg DOI, software (astropy/lightkurve/BLS), and methods refs (Gross–Vitells, Stetson, …).
+3. **No target venue / journal format.** House Markdown, not AASTeX/LaTeX (ApJ/AJ/MNRAS) or an
+   arXiv-ready package; no formatted author/affiliation block. Venue undecided (RNAAS vs AJ/MNRAS vs arXiv).
+4. **One-paper-vs-two unresolved.** Combined WD+K-dwarf methods paper, or separate? Shapes everything.
+5. **Nothing submitted anywhere** — no arXiv, no journal, no co-author sign-off, no cover letter.
+
+**Plan (next session, 2026-06-15):** close the gap starting with **figures** (generated from data
+already in hand), then references → venue/format decision → submit. After that, **process the next
+dataset** (the G 12–13 tiers, with the deferred activity-robust-morphology fix done up front and
+re-validated on injections *before* unblinding, per the stopping rule).
+
 ## What is and isn't durable
 
 - **Durable:** everything committed to `origin/main` (code, results, paper, residual lists, frozen
