@@ -2,7 +2,7 @@
 
 A single place to recover the state of work if a session is lost. The authoritative record is
 the git history + the OSF registration + the AI transcripts; this is the human-readable "where
-we are and how to continue." Last updated 2026-06-09.
+we are and how to continue." Last updated 2026-06-22.
 
 ## Registered
 
@@ -58,27 +58,34 @@ submission — no remaining blockers."** Review briefs archived: `paper/phase2_r
 `paper/phase2_gemini_brief.md` (Gemini). **Next:** author write-up / submission; fixes to the declared
 weaknesses (activity-robust morphology) deferred to the G 12–13 tiers, re-validated before unblinding.
 
-## Publication gap & plan (assessed 2026-06-14)
+## Publication production — DONE (2026-06-22, commit f085a17)
 
-"Review-complete draft" ≠ submittable manuscript. The *argument* is written and externally
-stress-tested; the *manuscript a referee could read* is not. Concrete gaps, both papers
-(`paper/phase2_T0_draft.md` K-dwarf, `paper/draft.md` white-dwarf) being internal Markdown→PDF only:
+The publication-*production* gap is closed for the K-dwarf paper (`paper/phase2_T0_draft.md`). What
+was done:
 
-1. **Figures: none.** The K-dwarf paper references zero figures (no `![`, no `.png`, no "Figure 1");
-   `figures/` holds almost only Phase-1 plots. Every result (cascade, f_max-vs-depth, completeness/
-   recovery grid incl. the 13% EB-cut ceiling, resolvable-residual light curves, injection-recovery
-   calibration) is prose-only. **Biggest gap — the planned first task.**
-2. **References are a 9-item placeholder sketch.** Missing the Gentile Fusillo catalogue, our own OSF
-   prereg DOI, software (astropy/lightkurve/BLS), and methods refs (Gross–Vitells, Stetson, …).
-3. **No target venue / journal format.** House Markdown, not AASTeX/LaTeX (ApJ/AJ/MNRAS) or an
-   arXiv-ready package; no formatted author/affiliation block. Venue undecided (RNAAS vs AJ/MNRAS vs arXiv).
-4. **One-paper-vs-two unresolved.** Combined WD+K-dwarf methods paper, or separate? Shapes everything.
-5. **Nothing submitted anywhere** — no arXiv, no journal, no co-author sign-off, no cover letter.
+1. **Figures — DONE.** Five figures generated from frozen artifacts by
+   `pipeline/runners/make_paper_figures.py` (production-only: reads committed calibrations/CSVs/noise
+   floor, no new thresholds; cascade counts self-verify against the paper): `figures/kdwarf_`
+   `{noise_cohorts, completeness, cascade, fmax_depth, residual_metrics}.png`, embedded with captions
+   and in-order callouts (Figs 1–5).
+2. **References — DONE.** 36-entry verified bibliography (DOIs traced to ADS/publisher), inline
+   author-year citations, author block, Facilities/Software acknowledgment. Self-cites use the real
+   OSF prereg titles/dates (6YH7R 2026-06-01; 2AKN3 2026-06-05).
+3. **Scope — DECIDED: two separate papers.** K-dwarf is standalone and **cites** the Phase 1 WD null
+   (Loewald 2026a); no combined methods paper. (WD paper `paper/draft.md` still its own production task.)
+4. **Review — DONE.** Independent adversarial pass on the additions; one blocker (Fig 2 dust-tail
+   grouping) + polish items fixed. `audit_T0_paper.py` still 53/53 PASS.
 
-**Plan (next session, 2026-06-15):** close the gap starting with **figures** (generated from data
-already in hand), then references → venue/format decision → submit. After that, **process the next
-dataset** (the G 12–13 tiers, with the deferred activity-robust-morphology fix done up front and
-re-validated on injections *before* unblinding, per the stopping rule).
+**Still open before actual submission:** (a) author **affiliation + ORCID** (placeholder in the md);
+(b) **venue + format** — still house Markdown→PDF, not AASTeX/LaTeX; RNAAS vs AJ/MNRAS vs arXiv
+undecided; (c) optional **phase-folded light curves** of the 3 resolvable residuals + the 2 validation
+systems (needs a MAST fetch); (d) **nothing submitted** yet (no arXiv/journal/cover letter); (e) the
+**push to public `origin/main`** — 3 commits now unpushed (this + 2 from 06-14), awaiting the go-ahead.
+
+**Next dataset (not started):** the **G 12–13 tiers**. Per the declared stopping rule, the deferred
+activity-robust-morphology fix must be implemented and **re-validated on injections BEFORE unblinding**;
+the `k04 --unblind` step lifts the blind and must only run against a frozen, tagged production
+calibration **when the human directs it** (integrity invariant).
 
 ## What is and isn't durable
 
