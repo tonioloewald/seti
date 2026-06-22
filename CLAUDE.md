@@ -79,7 +79,9 @@ predicted photometry (natural baseline), the bolometric flux (for `f_max`), and 
 temperatures count as natural (disk/companion) vs. a residual. To add a population, implement that
 interface — e.g. swapping a Bergeron grid for a BT-Settl/PHOENIX grid via `core.grids.load_grid`.
 
-**Phase 1 (white dwarfs) — complete, three clean nulls.** `pipeline/fetch/01–06` (data acquisition)
+**Phase 1 (white dwarfs) — complete, three clean nulls.** `pipeline/fetch/01–06` (data acquisition),
+`pipeline/build/01_optical_baseline.py` (the intermediate "Step 2a": parses the pinned Gentile Fusillo
+catalogue into `data/derived/optical_baseline.parquet`, the H0 SED anchor that the analysis stages consume),
 and `pipeline/analysis/01–16` (numbered, run in order): excess → empirical null → battery → vetting →
 upper limit → variability → transit/centroid → clean-zone, plus v2 (CatWISE) and robustness checks.
 Results in `RESULTS.md` and the IMPLEMENTATION_LOG.

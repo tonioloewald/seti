@@ -201,3 +201,17 @@ and **3.4×10⁻⁴** for EXCLUDE-non-DA (N=290,809) — identical to 2 sig figs
 confirmed-non-DA WDs modelled as DA do not affect the limit. Confirmed-DA-only (N=16,525)
 gives 3.0×10⁻³, weaker *only* because N is ~18× smaller (same per-WD physics). **The
 registered full-sample f_max is robust to the DA-photosphere assumption.**
+
+---
+
+## Phase 2 — paper production (2026-06-22)
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| P2-fig | `pipeline/runners/make_paper_figures.py`: generate the five K-dwarf paper figures (`figures/kdwarf_{noise_cohorts,completeness,cascade,fmax_depth,residual_metrics}.png`) from the frozen calibrations, the per-stage residual/triage CSVs, and the noise floor. | Production only — **reads committed artifacts, computes no new thresholds, touches no analysis**. Cascade counts are recomputed from the committed CSVs and asserted against the paper's numbers (raises on drift); the two upstream candidate-generation levels, which exist only in the k04 search log, are labelled as quoted from the recorded result. f_max curves use `core.stats.poisson_fmax` over `core.noise.assign_cohorts`, identical to `audit_T0_paper.py`. | paper figs |
+| P2-refs | `paper/phase2_T0_draft.md`: replaced the 9-item placeholder bibliography with a 36-entry verified reference list (DOIs traced to ADS/publisher), added inline author-year citations, an author block, and a Facilities/Software acknowledgment. | Submittable-manuscript production; no methodological content. Self-citations use the actual registered OSF titles/dates (6YH7R 2026-06-01; 2AKN3 2026-06-05). | paper |
+
+**Note:** this is manuscript production, not a registered-method elaboration, so it carries no
+`AMENDMENTS.md` entry. `audit_T0_paper.py` remains 53/53 PASS after the edits (no number changed).
+Open items before submission: confirm author affiliation + ORCID; optional phase-folded light curves
+of the three resolvable residuals + the two validation systems (needs a MAST fetch).

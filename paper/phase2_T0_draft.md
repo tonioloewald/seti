@@ -1,5 +1,10 @@
 # A Pre-Registered, Mechanism-Agnostic Search for Anomalous Transit Signatures Around Main-Sequence K Dwarfs: Bright-Tier (G < 12) Results
 
+**Tonio Loewald**
+
+Independent Researcher · tloewald@gmail.com
+<!-- TODO before submission: confirm affiliation (institution or "Independent Researcher") and add ORCID -->
+
 **Status: DRAFT for review.** Phase 2 of the program whose Phase 1 (white dwarfs) is published
 and registered at OSF [10.17605/OSF.IO/6YH7R](https://doi.org/10.17605/OSF.IO/6YH7R). The Phase-2
 plan was registered at OSF [osf.io/2akn3](https://osf.io/2akn3/) before any K-dwarf light curve was
@@ -61,10 +66,16 @@ precision, sky coverage, and time baselines improve. No claim of artificiality i
 ## 1. Introduction
 
 This is Phase 2 of a program that reframes technosignature detection away from mechanism-assuming
-SETI (Dyson spheres, Kardashev scaling) and toward the only thing an enduring intelligence must
-produce to be detectable at all: an **anomaly** — a departure from the well-modelled natural
-behaviour of a system that resists every natural explanation. Phase 1 applied this anomaly-residual
-method to white dwarfs and returned a clean, fully-explained null with a quantitative upper limit.
+SETI — searches that presuppose a construct such as a Dyson sphere or Kardashev-scale energy use
+(Griffith et al. 2015; Zuckerman 2022; Suazo et al. 2024) — and toward the only thing an enduring
+intelligence must produce to be detectable at all: an **anomaly** — a departure from the
+well-modelled natural behaviour of a system that resists every natural explanation, the regime in
+which unexplained stellar dimming (Boyajian et al. 2016) and proposed artificial transit signatures
+(Arnold 2005) have historically drawn attention. The reframing also relaxes the longevity pessimism
+of the Fermi paradox (Sandberg et al. 2018): we ask not whether enduring intelligence is common but,
+conditional on its persistence, where it would be detectable. Phase 1 applied this anomaly-residual
+method to white dwarfs and returned a clean, fully-explained null with a quantitative upper limit
+(Loewald 2026a).
 
 Phase 2 carries the same validated machinery to a *living* host. Among living stars, K dwarfs offer
 the longest stable main-sequence lifetime (15–40 Gyr), the quietest photospheric baseline, and —
@@ -92,16 +103,18 @@ long-lived, quiet platform and their deep, resolvable transits — properties of
 
 The differentiator is not the transit channel, which is well-trodden, but the discipline: thresholds
 fixed by a registered procedure rather than by inspecting candidates, and a mandatory, uniform
-explain-away battery. We register the *method*, not the numbers; a reviewer judges adherence to the
-procedure, not the values it produced.
+explain-away battery (for the breadth of the technosignature landscape this method sits within, see
+the review of Wright 2018). We register the *method*, not the numbers (the pre-registered Phase-2
+plan, Loewald 2026b); a reviewer judges adherence to the procedure, not the values it produced.
 
 ## 2. Sample and data
 
 The parent sample is a frozen, checksummed manifest of 175,968 main-sequence K dwarfs from Gaia DR3
-(Teff 3900–5300 K, log g > 4.3, RUWE < 1.4, parallax_over_error > 10, within a main-sequence box;
-git tag `phase2-manifest-1.0`). The manifest is analysed in nested, brightest-first tiers, with the
+(Gaia Collaboration et al. 2023; Teff 3900–5300 K, log g > 4.3, RUWE < 1.4, parallax_over_error > 10,
+within a main-sequence box; git tag `phase2-manifest-1.0`). The manifest is analysed in nested, brightest-first tiers, with the
 expansion trigger being available compute rather than any result. This paper reports two tiers. Tier
-**T0 (G < 11)** is 12,100 stars with a usable TESS SPOC, TESS-SPOC, or QLP light curve, detrended
+**T0 (G < 11)** is 12,100 stars with a usable TESS (Ricker et al. 2015) SPOC (Jenkins et al. 2016),
+TESS-SPOC (Caldwell et al. 2020), or QLP (Huang et al. 2020a, 2020b) light curve, detrended
 with an upward-only outlier clip so transits are preserved (the remaining ~400 of the tier are
 saturated-bright stars absent from standard photometric processing, recorded as unanalysable and
 self-weighting to zero in the limit). The **combined bright sample T0+T1 (G < 12)** adds the next
@@ -136,14 +149,16 @@ residual lists are committed in a public, branch-protected repository linked fro
 Each star's out-of-transit noise is measured with an outlier-blind estimator — the median absolute
 deviation of the continuum after iterative downward-only sigma-clipping — so a genuine deep dip
 cannot inflate its own baseline and mask itself. Stars are binned into three equal-count noise
-cohorts. Within each cohort, box-least-squares (BLS) is run on every star's light curve and the
-null location δ0 and scale σ0 of the detection statistic (the signal-detection-efficiency SDE) are
-estimated from the **lower bulk** of the per-star distribution (the median and the 15.9th
-percentile), so that the real transiting planets and binaries — which are common, not rare, and
-populate the *upper* tail — do not bias the null. The family-wise detection bar is δ0 + z·σ0 with
-z = Φ⁻¹(1 − 1/N_total), N_total the full 175,968-star manifest. We label σ0² as a genomic-control
-factor λ by analogy with large-scale inference, but the BLS SDE is not a z-statistic, so values of
-λ away from unity (here 0.68–1.02 across cohorts) carry no inflation/deflation meaning; λ is simply
+cohorts. Within each cohort, box-least-squares (BLS; Kovács et al. 2002) is run on every star's
+light curve and the null location δ0 and scale σ0 of the detection statistic (the signal-detection-
+efficiency SDE) are estimated from the **lower bulk** of the per-star distribution (the median and
+the 15.9th percentile) — the empirical-null construction of Efron (2004), in which the null is read
+off the data's own quiet bulk — so that the real transiting planets and binaries, which are common,
+not rare, and populate the *upper* tail, do not bias the null. The family-wise detection bar is
+δ0 + z·σ0 with z = Φ⁻¹(1 − 1/N_total), N_total the full 175,968-star manifest — a per-trial
+significance in the spirit of the Kepler ~7.1σ detection threshold (Jenkins et al. 2002). We label
+σ0² as a genomic-control factor λ (Devlin & Roeder 1999) by analogy with large-scale inference, but the BLS SDE is not a z-statistic, so values of
+λ away from unity (here 0.61–1.15 across cohorts and tiers) carry no inflation/deflation meaning; λ is simply
 the per-cohort bulk scale that sets the threshold (we retain the genomic-control reference for this
 per-cohort scaling construction, not for an inflation correction, which the SDE does not admit). The bar is a **white-noise candidate-generation**
 threshold: it controls pure-noise false alarms, but is deliberately permissive toward the real
@@ -169,7 +184,35 @@ red-noise-aware (§3.3), which legitimately weakens the tail's completeness and 
 natural-control planet recovers at ≲ 0.1 — it classifies as a planet and so earns essentially no
 anomaly-completeness, as it should. The detection bars are battery-independent and were frozen at
 the values above; only the completeness C_i was refreshed when the battery was refined (the bars are
-a deterministic property of the null, the completeness a property of the classifier).
+a deterministic property of the null, the completeness a property of the classifier). The cohort
+structure and the resulting per-cohort bars are shown in Figure 1, and the classification-aware
+completeness by morphology in Figure 2.
+
+<figure>
+<img src="../figures/kdwarf_noise_cohorts.png" alt="Noise cohorts and per-cohort detection bars">
+<figcaption><b>Figure 1.</b> The detection threshold is computed, not chosen. Each searched star is
+placed in one of three equal-count noise cohorts by its outlier-blind out-of-transit scatter (dashed
+lines: cohort edges); within each cohort the family-wise BLS detection bar (legend) is set from the
+empirical null of the noise floor, before any candidate is unblinded. Left: T0 (G&nbsp;&lt;&nbsp;11);
+right: the combined T0+T1 (G&nbsp;&lt;&nbsp;12) sample, re-calibrated from scratch on its larger
+noise floor.</figcaption>
+</figure>
+
+<figure>
+<img src="../figures/kdwarf_completeness.png" alt="Classification-aware completeness by morphology">
+<figcaption><b>Figure 2.</b> Classification-aware completeness <i>C<sub>i</sub></i> versus injected
+transit depth, by morphology family (combined sample; n-weighted mean across cohorts, band spanning
+the cohort range). An injection counts as recovered only if it is <i>both</i> detected above the bar
+<i>and</i> survives the natural-explanation battery as a residual. The flat occulter is recovered with
+high completeness (<i>C<sub>i</sub></i>&nbsp;≈&nbsp;0.9) from ~1% depth up to the ~13% ceiling, falling
+to ≈&nbsp;0.5 at the 0.3% resolution floor. The disintegrating dust-tail recovers at moderate
+completeness (≈&nbsp;0.55) — lower than the flat occulter because it is often, and correctly, explained
+away as a natural disintegrating body. The asymmetric occulter and the limb-darkened-planet control
+recover at <i>C<sub>i</sub></i>&nbsp;≲&nbsp;0.15: they classify as planets and so earn essentially no
+anomaly-completeness. Above ~13% depth the depth→radius criterion reclassifies a flat occulter as a
+stellar companion (the search goes blind); the grey band at left marks the 0.3% morphology-resolution
+floor.</figcaption>
+</figure>
 
 ### 3.3 Search and the natural-explanation battery
 
@@ -179,8 +222,10 @@ morphology. Each candidate above its cohort bar passes through a battery applied
 
 1. **Light-curve battery** — fold on the BLS period and classify by morphology and stellar
    variability (sinusoid variance for activity; secondary eclipse and odd–even depth for eclipsing
-   binaries; depth variability for disintegrating bodies; U-shape vs flat-bottom for planet vs
-   occulter), retaining as a residual only what no natural class explains. Three of these tests are
+   binaries; depth variability for disintegrating bodies, the class exemplified by KIC 12557548
+   (Rappaport et al. 2012) and the disintegrating planetesimals of WD 1145+017 (Vanderburg et al.
+   2015); U-shape vs flat-bottom for planet vs occulter), retaining as a residual only what no
+   natural class explains. Three of these tests are
    sharpened by physics or a noise model that needs no per-candidate parameter (logged as registered
    methods refinements, §6 / `AMENDMENTS.md`). First, a transit depth implies an occulter radius —
    depth = (R_occ/R⋆)², so on a 0.7 R⊙ K dwarf a depth above ~0.13 implies R_occ > ~2.5 R_Jupiter,
@@ -206,8 +251,9 @@ morphology. Each candidate above its cohort bar passes through a battery applied
    tail from red noise — and that correction is reported rather than hidden. All three were validated
    pre-application on the injection grid (a flat occulter still classes as a residual, a genuinely
    variable-depth tail still classes as a residual).
-2. **Identity cross-check** — coincidence with a confirmed planet, a TESS Object of Interest, or a
-   SIMBAD eclipsing-binary / binary / variable explains the candidate away; a stellar-property
+2. **Identity cross-check** — coincidence with a confirmed planet, a TESS Object of Interest
+   (Guerrero et al. 2021), or a SIMBAD (Wenger et al. 2000) eclipsing-binary / binary / variable
+   explains the candidate away; a stellar-property
    classification (e.g. high proper motion) does not, and such candidates survive. Prior knowledge
    is used only to *subtract* candidates, never to assume the residual set is empty.
 3. **Difference-image centroid gate** — at TESS's ~21″ pixels a background eclipsing binary is the
@@ -262,8 +308,9 @@ Before unblinding, the morphology metrics' separation of the forward-modelled fa
 established quantitatively on the synthetic injection grid (the statistical validation, spanning
 family × depth × period). Two named, published systems then serve as real-data spot-checks — not a
 classifier validation set: the pipeline fires on the disintegrating planet KIC 12557548 /
-Kepler-1520 (asymmetry and depth-variability both elevated) and stays quiet on the clean transiting
-planet Kepler-8 b, the same discipline by which Phase 1 validated on WD 1856+534 b. These Kepler
+Kepler-1520 (Rappaport et al. 2012; asymmetry and depth-variability both elevated) and stays quiet
+on the clean transiting planet Kepler-8 b (Jenkins et al. 2010), the same discipline by which
+Phase 1 validated on WD 1856+534 b (Vanderburg et al. 2020). These Kepler
 spot-checks exercise only the morphology classifier; the TESS-specific stages — the 21″ difference-
 image centroid gate and multi-sector recurrence — are instead exercised on the survey candidates
 themselves (§4.1), where they remove background blends and single-sector red noise at scale. A broader
@@ -311,7 +358,20 @@ on-target (1,580 blends killed, 120 uncentroidable); recurrence confirmed 140 re
 recurring returned 17 eclipsing binaries, 92 transiting planets, 4 disintegrating bodies, and 27
 residuals — of which **two lie in the morphology-resolvable regime** (depth > 0.3%; §4.2), the
 remaining 25 being sub-resolution. (Two resolvable residuals likewise survive in T0 on its own; the
-union across both tiers is three distinct objects, examined individually in §4.2.)
+union across both tiers is three distinct objects, examined individually in §4.2.) The full cascade
+for both tiers is shown in Figure 3.
+
+<figure>
+<img src="../figures/kdwarf_cascade.png" alt="The residual cascade for both tiers">
+<figcaption><b>Figure 3.</b> The residual cascade for the two tiers. Every BLS candidate above the
+per-cohort bar is either explained away by the fixed, pre-registered battery (light-curve morphology,
+identity cross-check, difference-image centroid, multi-sector recurrence) or carried forward — never
+tuned in or out. Box widths scale with the square root of the count. Side annotations give the natural
+classes the light-curve battery removes, and the by-product and data-limited deferred sets. The
+terminal residuals (12 in T0, 27 combined) are the objects the frozen battery cannot auto-classify;
+only those in the morphology-resolvable regime (depth&nbsp;&gt;&nbsp;0.3%; Figure 4) are examined
+individually.</figcaption>
+</figure>
 
 ### 4.2 The resolvable-regime residuals, and the upper limit
 
@@ -348,6 +408,24 @@ diagnostic metrics that place each at the margins:
   intermittent — detected in 5 of 7 sectors (absent, at ≈ 0% depth, in the other two), strongly
   asymmetric — the diagnostics of a marginal or blended signal.
 
+Figure 4 places these three objects in the committed diagnostic metric space against the full
+recurring-candidate population, showing that each sits at the margin of a natural class and none is a
+flat-bottomed occulter.
+
+<figure>
+<img src="../figures/kdwarf_residual_metrics.png" alt="Resolvable residuals in the diagnostic metric space">
+<figcaption><b>Figure 4.</b> Where the three morphology-resolvable residuals (circled) sit in the
+committed diagnostic metric space, against the full recurring-candidate population. Left: shape space —
+flat-bottomedness versus light-curve asymmetry; none of the three is a flat-bottomed occulter (a flat
+occulter would sit at flat-bottomedness&nbsp;→&nbsp;1 with low asymmetry). Right: per-sector coherence —
+depth dispersion versus the correlation between per-sector depth and per-sector scatter (noise-like
+signals, whose depth tracks scatter, fall to the upper right). Each residual sits at the margin of a
+natural class: the deep transit on an active host (its flat-bottomedness≈1 driven by an
+activity-distorted folded profile, not a genuine occulter; §3.5), the weak/near-blend, and the
+floor-depth intermittent dip. (The weak/near-blend object survived on a single discovery sector and so
+carries no multi-sector depth–scatter coherence metric; it appears in the left panel only.)</figcaption>
+</figure>
+
 These metrics are recorded in the committed residual lists, not asserted in prose; they indicate
 margins, but the *pipeline* does not classify these objects, so we carry them as **unexplained
 residuals**, not as a clean null and not as anomalies. Their disposition is deferred to the battery
@@ -377,7 +455,22 @@ Asymmetric occulters that are *not* tails are weakly constrained too: an asymmet
 recovers at only C_i ≈ 0.06 (it is usually classified a planet), so **f_max(asymmetric occulter)
 ≈ 6×10⁻³ (T0) / 9×10⁻⁴ (combined)** — the search has little power on that morphology, and we report
 the weak bound rather than omit the family. All limits weaken toward shallower depths as C_i falls and
-lapse below ~0.3% depth, where the search places no anomaly constraint by construction.
+lapse below ~0.3% depth, where the search places no anomaly constraint by construction. The full set
+of limits, by morphology family and as a function of depth for both tiers, is shown in Figure 5.
+
+<figure>
+<img src="../figures/kdwarf_fmax_depth.png" alt="Population upper limit by morphology and depth">
+<figcaption><b>Figure 5.</b> The population upper limit. <i>f</i><sub>max</sub>, the 95%
+zero-detection bound on the prevalence of a detectable anomalous transit <i>signature</i>, versus
+transit depth, by morphology family, for T0 (dashed) and the combined T0+T1 sample (solid). The
+flat-occulter ("megastructure-like") limit is the search's one strong constraint —
+<i>f</i><sub>max</sub>&nbsp;≈&nbsp;2.8×10⁻⁴ (T0) tightening to ≈&nbsp;8.3×10⁻⁵ (combined) at 1% depth
+— and holds only over the 0.3–13% depth window (grey bands: the morphology-resolution floor and the
+stellar-companion reclassification ceiling). Disintegrating-tail and asymmetric-occulter morphologies
+are bounded progressively more weakly — the latter near-uninformatively — because they are degenerate
+with natural classes; the curves show exactly where the search has teeth and where it does not.
+</figcaption>
+</figure>
 
 ### 4.3 By-product catalogue
 
@@ -404,7 +497,8 @@ sub-resolution signal is assigned no anomaly-completeness and so self-weights ou
 than discard them, we publish them as a structurally defined target list (membership set by the
 pipeline's inability to classify or to test, not by hand): the recurrence-untestable dips for TESS
 extended-mission sectors (one further sector separates red noise from a long-lived occulter); the
-sub-resolution dips for higher-precision photometry (CHEOPS, PLATO) able to resolve their morphology;
+sub-resolution dips for higher-precision photometry (CHEOPS, Benz et al. 2021; PLATO, Rauer et al.
+2014) able to resolve their morphology;
 and the uncentroidable set for a re-run of the centroid gate. The deep transiter on an active host
 (§4.2, §4.3) is a separate, higher-value follow-up: an activity-robust re-analysis to recover its
 true transit shape. The same engine, re-run as those data arrive, clears the queue and tightens the
@@ -469,7 +563,9 @@ photometric datasets, leaving whatever genuinely resists modelling — of value 
 regardless of the motivating question. The intended mode of operation is to re-run the engine as data
 accumulate, lowering the limit as the census fills, until either the population is exhausted or a
 signal survives the full battery. Such re-runs are sequential looks at the same hypotheses rather than
-independent trials, but they do not inflate the false-alarm rate the way naive repeated testing would:
+independent trials, and the look-elsewhere cost of testing many stars and periods is carried in the
+family-wise bar (the trial-factor reasoning of Gross & Vitells 2010); but they do not inflate the
+false-alarm rate the way naive repeated testing would:
 the decisive battery stages strengthen with more data — additional sectors make spurious recurrence
 *harder*, not easier, to pass, and deeper photometry resolves morphology that was previously
 unmeasurable — so accumulating data subjects a candidate to progressively more stringent tests, and
@@ -512,6 +608,12 @@ bars unchanged; completeness refreshed for the battery refinements of §3.3, all
 `AMENDMENTS.md`). Every number in this paper is reconstructed from the committed artifacts by
 `pipeline/runners/audit_T0_paper.py`.
 
+*Facilities:* TESS (Ricker et al. 2015); MAST. *Software:* astropy (Astropy Collaboration et al.
+2013, 2018, 2022), numpy (Harris et al. 2020), scipy (Virtanen et al. 2020), matplotlib
+(Hunter 2007), lightkurve (Lightkurve Collaboration et al. 2018), astroquery (Ginsburg et al. 2019).
+This work has made use of data from the European Space Agency mission Gaia
+(Gaia Collaboration et al. 2023) and the SIMBAD database (Wenger et al. 2000).
+
 ## 8. Provenance
 
 Authored and directed by the sole investigator, who bears full responsibility for the contents and
@@ -523,12 +625,74 @@ are archived in the public repository.
 
 ## References
 
-- Efron, B. 2004, *JASA*, 99, 96 — empirical null.
-- Devlin, B., & Roeder, K. 1999, *Biometrics*, 55, 997 — genomic control.
-- Kovács, G., Zucker, S., & Mazeh, T. 2002, *A&A*, 391, 369 — Box Least Squares.
-- Hippke, M., & Heller, R. 2019, *A&A*, 623, A39 — Transit Least Squares.
-- Jenkins, J. M., et al. 2002, *ApJ*, 564, 495 — Kepler detection threshold.
-- Arnold, L. F. A. 2005, *ApJ*, 627, 534 — artificial transit signatures.
-- Rappaport, S., et al. 2012, *ApJ*, 752, 1 — KIC 12557548 (disintegrating planet).
-- Vanderburg, A., et al. 2015, *Nature*, 526, 546 — WD 1145+017.
-- Ricker, G. R., et al. 2015, *JATIS*, 1, 014003 — TESS.
+Arnold, L. F. A. 2005, ApJ, 627, 534. doi:10.1086/430437
+
+Astropy Collaboration, Robitaille, T. P., Tollerud, E. J., et al. 2013, A&A, 558, A33. doi:10.1051/0004-6361/201322068
+
+Astropy Collaboration, Price-Whelan, A. M., Sipőcz, B. M., et al. 2018, AJ, 156, 123. doi:10.3847/1538-3881/aabc4f
+
+Astropy Collaboration, Price-Whelan, A. M., Lim, P. L., et al. 2022, ApJ, 935, 167. doi:10.3847/1538-4357/ac7c74
+
+Benz, W., Broeg, C., Fortier, A., et al. 2021, Exp. Astron., 51, 109. doi:10.1007/s10686-020-09679-4
+
+Boyajian, T. S., LaCourse, D. M., Rappaport, S. A., et al. 2016, MNRAS, 457, 3988. doi:10.1093/mnras/stw218
+
+Caldwell, D. A., Tenenbaum, P., Twicken, J. D., et al. 2020, RNAAS, 4, 201. doi:10.3847/2515-5172/abc9b3
+
+Devlin, B., & Roeder, K. 1999, Biometrics, 55, 997. doi:10.1111/j.0006-341X.1999.00997.x
+
+Efron, B. 2004, JASA, 99, 96. doi:10.1198/016214504000000089
+
+Gaia Collaboration, Vallenari, A., Brown, A. G. A., et al. 2023, A&A, 674, A1. doi:10.1051/0004-6361/202243940
+
+Ginsburg, A., Sipőcz, B. M., Brasseur, C. E., et al. 2019, AJ, 157, 98. doi:10.3847/1538-3881/aafc33
+
+Griffith, R. L., Wright, J. T., Maldonado, J., et al. 2015, ApJS, 217, 25. doi:10.1088/0067-0049/217/2/25
+
+Gross, E., & Vitells, O. 2010, Eur. Phys. J. C, 70, 525. doi:10.1140/epjc/s10052-010-1470-8
+
+Guerrero, N. M., Seager, S., Huang, C. X., et al. 2021, ApJS, 254, 39. doi:10.3847/1538-4365/abefe1
+
+Harris, C. R., Millman, K. J., van der Walt, S. J., et al. 2020, Nature, 585, 357. doi:10.1038/s41586-020-2649-2
+
+Huang, C. X., Vanderburg, A., Pál, A., et al. 2020a, RNAAS, 4, 204. doi:10.3847/2515-5172/abca2e
+
+Huang, C. X., Vanderburg, A., Pál, A., et al. 2020b, RNAAS, 4, 206. doi:10.3847/2515-5172/abca2d
+
+Hunter, J. D. 2007, Comput. Sci. Eng., 9, 90. doi:10.1109/MCSE.2007.55
+
+Jenkins, J. M., Caldwell, D. A., & Borucki, W. J. 2002, ApJ, 564, 495. doi:10.1086/324143
+
+Jenkins, J. M., Borucki, W. J., Koch, D. G., et al. 2010, ApJ, 724, 1108. doi:10.1088/0004-637X/724/2/1108
+
+Jenkins, J. M., Twicken, J. D., McCauliff, S., et al. 2016, Proc. SPIE, 9913, 99133E. doi:10.1117/12.2233418
+
+Kovács, G., Zucker, S., & Mazeh, T. 2002, A&A, 391, 369. doi:10.1051/0004-6361:20020802
+
+Lightkurve Collaboration, Cardoso, J. V. de M., Hedges, C., et al. 2018, Astrophysics Source Code Library, ascl:1812.013
+
+Loewald, T. 2026a, An Anomaly-Residual Search for Unexplained Thermal and Photometric Signatures Around White Dwarfs, OSF (registered 2026-06-01). doi:10.17605/OSF.IO/6YH7R
+
+Loewald, T. 2026b, An Anomaly-Residual Search for Unexplained Transit and Photometric Signatures Around Main-Sequence K Dwarfs, OSF (registered 2026-06-05). doi:10.17605/OSF.IO/2AKN3
+
+Rappaport, S., Levine, A., Chiang, E., et al. 2012, ApJ, 752, 1. doi:10.1088/0004-637X/752/1/1
+
+Rauer, H., Catala, C., Aerts, C., et al. 2014, Exp. Astron., 38, 249. doi:10.1007/s10686-014-9383-4
+
+Ricker, G. R., Winn, J. N., Vanderspek, R., et al. 2015, JATIS, 1, 014003. doi:10.1117/1.JATIS.1.1.014003
+
+Sandberg, A., Drexler, E., & Ord, T. 2018, arXiv:1806.02404. doi:10.48550/arXiv.1806.02404
+
+Suazo, M., Zackrisson, E., Mahto, P. K., et al. 2024, MNRAS, 531, 695. doi:10.1093/mnras/stae1186
+
+Vanderburg, A., Johnson, J. A., Rappaport, S., et al. 2015, Nature, 526, 546. doi:10.1038/nature15527
+
+Vanderburg, A., Rappaport, S. A., Xu, S., et al. 2020, Nature, 585, 363. doi:10.1038/s41586-020-2713-y
+
+Virtanen, P., Gommers, R., Oliphant, T. E., et al. 2020, Nat. Methods, 17, 261. doi:10.1038/s41592-019-0686-2
+
+Wenger, M., Ochsenbein, F., Egret, D., et al. 2000, A&AS, 143, 9. doi:10.1051/aas:2000332
+
+Wright, J. T. 2018, in Handbook of Exoplanets, ed. H. J. Deeg & J. A. Belmonte (Cham: Springer), 3405. doi:10.1007/978-3-319-55333-7_186
+
+Zuckerman, B. 2022, MNRAS, 514, 227. doi:10.1093/mnras/stac1113
