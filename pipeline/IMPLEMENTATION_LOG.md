@@ -215,3 +215,16 @@ registered full-sample f_max is robust to the DA-photosphere assumption.**
 `AMENDMENTS.md` entry. `audit_T0_paper.py` remains 53/53 PASS after the edits (no number changed).
 Open items before submission: confirm author affiliation + ORCID; optional phase-folded light curves
 of the three resolvable residuals + the two validation systems (needs a MAST fetch).
+
+## Phase 2 — battery v4: activity-robust morphology (2026-06-22)
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| P2-v4 | `core.transit.local_detrend(t,f,period,t0,duration)`: per-transit local detrend. `k04.battery()` now measures morphology (depth / flat_bottom / asymmetry) on the **locally-detrended** fold; the activity gate (sin_r2), EB tests (secondary / odd-even), and red-noise-aware depth-variability stay on **raw** flux. BLS `duration` threaded through `battery()` and its three call sites (`k04` search, `k03` calibrate, `k08` triage). | The §3.5 activity-corrupted-morphology limitation: irregular spot variability surviving the global detrend distorts the folded shape on active hosts; `sin_r2` catches only *coherent* P/2P modulation and misses it (the `1397924585409290240` case, sin_r2=0.001). Per epoch a low-order poly is fit to the out-of-transit window (in-transit masked) and divided out, so the folded shape reflects the transit, not the activity. **Identity-safe:** no-op on a quiet/flat host and with `duration=None`, so the quiet-cohort completeness is unchanged by construction. | §3.3, §3.5 (stopping-rule fix for G12-13) |
+| P2-v4-val | `pipeline/runners/validate_activity_robust.py`: objective active/quiet host split (90-10 range of ~2 h-binned medians over tier-2 ok stars; **not** from any candidate list) + inject clean planet/box, classify detrend ON vs OFF. | Validates the fix candidate-blind. Result: active-host planet→natural_planet **+0.19** (0.21→0.40), quiet **+0.00** (clean no-op), active-host box→RESIDUAL **−0.07** (small, ~1.5σ at n=150). `k04 --test` regression preserved (box→RESIDUAL, planet→natural_planet, tail→RESIDUAL). | §3.5 |
+
+**Decision (human-directed, 2026-06-22):** freeze the G12-13 production calibration with the detrend
+**alone** (option A); the down-weight/flag safeguard (B) is held unless the per-cohort C_i shows a
+material box-completeness loss. Published T0 / T0+T1 results retain battery v3; v4 applies to the new
+combined **T0T1T2 (G<13)** run. Calibration re-run via `k03` over all three tiers → frozen as a new
+tagged artifact; the `k04 --unblind` blind-lift is **deferred to explicit human direction**.

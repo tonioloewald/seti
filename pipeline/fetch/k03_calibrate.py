@@ -95,7 +95,7 @@ def _recover(task):
     # 'disintegrating_body', is explained away -> not recovered (no f_max credit). This bounds the
     # battery's anomaly->natural leakage directly in C_i. (The natural-control 'planet' family is
     # expected to classify as planet and so earns ~0 anomaly-completeness, by design.)
-    verdict = battery(t, fi, r["period"], r["t0"], scatter)["verdict"]
+    verdict = battery(t, fi, r["period"], r["t0"], scatter, r["duration"])["verdict"]
     return (cohort, verdict == "RESIDUAL")
 
 
@@ -107,7 +107,15 @@ def main():
 
     nf = pd.read_parquet(NOISE); nf["source_id"] = nf["source_id"].astype(str)
     ok = nf[(nf["status"] == "ok") & np.isfinite(nf["scatter_ppm"])].reset_index(drop=True)
-    print(f"ok stars: {len(ok)} | workers {workers} | inj/cohort {inj_per}", flush=True)
+    # Optional tier restriction (KTIERS="0,1" -> calibrate that subset only). Default: all tiers
+    # present in the noise floor. Lets the run target a specific nested sample (T0 / T0T1 / T0T1T2)
+    # reproducibly, and isolates a battery change on a fixed sample (same tiers -> same cohort edges).
+    ktiers = os.environ.get("KTIERS")
+    if ktiers:
+        keep = [int(x) for x in ktiers.split(",")]
+        ok = ok[ok["tier"].isin(keep)].reset_index(drop=True)
+    print(f"ok stars: {len(ok)} | tiers {ktiers or 'all'} | workers {workers} | inj/cohort {inj_per}",
+          flush=True)
     scat = ok["scatter_ppm"].to_numpy() / 1e6
     edges = cohort_edges(scat, n_cohorts=N_COHORTS)
     ok["cohort"] = assign_cohorts(scat, edges)

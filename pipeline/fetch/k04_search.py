@@ -28,10 +28,10 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 sys.path.insert(0, os.path.join(ROOT, "pipeline"))
 from core.detect import bls_detect, single_event_detect            # noqa: E402
 from core.stats import poisson_fmax                                 # noqa: E402
-from core.transit import metrics, make_transit, multi_epoch_depths  # noqa: E402
+from core.transit import metrics, make_transit, multi_epoch_depths, local_detrend  # noqa: E402
 
-RUN = os.environ.get("KRUN", "T0")            # run label: T0 (default) | T0T1 (combined)
-TIERS = {"T0": [0], "T0T1": [0, 1]}.get(RUN, [0])
+RUN = os.environ.get("KRUN", "T0")            # run label: T0 (G<11) | T0T1 (G<12) | T0T1T2 (G<13)
+TIERS = {"T0": [0], "T0T1": [0, 1], "T0T1T2": [0, 1, 2]}.get(RUN, [0])
 NOISE = os.path.join(ROOT, "data", "derived", "kdwarf_noise_floor.parquet")
 CAL = os.path.join(ROOT, "data", "manifests", f"kdwarf_calibration_{RUN}.json")   # FROZEN, tagged
 RESID = os.path.join(ROOT, "data", "manifests", f"kdwarf_{RUN}_residuals.csv")
@@ -61,15 +61,27 @@ def _binned_local(ph, f, half=0.12, nbin=80):
     return cen[g], prof[g]
 
 
-def battery(t, f, period, t0, scatter):
-    """Light-curve battery features + verdict for a candidate."""
-    ph, ff = _fold(t, f, period, t0)
-    cen, prof = _binned_local(ph, ff)
+def battery(t, f, period, t0, scatter, duration=None):
+    """Light-curve battery features + verdict for a candidate.
+
+    Morphology (depth / flat_bottom / asymmetry) is measured on a LOCALLY-DETRENDED fold
+    (`core.transit.local_detrend`) so that irregular stellar activity surviving the global
+    detrend does not distort the folded shape on active hosts. The activity gate (sin_r2), the
+    eclipsing-binary tests (secondary / odd-even), and the red-noise-aware depth-variability
+    test are computed on the RAW flux -- they measure the activity and differential depths
+    directly, which a per-transit detrend would erase. `duration` is the BLS transit duration
+    (days) used to size the detrend window; with duration=None the detrend is a no-op (so the
+    raw-flux behaviour is recovered exactly)."""
+    f_morph = local_detrend(t, f, period, t0, duration)
+    phm, ffm = _fold(t, f_morph, period, t0)
+    cen, prof = _binned_local(phm, ffm)
     feat = {}
     if len(prof) < 8:
         return {"verdict": "unfoldable", **feat}
     m = metrics(cen, prof)
     feat.update({k: m[k] for k in ("depth", "flat_bottom", "asymmetry")})
+    # raw fold for the activity / EB / variability features (detrend must NOT touch these)
+    ph, ff = _fold(t, f, period, t0)
     base = np.median(ff[np.abs(ph) > 0.25]) if np.any(np.abs(ph) > 0.25) else np.median(ff)
     d = feat["depth"]
     # secondary eclipse near phase 0.5 (eclipsing binary)
@@ -137,7 +149,7 @@ def search_one(t, f, scatter, threshold, z):
     is_cand = (r["sde"] > threshold) or (se["best_snr"] > z and se["n_events"] >= 2)
     if not is_cand:
         return None
-    b = battery(t, f, r["period"], r["t0"], scatter)
+    b = battery(t, f, r["period"], r["t0"], scatter, r["duration"])
     return {"sde": r["sde"], "period": r["period"], "depth": r["depth"], "t0": r["t0"],
             "se_snr": se["best_snr"], "se_events": se["n_events"],
             "needs_centroid_vet": True, **b}

@@ -68,7 +68,7 @@ def _triage(task):
         t = np.concatenate([s[1] for s in secs]); f = np.concatenate([s[2] for s in secs])
         o = np.argsort(t); t, f = t[o], f[o]
         r = bls_detect(t, f, PERIODS, DURS)
-        b = battery(t, f, r["period"], r["t0"], robust_scatter(f))
+        b = battery(t, f, r["period"], r["t0"], robust_scatter(f), r["duration"])
         n_det, frac, scv, corr = _sector_coherence(secs, r["period"], r["t0"], r["duration"])
         return {"source_id": sid, "n_sectors": len(secs), "period": r["period"],
                 "depth": b.get("depth", np.nan), "verdict": b["verdict"],

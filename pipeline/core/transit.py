@@ -157,6 +157,60 @@ def multi_epoch_depths(n_epochs, mean_depth, cv=0.6, dropout=0.15, rng=None):
     return d
 
 
+# ---- activity-robust per-transit detrending (Phase-2 amendment) ----------------------
+
+def local_detrend(time, flux, period, t0, duration, mask_factor=1.8, win_factor=6.0,
+                  order=1, max_halfwin=0.30):
+    """Remove the slow stellar-activity trend LOCAL to each transit, so the folded shape
+    metrics are not distorted on photometrically active hosts.
+
+    Irregular spot modulation that survives the global detrend sits under each transit at a
+    different local slope; folding then tilts/flattens the stacked profile and inflates
+    flat_bottom / asymmetry. The activity gate (sin_r2) keys only on *coherent* P/2P
+    modulation, so it misses the irregular case -- hence active hosts with a clean transit can
+    be pushed to RESIDUAL by a spuriously anomalous shape. Here, per orbital epoch, a low-order
+    polynomial is fit to the out-of-transit cadences in a window of +/- win_factor*halfdur
+    around the transit (masking +/- mask_factor*halfdur as in-transit) and divided out. A
+    transit is short compared with the activity timescale, so the local baseline is well
+    approximated by a line and removed without touching the dip.
+
+    Identity-safe by construction: with no/invalid duration, or an epoch with too few
+    out-of-transit points, or a non-finite/<=0 fitted baseline, the flux is returned unchanged;
+    on a quiet (already-flat) host the local fit is ~constant, so this is ~a no-op -- which is
+    why it leaves the quiet-cohort injection completeness essentially unchanged. Windows are in
+    orbital-phase units derived from the BLS `duration`, so the mask scales with the transit,
+    not the period.
+    """
+    t = np.asarray(time, float)
+    f = np.asarray(flux, float)
+    if not (duration and np.isfinite(duration) and period > 0):
+        return f
+    halfdur = 0.5 * duration / period                  # transit half-width in phase units
+    mask_ph = min(mask_factor * halfdur, 0.45)
+    win_ph = min(win_factor * halfdur, max_halfwin)
+    if win_ph <= mask_ph:
+        return f
+    out = f.copy()
+    phase = ((t - t0) / period + 0.5) % 1.0 - 0.5
+    epoch = np.floor((t - t0) / period + 0.5).astype(int)
+    for e in np.unique(epoch):
+        seg = (epoch == e) & (np.abs(phase) < win_ph)
+        if seg.sum() < 2 * (order + 1):
+            continue
+        oot = seg & (np.abs(phase) > mask_ph)
+        if oot.sum() < max(4, order + 2):
+            continue
+        try:
+            coef = np.polyfit(phase[oot], f[oot], order)
+        except (np.linalg.LinAlgError, ValueError):
+            continue
+        baseline = np.polyval(coef, phase[seg])
+        good = np.isfinite(baseline) & (baseline > 0)
+        idx = np.where(seg)[0][good]
+        out[idx] = f[idx] / baseline[good]
+    return out
+
+
 # ---- morphology metrics (computed on a single folded/processed transit) --------------
 
 def metrics(phase, flux):
