@@ -82,10 +82,29 @@ undecided; (c) optional **phase-folded light curves** of the 3 resolvable residu
 systems (needs a MAST fetch); (d) **nothing submitted** yet (no arXiv/journal/cover letter); (e) the
 **push to public `origin/main`** — 3 commits now unpushed (this + 2 from 06-14), awaiting the go-ahead.
 
-**Next dataset (not started):** the **G 12–13 tiers**. Per the declared stopping rule, the deferred
-activity-robust-morphology fix must be implemented and **re-validated on injections BEFORE unblinding**;
-the `k04 --unblind` step lifts the blind and must only run against a frozen, tagged production
-calibration **when the human directs it** (integrity invariant).
+## G12-13 (T0T1T2) — pre-unblind work DONE (2026-06-22, commit a228639)
+
+The deferred activity-robust-morphology fix is implemented, validated, and the production
+calibration is frozen — everything up to (but not including) the blind-lift:
+
+- **Battery v4 = local per-transit detrending** (`core.transit.local_detrend`): morphology measured
+  on a detrended fold so irregular activity no longer distorts the folded shape on active hosts; the
+  activity gate / EB tests / red-noise depth-variability stay on raw flux. Threaded through `k04/k03/k08`.
+- **Validated candidate-blind:** `k04 --test` regression preserved; objective active-host injection test
+  (`validate_activity_robust.py`) → active-host planet recovery **+0.19**, quiet no-op, box **−0.07** on
+  active hosts. Fixed-sample v3→v4 isolation on tiers [0,1] → box completeness **neutral** (f_max(box)
+  ratio 1.01×), so the flat-occulter limit is preserved. Human-directed decision: **freeze with the
+  detrend alone** (safeguard B held).
+- **Frozen** `data/manifests/kdwarf_calibration_T0T1T2.json`, tag **`phase2-calibration-T0T1T2`**:
+  61,178 stars, cohorts 629/1241/2248 ppm, bars 7.1/8.3/9.0; f_max(box) **6.6×10⁻⁵**, tail **9.0×10⁻⁵**
+  (tighter than T0+T1 from the larger sample). Logged in AMENDMENTS.md (pre-data/confirmatory) + IMPL_LOG.
+- Published T0 / T0+T1 results retain battery v3 (separate immutable artifacts); v4 is for the new tier.
+
+**NEXT — the gated unblind (awaiting explicit human direction):** `KRUN=T0T1T2 k04 --unblind` lifts the
+blind against the frozen calibration, then the cascade (`k05` identity → `k06` centroid → `k07`
+recurrence → `k08` triage) → the T0T1T2 result + paper update. This LIFTS THE BLIND and must only run
+when the human directs it (integrity invariant). Re-running the brighter tiers with v4 also re-evaluates
+their residuals (incl. `1397924585409290240`) — part of the unblind, not done here.
 
 ## What is and isn't durable
 
