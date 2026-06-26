@@ -100,11 +100,32 @@ calibration is frozen — everything up to (but not including) the blind-lift:
   (tighter than T0+T1 from the larger sample). Logged in AMENDMENTS.md (pre-data/confirmatory) + IMPL_LOG.
 - Published T0 / T0+T1 results retain battery v3 (separate immutable artifacts); v4 is for the new tier.
 
-**NEXT — the gated unblind (awaiting explicit human direction):** `KRUN=T0T1T2 k04 --unblind` lifts the
-blind against the frozen calibration, then the cascade (`k05` identity → `k06` centroid → `k07`
-recurrence → `k08` triage) → the T0T1T2 result + paper update. This LIFTS THE BLIND and must only run
-when the human directs it (integrity invariant). Re-running the brighter tiers with v4 also re-evaluates
-their residuals (incl. `1397924585409290240`) — part of the unblind, not done here.
+## G12-13 (T0T1T2) — UNBLIND AUTHORIZED & IN PROGRESS (human said "Unblind!" 2026-06-26)
+
+The human directed the unblind. The blind is lifted; a fresh session may run the steps below freely.
+A machine reboot interrupted the run mid-search — **no harm**: `k04 --unblind` writes its output only at
+the very end, so an interrupted run leaves no partial file and is simply re-run from scratch
+(deterministic against the frozen, tagged calibration). **Resume from step 1.**
+
+Run from repo root, in order (each stage is `KRUN`-parameterized and writes `data/manifests/kdwarf_T0T1T2_*`):
+
+```bash
+# 1. the search (lifts the blind) — ~12 min, NOT resumable (re-run whole; deterministic). Writes
+#    kdwarf_T0T1T2_residuals.csv + prints battery verdicts and the real per-family f_max.
+KRUN=T0T1T2 .venv/bin/python pipeline/fetch/k04_search.py --unblind --workers 14
+# 2-5. the cascade — network-heavy (MAST/SIMBAD/TESScut fetches), each resumable:
+KRUN=T0T1T2 .venv/bin/python pipeline/fetch/k05_identity.py
+KRUN=T0T1T2 .venv/bin/python pipeline/fetch/k06_centroid.py --workers 8
+KRUN=T0T1T2 .venv/bin/python pipeline/fetch/k07_multisector.py --workers 8
+KRUN=T0T1T2 .venv/bin/python pipeline/fetch/k08_triage.py --workers 8
+```
+
+Expectations / scale: ~4,000+ residuals → identity survivors → centroid (slow, a TESScut fetch per
+candidate) → recurrence → triage. The cascade (k06-k08) may take a few hours. The T0T1T2 result then
+feeds a paper update. Note: this run re-searches the brighter tiers with v4 too, so it re-evaluates
+their residuals (incl. the active-host `1397924585409290240`) under the new activity-robust morphology —
+that is expected and part of the unblind. Frozen calibration: tag `phase2-calibration-T0T1T2`;
+f_max(box) 6.6×10⁻⁵ if the residuals clear. Status task #8 tracks this.
 
 ## What is and isn't durable
 
