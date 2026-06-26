@@ -411,3 +411,60 @@ On it — let me make this durable across the reboot. Three things: refresh + co
 
 
 _[tools: Bash]_
+
+Let me refresh the transcript and record the publication gap in the resume anchor:
+
+
+_[tools: Bash]_
+
+
+_[tools: Read]_
+
+Now insert the publication-gap analysis as a new section in the resume anchor:
+
+
+_[tools: Edit]_
+
+Now save the cross-session context to memory:
+
+
+_[tools: Write]_
+
+
+_[tools: Write]_
+
+Now add both to the memory index:
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now commit the transcript and status doc to git (the durable record):
+
+
+_[tools: Bash]_
+
+Committed and working tree is clean. Let me check whether these commits are also on the remote (the most durable, off-machine copy):
+
+
+_[tools: Bash]_
+
+Everything's saved locally and committed — and a normal restart won't touch any of it (your home directory and git history persist across a reboot). Here's the full picture so you can restart with confidence:
+
+**Saved and committed (`177d23a`, `987d2dc`):**
+- ✅ This session's transcript — `docs/transcripts/claude-session-96240aa9.md` (refreshed, 24 KB)
+- ✅ The publication-gap analysis + tomorrow's plan — in `docs/phase2_status.md` (the resume anchor a fresh session reads first)
+- ✅ `CLAUDE.md` and the transcript-clobber fix
+- ✅ Memory files for a clean cold-start tomorrow: **Phase 2 publication gap** (figures→refs→venue→submit, then G 12–13 tiers) and **Firefox resource cap**, both added to `MEMORY.md`
+
+**One decision for you:** those 2 commits are **local only — not yet pushed to GitHub.** A reboot keeps them either way, but pushing is the off-machine copy (survives disk trouble) and fits the project's public tamper-evident-history ethos. Since it publishes to the public repo, I didn't push unprompted. Want me to `git push origin main`?
+
+**One heads-up:** when this turn ends, the Stop hook will refresh `claude-session-96240aa9.md` once more (to include this final exchange), so you'll see that one file as "modified" tomorrow — that's expected and harmless; tomorrow's session can commit it.
+
+Tomorrow we pick up at: **close the publication gap, figures first**, then move on to the next dataset. Have a good restart.
+
+### 🧑 Tonio
+
+Perfect. Thank you.
