@@ -181,34 +181,45 @@ activity/profile artifact"). **NOT a vindication-by-tuning:** the correction cam
 detector's own recovered period, not from adjusting any cut. f_max(box) zero-flat-bottom basis is
 **not** broken by an alias artifact — but the human should make the final call.
 
-**The standout survives the correction and is NOT explained away:** `1397924585409290240` at its true
-2.94 d period is a clean, deep (7.2%), strikingly symmetric (asym=0.03), recurring (12 sectors),
-sub-stellar-radius (~1.9 R_J) dip the battery cannot classify, in no catalogue, and it survived the v4
-activity fix built specifically for it (sin_r2=0.001). A real, uncatalogued deep transiter of
-undetermined nature (inflated HJ / brown dwarf / grazing low-mass companion / other) — a genuine
-follow-up target, carried as unexplained (paper Option A).
+*(Interim read, 2026-06-28, now SUPERSEDED → see RESOLVED below: the standout `1397924585409290240`
+was provisionally carried as an unexplained, uncatalogued deep transiter. A SPOC cross-check then
+showed that was wrong.)*
 
-**Methodological item to log/fix:** k08's multi-sector period re-derivation can alias relative to k04's
-single-pass BLS, corrupting the triage morphology metrics and defeating the v4 detrend. The resolvable
-residuals' morphology should be verified at the BLS-consistent period (as done here) before any are
-cited; consider reconciling k08's period to k04's or flagging alias multiples.
+**RESOLVED — `1397924585409290240` is an ECLIPSING BINARY (2026-06-28).** Cross-checking the brightest
+standout against TESS catalogues overturned the "uncatalogued" read: it is **TIC 156074324** (= TYC
+3490-591-1, K1V), a **2-minute SPOC target** (sectors 14–78) with full Data Validation and **four
+TCEs** — TCE_1 (P=2.935d, depth 8.6%) and **TCE_2 a secondary eclipse** (same period, half-phase
+offset, depth 1.7%). A secondary at φ=0.5 ⟹ low-mass eclipsing companion. Our own FFI data confirm it:
+folded at the true 2.935d period with a window matched to the eclipse, the secondary appears at **0.7%,
+77σ**. SPOC detected it; the TESS team never made it a TOI (EB disposition). Write-up:
+`paper/note_residual_TIC156074324.md`. *(My earlier "no SPOC TCE" note was wrong — it read ExoFOP's
+TOI/comment fields, not the DV/TCE products; corrected.)*
 
-Figures: `figures/kdwarf_T0T1T2_resolvable_residuals.png` (all 6, folded at true P),
-`figures/kdwarf_T0T1T2_standout_1397924585409290240.png` (harmonic check).
+**Why our battery missed it — two blind spots, now fixed:** (1) k08 period aliasing (11.74≈4×2.94d)
+corrupted the morphology/EB metrics; (2) the secondary-eclipse test used a **median over a ±0.05-phase
+window** (≈3× the eclipse width → dilutes a narrow secondary to ~0; this object measured 0.0) and fired
+only on `secondary>0.3×primary` (1.7/8.6=0.20<0.30, so it would miss it even if measured). **Fix
+(`k04.battery`):** secondary measured on a duration-matched window, EB flagged on **significance**
+(`SECONDARY_SIGMA`=6σ vs out-of-eclipse scatter); odd-even in-transit selection also matched.
+Injection regression preserved (box→RESIDUAL 22/24, planet→natural_planet 23/24) ⟹ detection bars and
+f_max(box) completeness **unchanged**.
 
-**Standout written up (2026-06-28): `paper/note_residual_TIC156074324.md`.** Full battery recomputed at
-the true 2.94d period: no secondary (≈0), no odd-even (0.008), symmetric (asym 0.028), flat 0.67, low
-sin_r2 (0.083), per-transit depth stable (CV 0.11, no dropouts), on-target centroid. Host = K1V,
-Teff 4866K, R★≈0.72R☉, RUWE 1.06 (clean single-star astrometry) → R_p≈1.7–1.9 R_J (sub-stellar, large
-for a planet). **Catalogue cross-checks: SIMBAD** = plain star, no variable/EB/planet type; **ExoFOP
-(TIC 156074324)** = no TOI, no SPOC TCE, no disposition, no notes (caveat: ExoFOP TCEs are 2-min SPOC;
-our detection is FFI, so absence may mean it wasn't a 2-min target); **literature** = nothing. So:
-genuinely uncatalogued; survives all discriminants at true period; most-likely mundane (inflated HJ or
-grazing/low-mass EB) but undetermined from photometry. **NOT a detection.** No solid *local* deeper-dive
-path remains (planet-vs-EB needs RV / 2-min data / spectroscopy = external follow-up).
+**Exploratory re-vet** (`pipeline/runners/revet_secondary.py`, → `kdwarf_T0T1T2_secondary_revet.csv`):
+applying the corrected secondary test at true BLS periods reclassifies **~5 of 64 residuals as EBs**
+(incl. this object 77σ and resolvable residual `2561459808901475584` ~11σ) and finds **~2 of 107
+`natural_planet` also have strong secondaries** (the blind spot leaked EBs into the planet class too).
+Of the 6 resolvable residuals, 2 are now EBs; the other 4 are low-SDE/asymmetric, none a clean
+flat-bottomed occulter.
 
-**Next:** continue the program (the period-alias k08↔k04 fix; paper §4.2 extension to G<13 remain open
-items). The note + cascade are committed and pushed to origin/main.
+**Integrity:** T0T1T2 is already unblinded and G<13 is the faintest tier, so this fix is inherently
+**post-data/exploratory** under the registered stopping rule — **not** applied as a corrected
+confirmatory result. Frozen confirmatory output stands (residuals reported under Option A); the re-vet
+is the follow-up that explains them. Bars / cohort nulls / C_i / f_max untouched. Logged: `AMENDMENTS.md`
++ `pipeline/IMPLEMENTATION_LOG.md`.
+
+**Next:** paper §4.2 extension to G<13 (now incorporating the EB resolution + re-vet); the k08↔k04
+period reconciliation remains a code item. Discovery ambition → aperiodic + cross-channel regimes
+(see memory `search-value-proposition`).
 
 Original resume note (retained): a reboot interrupting `k04 --unblind` is **no harm** — it writes
 output only at the very end, so it leaves no partial file and is re-run from scratch (deterministic

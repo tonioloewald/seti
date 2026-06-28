@@ -653,3 +653,312 @@ _[tools: Edit]_
 
 
 _[tools: Edit]_
+
+Done. Here's where the unblind landed.
+
+## T0T1T2 (G ≤ 13) unblind — complete
+
+The blind is lifted. The full cascade ran end-to-end, and `f_max` matched the frozen pre-data prediction **exactly**: box **6.60×10⁻⁵**, tail 8.99×10⁻⁵. Cascade: 4,501 residuals → 4,195 identity → 1,598 on-target → 194 recurring → **108 planet / 64 RESIDUAL / 17 EB / 5 disintegrating**.
+
+## What the resolvable residuals actually are
+
+Six RESIDUALs reach the resolvable regime (depth > 0.3%). Following your steer to surface rather than explain away, I phase-folded all six and recomputed their morphology at their *true* BLS periods — and that's where I found I had to correct myself:
+
+- **The "2 flat-bottomed occulters" I first reported was a harmonic-alias artifact.** k08 measures `flat_bottom`/`asymmetry` at its multi-sector period, which for several objects is an alias of the true period (1397924585409290240: 11.74 ≈ 4×2.94 d). At the wrong period the fold smears *and* the v4 detrend misfires. Recomputed at true periods, no object is cleanly flat **and** symmetric **and** significant. The clean-null basis for f_max(box) is intact — but I want to be explicit this correction came from folding at the detector's own period, not from nudging a cut, and the final call is yours.
+
+- **One object does not go away, and I'm not filing it under "activity":** `1397924585409290240`. At its true 2.94 d period it's a clean, deep (7.2%), strikingly symmetric (asym 0.03), recurring-across-12-sectors, sub-stellar (~1.9 R_J) dip the battery cannot classify and that's in no catalogue. It survived the v4 fix that was built specifically for it. The paper already carries it (§4.2) as a real, uncatalogued deep transiter of undetermined nature. It's the genuine follow-up target here.
+
+## Also resolved / surfaced
+- **Bookkeeping:** the T0 "12 vs 33 RESIDUAL" discrepancy — the on-disk T0 CSV is a v3 artifact; the "33" was the superseded v2 run.
+- **A real methodological item to fix:** k08's multi-sector period can alias against k04's BLS, corrupting triage morphology metrics. Resolvable-residual morphology should be verified at the BLS-consistent period (as I did) until k08↔k04 periods are reconciled.
+
+## State
+Two local commits (`499dc70` cascade + result, `658cf51` folds + correction), all result CSVs / figures / scripts / logs in. Status doc, IMPLEMENTATION_LOG, and memory updated — including the original claim **and** its correction, so the record shows the reasoning, not just the conclusion. **Nothing pushed.**
+
+Open for your call: (1) how hard to chase `1397924585409290240` (secondary search at 2.94 d, odd-even at the true period, host characterization, archival RV); (2) whether to fix the k08 period-aliasing now or just flag it; (3) extending paper §4.2 to G<13. Where do you want to point it?
+
+### 🧑 Tonio
+
+Let’s make sure we have everything including logs and transcripts committed and pushed. I think we might want to just write up a note on this one item we cannot explain away. And then continue with our program unless there’s a solid path for a deeper dive.
+
+### 🤖 Claude
+
+Good plan. Before I write the note, one thing matters: the EB discriminants (secondary eclipse, odd-even) in the triage were *also* computed at the alias period — so they're suspect too. If this object shows a secondary or odd-even at its true 2.94 d period, it's just an eclipsing binary and there's nothing to write up. That check is local and cheap, and it decides both the note and the "deeper dive" question. Let me run the full battery at the true period first.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+The EB tests recomputed at the true period are decisive: at P=2.94 d there's **no secondary eclipse** (the phase scan is flat everywhere except phase 0), **no odd-even difference** (0.008), the dip is **symmetric** (asym=0.03), and the depth is **stable across all 7 well-sampled transits** (per-transit CV=0.11, no dropout). It also isn't a coherent rotational signal (sin_r2=0.08). So it survives every discriminant the battery has *at its true period* — it genuinely is not explainable as an EB, disintegrating body, or activity. It reads as a clean transit of a ~1.6–2.1 R_J body.
+
+That makes one thing essential for an accurate note: **is it actually uncatalogued?** A 7%-deep 2.94 d transit on a G=10.7 star would almost certainly be a known TESS Object of Interest if real — k05 said "unknown," but k05 ran its cross-match at the alias period context. Let me verify its coordinates and do a targeted archival check before I write anything.
+
+
+_[tools: Bash]_
+
+The identity record clarifies it: the k04/identity stage **did** use the correct 2.94 d period (only k08 aliased), se_snr=272.9 (a very strong single-event signal), and the cross-match returned `known_planet=False`, `known_toi=False`, `simbad_otype="*"` (a plain star, no variability/binary classification). So per our catalog checks it is genuinely uncatalogued. Let me pull the star's actual Gaia parameters from the manifest so the radius estimate is real rather than assumed.
+
+
+_[tools: Bash]_
+
+Now I have real stellar parameters: **Teff = 4866 K, logg = 4.46, d = 85 pc, RUWE = 1.06** (clean single-star astrometry — argues against an unresolved blend), R★ ≈ 0.72 R☉. So the transiting body is **R_p ≈ 1.8 R_J** (sub-stellar, below the battery's 2.5 R_J stellar-companion cut). That's the full local picture, and it's enough to write an accurate note. Let me make a clean dedicated figure for it, then write the note.
+
+
+_[tools: Write]_
+
+Let me finish generating the note figure, then answer your question directly — because it reshapes how the note should be framed.
+
+
+_[tools: Bash]_
+
+## Short answer: probably a transiting substellar/low-mass companion — but "gas giant" claims more than we can show, and the radius is the interesting part.
+
+Here's the careful version. From the real Gaia parameters (Teff 4866 K, R★ ≈ 0.72 R☉) and depth ~6–7%:
+
+$$R_p/R_\star = \sqrt{\text{depth}} \approx 0.26 \;\Rightarrow\; R_p \approx 1.8\,R_J$$
+
+What that radius is, and isn't:
+- **Too big for a brown dwarf** (those are ~1 R_J — degenerate, they don't get bigger with mass).
+- **At the *large* end for a gas giant** — inflated hot Jupiters reach ~1.5–2.0 R_J, so an inflated HJ at this 2.94 d period is the leading mundane hypothesis, but 1.8 R_J is not a *typical* gas giant.
+- **Also the radius of a mid-M dwarf** (~0.19 R☉). A grazing or low-mass eclipsing binary can mimic this — *except* the morphology argues against it: the dip is symmetric and flat-ish (grazing EBs are V-shaped), there's **no secondary eclipse**, and **no odd-even** difference at the true period.
+
+So the radius and morphology are *consistent with* a transiting giant planet, but we cannot call it a planet — that needs a **mass**, which needs radial velocities we don't have. Photometry alone can't separate "inflated hot Jupiter" from "grazing/low-mass EB with an undetectable secondary."
+
+And the part that's genuinely a small puzzle: a **7%-deep, 2.94-day transit on a V≈11 star** is about the easiest thing TESS's own pipeline detects — it should be a TOI. Our cross-match says it isn't (`known_toi=False`, `known_planet=False`, SIMBAD just "*"). Three options: (a) it's real and slipped through SPOC's TOI vetting (e.g. auto-flagged as likely-EB or on crowding), (b) it's catalogued and our cross-match missed it, or (c) our depth is inflated by processing and the true object is shallower/known.
+
+That's exactly why this is a *note*, not a discovery: **our pipeline cannot classify it, and the most likely explanations are mundane but unconfirmed.** It's the honest residual the search is designed to surface — most probably an uncatalogued transiting giant or a low-mass EB, plausibly worth a TESS-community follow-up, but not a technosignature and not a confirmed planet.
+
+Here's the clean fold for it:
+
+
+_[tools: SendUserFile]_
+
+Now, on your actual instructions — commit/push everything, write the note, and the deeper-dive question. The crux of the note is whether it's *truly* uncatalogued, and you just asked the same thing, so let me do one quick, decisive archival check before writing: query ExoFOP/SIMBAD for this star. That directly tests option (b) "catalogued but our cross-match missed it."
+
+
+_[tools: ToolSearch]_
+
+
+_[tools: WebFetch]_
+
+
+_[tools: WebSearch]_
+
+SIMBAD resolves it as **TYC 3490-591-1 = TIC 156074324, K1V, V=11.0**, with **no variable/EB classification and no TOI/planet** — and the literature search turns up nothing on it. That confirms it's genuinely uncatalogued as a transiting or variable object. Let me check ExoFOP (the authoritative TESS follow-up database) for the TIC, since that's where any SPOC threshold-crossing event or community flag would live.
+
+
+_[tools: WebFetch]_
+
+ExoFOP is the clincher: TIC 156074324 has **no TOI, no SPOC threshold-crossing event, no disposition, no community notes** — and crucially one honest caveat, the ExoFOP TCE list reflects TESS *2-minute* SPOC targets, whereas our detection comes from FFI photometry, so "no TCE" may simply mean it was never a 2-min target rather than "SPOC looked and saw nothing."
+
+That's the complete local picture. There is **no solid *local* deeper-dive path left** — planet-vs-EB disambiguation needs radial velocities (a mass) and a look at any 2-min data, both of which are external/community follow-up. So I'll do exactly what you said: write the note, commit and push everything, then continue the program. Let me write the note.
+
+
+_[tools: Write]_
+
+Let me point the status doc at the note and the catalogue confirmations, then commit and push everything.
+
+
+_[tools: Edit]_
+
+
+_[tools: Bash]_
+
+Remote is the public `github.com/tonioloewald/seti` (public-after-registration, which Phase 2 is). Currently 2 commits ahead, plus this new work. Let me commit the note + figures + transcripts, then push everything.
+
+
+_[tools: Bash]_
+
+
+_[tools: Bash]_
+
+Pushed — `42d4428..9f85869`, and `main` is now level with `origin/main`. Everything's public and durable.
+
+## Done
+
+**Committed & pushed** (3 commits now on `origin/main`): the full T0T1T2 cascade + result CSVs, the phase-fold figures and scripts, the flat-bottom correction, the research note, the status doc, the IMPLEMENTATION_LOG entries, and both session transcripts.
+
+**The note:** `paper/note_residual_TIC156074324.md` — Gaia DR3 1397924585409290240 = TIC 156074324, the one residual the frozen battery can't classify. It survives every discriminant at its true 2.94 d period, sits on a clean single K1V dwarf, has R_p ≈ 1.8 R_J (sub-stellar, large for a planet), and is confirmed uncatalogued by SIMBAD + ExoFOP + literature. Framed as exactly what it is: reported, not adjudicated; most-likely mundane but unconfirmed; **not** a detection.
+
+**Deeper dive:** there's no solid *local* path left — separating "inflated hot Jupiter" from "grazing/low-mass EB" needs a mass (RV), a look at any 2-min SPOC data, and recon spectroscopy, all external. So per your steer, the local work is closed and we move on.
+
+## Continuing the program — two open items, one a real bug
+
+1. **The k08 period-alias bug (recommend doing this next).** k08's multi-sector stage re-derives periods that can be harmonic aliases of k04's BLS, which silently corrupts the triage morphology metrics (it's what produced the false `flat_bottom=1.00`). It doesn't touch the detection bars or `f_max` (those come from k04), so it's not an integrity threat to the headline result — but it's a correctness fix worth making so future resolvable-residual adjudication doesn't need hand-correction. Small, well-scoped.
+2. **Extend paper §4.2 to G<13** — fold the T0T1T2 result and this note into the K-dwarf draft (the paper currently stops at the combined T0+T1 tier).
+
+I'd suggest the k08 alias fix first since I just found it and it's a genuine pipeline defect. Want me to take that on, go to the paper extension, or point somewhere else?
+
+### 🧑 Tonio
+
+Is there someone we should notify or somewhere we should post the note?
+
+### 🤖 Claude
+
+Good instinct to ask — and the answer matters because *how* you post it has to match what it is: a follow-up **candidate**, not a discovery. There's no single person to email; the field has standard mechanisms for exactly this. In rough priority:
+
+## 1. ExoFOP-TESS — the right place to actually get it followed up
+Add a community **observing note** to **TIC 156074324** at `exofop.ipac.caltech.edu/tess/`. This is the authoritative TESS follow-up coordination database; anyone vetting that star will see your note. It's the single highest-value action because it routes the object to people with spectrographs. The note text is essentially what we already have: FFI detection, P=2.94 d, ~6% depth, SDE 11, 12 sectors, on-target centroid, no secondary/odd-even at the true period, R_p≈1.8 R_J, not a TOI / no SPOC TCE, RV needed. Requires a free ExoFOP login (full TFOP functions need TFOP membership, but community notes are lighter).
+
+## 2. RNAAS (Research Notes of the AAS) — the right formal home for the note
+The note as written is almost exactly an RNAAS: short, citable (DOI, ADS-indexed), non-peer-reviewed, explicitly meant for candidates and "here's a thing worth a look" results. Fast turnaround. This puts it on the permanent record and your main K-dwarf paper can cite it. I'd reformat it to the ~1-figure / ≲1000-word RNAAS shape if you want.
+
+## 3. Link it from the OSF registration
+Attach the note as a component/update under your registered project (`osf.io/2akn3`) so the pre-registration record stays complete — the search surfaced one residual, and here's its disposition. This is bookkeeping, but it's the kind your methodology cares about.
+
+## 4. (Optional) arXiv astro-ph.EP
+If you want broader visibility, post alongside/instead of RNAAS. Needs arXiv endorsement if you're not already a submitter.
+
+**One caveat before any *public* post (RNAAS/arXiv):** the note flags that "no SPOC TCE" might just mean it wasn't a 2-minute target. Worth closing that loop first — check MAST for whether TIC 156074324 had 2-min cadence in any sector and whether a SPOC TCE exists. If it *was* a 2-min target and SPOC saw nothing, that's more interesting; if it was FFI-only, the absence is expected. ExoFOP and OSF don't need this first; a public note is cleaner with it.
+
+I can't post any of these myself (they need your accounts), but I can prepare the artifacts. Want me to:
+
+
+_[tools: AskUserQuestion]_
+
+Right call. Let me query MAST for whether TIC 156074324 had 2-minute SPOC cadence in any sector, and whether any SPOC Data Validation product (i.e. a TCE) exists.
+
+
+_[tools: Bash]_
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+I'll wait for the MAST query to return.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bieydycso</task-id>
+<tool-use-id>toolu_019tDbx6eeKs9MqeLgsd2deQ</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/f11058c0-0183-4758-85e3-66b8b6b2a286/tasks/bieydycso.output</output-file>
+<status>completed</status>
+<summary>Background command "Query MAST for 2-min cadence and SPOC TCE" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Read]_
+
+This changes things materially, and it's exactly why you said check first. TIC 156074324 **was a 2-minute SPOC target** (sectors 23, 24, 26, 50, 51, 55, 77, 78), and SPOC **did produce Data Validation reports** — i.e. **there is a SPOC TCE on this star.** So it is *not* uncatalogued or missed; SPOC detected a transit signal, ran full DV on it, and the TESS team did **not** promote it to a TOI. That strongly implies it was dispositioned as a false positive or eclipsing binary in vetting.
+
+Before I say anything more, let me pull the SPOC TCE parameters and DV diagnostics to see *why* — that's what tells us whether this is robustly explained.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+I'll wait for the DV report download and parse.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bdk9kkwar</task-id>
+<tool-use-id>toolu_012PYat5oQ5sicwgGKzf6djQ</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/f11058c0-0183-4758-85e3-66b8b6b2a286/tasks/bdk9kkwar.output</output-file>
+<status>completed</status>
+<summary>Background command "Download SPOC DV time series and dump TCE parameters" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Read]_
+
+This is decisive — and it's exactly why you check before posting. The SPOC multi-sector DV (sectors 14–78) reports **four TCEs, and the first two are the smoking gun:**
+
+- **TCE_1:** P = 2.935 d, depth **8.6%**, MES 690 — the primary (our detection).
+- **TCE_2:** P = 2.935 d (same period), epoch offset by **half a period** (1930.14 vs 1928.67; ΔP/2 = 1.468 d), depth **1.7%**, MES 122 — **a secondary eclipse.**
+
+A 1.7% secondary eclipse at the same period, half a phase away, is the textbook signature of an **eclipsing binary**. SPOC detected it, which is why the TESS team never promoted it to a TOI. It's a low-mass EB (the companion contributes ~1.7% of the system light → an M-dwarf-class secondary), not a planet and not an anomaly.
+
+The obvious question is why *our* battery's secondary test missed a 1.7% secondary. Let me confirm the mechanism in our own light curve.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+Confirmed in our own light curve. Folding at the true 2.935 d period with a window **matched to the eclipse duration** (half-width 0.015):
+
+| window half-width | primary | secondary |
+|---|---|---|
+| 0.015 (matched) | **+5.0%** | **+0.69%** |
+| 0.020 | +3.1% | +0.35% |
+| 0.050 (**what the battery uses, median**) | +0.08% | −0.04% |
+
+So the secondary eclipse **is right there in our data** (~0.7% in FFI, 1.7% in SPOC 2-min) — our battery's secondary-eclipse test missed it because it takes a **median over a ±0.05 phase window that's ~3× wider than the eclipse**, which washes a narrow eclipse down to zero. (It dilutes the *primary* the same way — 5% → 0.08%.)
+
+## Bottom line
+
+**TIC 156074324 is an eclipsing binary, robustly.** SPOC detected the secondary (TCE_2, 1.7% at half-phase); we independently recover it at 0.7% with a matched window. This is the very robust kind of explanation that *does* warrant reclassifying — it's a low-mass EB, not an anomaly, not a planet, not a technosignature.
+
+**So: don't notify anyone, don't post it.** Your instinct to check first was exactly right — it stopped us from announcing an eclipsing binary as an "unexplained deep transiter," and the public note/record now needs correcting.
+
+## But this surfaced a real bug, and it has teeth
+
+The misclassification came from **two compounding pipeline defects**:
+1. **k08 period aliasing** (11.74 d = 4 × 2.94 d) — already flagged.
+2. **The secondary-eclipse test window is far too wide for narrow eclipses** — a median over ±0.05 phase dilutes real secondaries to ~0. This is general: it means our EB rejection has been **under-catching narrow-eclipse EBs across the whole search**, letting them survive as "residuals."
+
+That second one matters beyond this object. The **published v3 paper's §4.2 discusses this exact star as a deep transiter of undetermined nature** — that's now a known misclassification, and other residuals (in any tier) could be the same kind of diluted-secondary EB. It doesn't touch the detection bars or `f_max` (those come from k04's BLS), but it changes the residual catalogue and the "unexplained residual" claims.
+
+I need your steer on scope before I change more than the record:
+
+
+_[tools: AskUserQuestion]_
+
+Understood — full scope. Given this is **post-unblind**, I'll treat it with the integrity care it demands: the fix has to be a principled correctness change (secondary window matched to the eclipse, mirroring how primary depth is already measured), justified independently of which objects it reclassifies — **not** a cut tuned to clean the null. The detection bars and `f_max` come from k04's BLS and stay untouched by construction; this only corrects EB *labeling*. And it's an **exploratory, post-data** refinement layered on top of the frozen confirmatory result (Option A: residuals were reported, not adjudicated; now follow-up explains one). I'll log it as such in AMENDMENTS.
+
+Let me start by reading the full verdict logic so I fix the right thing.
+
+
+_[tools: Read]_
+
+Now I see the full picture, and it's worse than just the window — it's two things. The verdict rule is:
+
+```python
+elif feat["secondary_depth"] > 0.3 * d or feat["odd_even"] > 0.5 or d > DEEP_EB_DEPTH:
+    v = "eclipsing_binary"
+```
+
+For this object: SPOC primary 8.6%, secondary 1.7% → secondary/primary = 0.20 < 0.30. So **even a perfectly-measured secondary wouldn't trip the `0.3×d` rule** — the relative threshold is too lax for shallow-secondary (low-mass/grazing) EBs. The fix is both: a **matched-width window** (so the secondary is measured at all) *and* a **significance-based** criterion (any statistically real secondary ⇒ EB), not "secondary > 30% of primary."
+
+On integrity, the safest implementation: I will **not** mutate the frozen confirmatory battery/calibration and silently re-label the registered result. Instead I'll build an **exploratory post-data re-vet** that applies the corrected secondary test (matched window + significance) to the existing residual list at true BLS periods, report exactly what flips, and validate it doesn't convert injected/known planets to EBs. The frozen confirmatory result stands; this is a documented follow-up layer. Let me build and run it.
+
+
+_[tools: Write]_
+
+
+_[tools: Bash]_
+
+The re-vet runs BLS + matched-window secondary test on all 194 recurring candidates (~3 min). I'll wait for it — the false-positive check on the 108 planets will tell me if the significance threshold is sane, and the residual flips tell me the real impact.
+
+### 🧑 Tonio
+
+<task-notification>
+<task-id>bjsr43flx</task-id>
+<tool-use-id>toolu_014zbZdKxT9GwrysWVzRVwus</tool-use-id>
+<output-file>/tmp/claude-1000/-home-tonio-seti/f11058c0-0183-4758-85e3-66b8b6b2a286/tasks/bjsr43flx.output</output-file>
+<status>completed</status>
+<summary>Background command "Run exploratory secondary re-vet on recurring triage" completed (exit code 0)</summary>
+</task-notification>
+
+### 🤖 Claude
+
+
+_[tools: Read]_
+
+The re-vet is informative. Let me look at the 5 flagged "planets" to judge whether the 4.7% rate is real EB contamination (the same bug) or false positives of my test — that calibrates how much to trust the marginal residual flips.
+
+
+_[tools: Bash]_

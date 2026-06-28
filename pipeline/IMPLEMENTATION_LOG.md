@@ -252,3 +252,14 @@ from adjusting any cut. The standout 1397924585409290240 remains — at true P=2
 battery cannot classify; carried as unexplained (Option A). **Open methodological item:** k08's
 multi-sector period can alias vs k04's BLS; resolvable-residual morphology should be verified at the
 BLS-consistent period (reconcile k08↔k04 period, or flag alias multiples).
+
+## Phase 2 — secondary-eclipse test fix + exploratory re-vet (2026-06-28)
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| P2-sec-fix | `k04.battery`: secondary-eclipse depth now measured on a window **matched to the BLS transit duration** (`hw = 0.5*duration/period`, floor 0.005) and the EB verdict fires on **significance** (`secondary_sigma > SECONDARY_SIGMA=6` vs out-of-eclipse scatter), replacing the old median-over-±0.05-phase + `secondary_depth>0.3*primary` rule. Odd-even in-transit selection matched to the eclipse too. | The old test diluted narrow secondaries to ~0 (a ±0.05 window is ~3× a short eclipse) and the 0.3×primary relative threshold missed shallow-secondary low-mass/grazing EBs — together they let TIC 156074324 (secondary 1.7%/primary 8.6%, measured 0.0) survive as a "residual" that SPOC had dispositioned as an EB (secondary TCE). A significant secondary at φ=0.5 ⟹ self-luminous companion ⟹ EB, independent of relative depth. Validated: `k04 --test` preserved (box→RESIDUAL 22/24, planet→natural_planet 23/24). | §3.3 EB discrimination |
+| P2-sec-revet | `pipeline/runners/revet_secondary.py`: EXPLORATORY post-data re-vet of the T0T1T2 recurring triage with the corrected secondary test at each object's true BLS period → `data/manifests/kdwarf_T0T1T2_secondary_revet.csv`. Reclassifies ~5/64 residuals as EBs (incl. `1397924585409290240` 77σ, `2561459808901475584` ~11σ); validation by-product: ~2/107 `natural_planet` also show strong secondaries. | Explains the surfaced residuals without altering the frozen confirmatory result (Option A: reported, then followed up). **Exploratory only** — T0T1T2 is unblinded and G<13 is the faintest tier, so the fix is not applied confirmatorily; bars/C_i/f_max untouched, the confirmatory f_max is NOT recomputed from the re-vetted list. See AMENDMENTS.md 2026-06-28. | §4.2 residual disposition |
+
+**Open code item:** k08's multi-sector period re-derivation can lock onto a harmonic alias of the k04
+BLS period (1397924585409290240: 11.74≈4×2.94d), corrupting the triage morphology/EB metrics. Reconcile
+k08's period to k04's (or flag alias multiples) before the triage morphology is used for adjudication.

@@ -42,6 +42,13 @@ DURS = np.array([0.05, 0.1, 0.2])
 # planet or structure: depth = (R_occ/R_star)^2, R_star ~ 0.7 R_sun = 6.96 R_J, so R_occ = 2.5 R_J
 # at depth ~0.13. Bigger than any planet/brown dwarf -> eclipsing binary. (Physical, not tuned.)
 DEEP_EB_DEPTH = 0.13
+# Secondary-eclipse significance threshold (sigma vs out-of-eclipse scatter). A statistically real
+# secondary at phase 0.5 is unambiguous evidence of a self-luminous/reflecting companion -> EB,
+# regardless of how shallow it is relative to the primary. Replaces the old "secondary > 0.3*primary"
+# relative rule, which missed shallow-secondary low-mass/grazing EBs (e.g. TIC 156074324: secondary
+# 1.7%/primary 8.6% = 0.20 < 0.30). Measured on a window MATCHED to the BLS transit duration; a wide
+# fixed window + median dilutes a narrow secondary to ~0. (Significance, not a depth tuned to a candidate.)
+SECONDARY_SIGMA = 6.0
 
 
 def _fold(t, f, period, t0):
@@ -84,12 +91,19 @@ def battery(t, f, period, t0, scatter, duration=None):
     ph, ff = _fold(t, f, period, t0)
     base = np.median(ff[np.abs(ph) > 0.25]) if np.any(np.abs(ph) > 0.25) else np.median(ff)
     d = feat["depth"]
-    # secondary eclipse near phase 0.5 (eclipsing binary)
-    sec = np.abs(ph - 0.5) < 0.05
+    # secondary eclipse near phase 0.5 (eclipsing binary), measured on a window MATCHED to the BLS
+    # transit duration and judged by SIGNIFICANCE vs the out-of-eclipse scatter (not a fixed wide
+    # window + median, which dilutes a narrow secondary to ~0).
+    hw = max(0.5 * duration / period, 0.005) if (duration and np.isfinite(duration) and period > 0) else 0.02
+    sec = np.abs(np.abs(ph) - 0.5) < hw
+    clean = (np.abs(ph) > 3 * hw) & (np.abs(np.abs(ph) - 0.5) > 3 * hw)
+    sig_pt = np.std(ff[clean]) if clean.sum() > 10 else np.std(ff)
     feat["secondary_depth"] = float(base - np.median(ff[sec])) if sec.sum() > 3 else 0.0
-    # odd-even depth difference (eclipsing binary)
+    feat["secondary_sigma"] = (float(feat["secondary_depth"] / (sig_pt / np.sqrt(sec.sum())))
+                               if (sec.sum() > 3 and sig_pt > 0) else 0.0)
+    # odd-even depth difference (eclipsing binary); in-transit selection also matched to the eclipse
     epoch = np.floor((t - t0) / period + 0.5).astype(int)
-    intr = np.abs(((t - t0) / period + 0.5) % 1.0 - 0.5) < 0.04
+    intr = np.abs(((t - t0) / period + 0.5) % 1.0 - 0.5) < hw
     do = base - np.median(f[intr & (epoch % 2 == 1)]) if (intr & (epoch % 2 == 1)).sum() > 3 else d
     de = base - np.median(f[intr & (epoch % 2 == 0)]) if (intr & (epoch % 2 == 0)).sum() > 3 else d
     feat["odd_even"] = float(abs(do - de) / (d + 1e-9))
@@ -132,8 +146,9 @@ def battery(t, f, period, t0, scatter, duration=None):
     # the planet and disintegrating cuts that would manufacture residuals from a threshold seam.
     if feat["sin_r2"] > 0.6:
         v = "activity/variability"
-    elif feat["secondary_depth"] > 0.3 * d or feat["odd_even"] > 0.5 or d > DEEP_EB_DEPTH:
-        v = "eclipsing_binary"             # secondary/odd-even, OR a depth implying R_occ > ~2.5 R_J
+    elif (feat["secondary_depth"] > 0 and feat["secondary_sigma"] > SECONDARY_SIGMA) \
+            or feat["odd_even"] > 0.5 or d > DEEP_EB_DEPTH:
+        v = "eclipsing_binary"             # significant secondary / odd-even / depth implying R_occ > ~2.5 R_J
     elif feat["depth_variable"] and feat["asymmetry"] > 0.15:
         v = "disintegrating_body"
     elif feat["flat_bottom"] < 0.75 and feat["asymmetry"] < 0.15 and not feat["depth_variable"]:

@@ -1,126 +1,86 @@
-# Research note — an unclassified deep transiter surfaced by the Phase-2 K-dwarf search
+# Methods note — the one T0T1T2 "residual" was an eclipsing binary our battery under-vetted
 
 **Gaia DR3 1397924585409290240 = TYC 3490-591-1 = TIC 156074324**
 
 *Part of the pre-registered technosignature search (OSF [osf.io/2akn3](https://osf.io/2akn3/)). This
-note records the single residual that the frozen Phase-2 battery cannot auto-classify in the
-G < 13 (T0T1T2) tier. It is **not** a detection claim of any kind; it is the honest output of a
-search designed to surface what it cannot explain.*
+note records a methodological finding, not a discovery. The single morphology-resolvable residual that
+the frozen G < 13 (T0T1T2) battery could not auto-classify turned out, on external cross-check and an
+exploratory re-vet, to be an **eclipsing binary** — surfaced as a "residual" only because of a blind
+spot in our secondary-eclipse test. We record the object's true disposition, the blind spot, and the
+fix.*
 
-## Summary
+> **Correction history.** Earlier commits (`499dc70`, `658cf51`, `9f85869`) described this object as
+> an "uncatalogued deep transiter" of undetermined nature. That was wrong: it is an eclipsing binary.
+> This note supersedes that framing. The error and its cause are documented below because they are the
+> scientifically useful part.
 
-The G < 13 run of the K-dwarf transit-morphology search (61,178 stars; frozen calibration
-`phase2-calibration-T0T1T2`; battery v4) leaves, after the full identity → centroid → multi-sector →
-triage cascade, **one** morphology-resolvable residual that survives every discriminant in the battery
-when its metrics are evaluated at the **true** orbital period: a clean, deep, recurring,
-sub-stellar-radius transit on a quiet-spectral-type K dwarf, **not present in any planet, TOI,
-eclipsing-binary, or variable-star catalogue we cross-checked**. Its nature is undetermined from
-photometry alone. We report it; we do not adjudicate it.
+## Disposition: eclipsing binary
 
-## The host
+The object is a K1V dwarf (T_eff 4866 K, R_★ ≈ 0.72 R_☉, d = 85.7 pc, RUWE 1.06). The signal is a
+**2.935 d eclipsing binary** with a clear secondary eclipse:
 
-| Quantity | Value | Source |
-|---|---|---|
-| Gaia DR3 | 1397924585409290240 | Gaia DR3 |
-| Aliases | TYC 3490-591-1, TIC 156074324 | SIMBAD |
-| RA, Dec (deg) | 237.3531, +46.1396 | Gaia DR3 |
-| Spectral type | K1V | SIMBAD |
-| T_eff | 4866 K | Gaia DR3 (gspphot) |
-| log g | 4.46 | Gaia DR3 (gspphot) |
-| G, V | 10.70, 11.00 | Gaia DR3 / SIMBAD |
-| Distance | 85.7 pc (ϖ = 11.69 mas) | Gaia DR3 |
-| RUWE | 1.06 | Gaia DR3 |
+- **SPOC** (TESS 2-minute, sectors 14–78) reports it as a multi-sector target with full Data
+  Validation and **four TCEs**. TCE_1: P = 2.935 d, depth 8.6%, MES 690. **TCE_2: same period,
+  epoch offset by half a phase, depth 1.7%, MES 122 — the secondary eclipse.** A 1.7% secondary at
+  φ = 0.5 is the textbook signature of a low-mass eclipsing companion. SPOC detected it; the TESS
+  team never promoted it to a TOI (consistent with an EB disposition).
+- **Our own data confirm it:** folding the FFI light curve at the true 2.935 d period and measuring
+  the secondary on a window matched to the eclipse duration recovers a secondary at **0.7% (FFI) and
+  77σ significance** (`pipeline/runners/revet_secondary.py`). The companion contributes ~1.7% of the
+  system light → an M-dwarf-class secondary. Not a planet, not an anomaly.
 
-The RUWE of 1.06 indicates a clean single-star astrometric solution — no evidence of an unresolved
-companion dominating the astrometry. SIMBAD carries it only as a star (`otype = *`), with **no**
-variability or binarity classification.
+## Why our frozen battery missed it — two compounding blind spots
 
-## The signal
+1. **k08 period aliasing.** The multi-sector triage stage re-derived the period as 11.74 d — a 4×
+   harmonic alias of the true 2.935 d. At an alias period the folded profile smears, the morphology
+   metrics are corrupted (it is what produced the spurious `flat_bottom = 1.00`), and the v4 local
+   detrend is defeated (its windows land at the wrong phase).
+2. **The secondary-eclipse test was insensitive to narrow / shallow secondaries.** The frozen battery
+   measured the secondary as a **median over a ±0.05-phase window** (≈ 3× the eclipse width, which
+   dilutes a narrow secondary to ~0: this object's secondary measured 0.0) and fired only if
+   `secondary_depth > 0.3 × primary_depth`. This EB's secondary/primary ratio is 1.7%/8.6% = 0.20 <
+   0.30, so even a correctly-measured secondary would not have tripped the relative threshold. The
+   physically correct test is the **statistical significance** of a secondary at φ = 0.5, measured on
+   a window **matched to the eclipse**, regardless of its depth relative to the primary.
 
-Detected by the registered BLS (periods 0.5–13 d) on the stitched TESS FFI light curve:
+## The fix, and its exploratory consequences
 
-| Metric | Value | Note |
-|---|---|---|
-| Period | **2.94 d** | true BLS period (see alias caveat) |
-| Epoch t0 | 1931.59 (BTJD) | |
-| Depth | ~6.3% (BLS) / ~7.2% (deepest bin) | face-value FFI photometry |
-| SDE | 11.0 | well above the cohort bar (9.0) |
-| Single-event SNR | 273 | strong |
-| Sectors detected | 12 | recurs across all |
-| Per-transit depth CV | 0.11 | stable; no dropout epochs |
+The secondary test in `k04.battery` now measures the secondary on a duration-matched window and flags
+an EB on **significance** (secondary > `SECONDARY_SIGMA` = 6σ vs out-of-eclipse scatter), replacing the
+diluting wide-median + 0.3×primary rule; the odd-even in-transit selection is likewise matched to the
+eclipse. The injection regression (`k04 --test`) is preserved — box → RESIDUAL (22/24), planet →
+natural_planet (23/24) — so detection and the flat-occulter completeness that `f_max(box)` rests on are
+unchanged; injected occulters have no secondary and are not spuriously reclassified.
 
-Battery discriminants, evaluated **at the true 2.94 d period**:
+Applied as an **exploratory post-data re-vet** to the T0T1T2 recurring-candidate list (at each
+object's true BLS period), the corrected secondary test reclassifies **~5 of the 64 residuals as
+eclipsing binaries** (including this object at 77σ and `2561459808901475584`, a second resolvable
+residual, at ~11σ), and — as a validation by-product — finds that **~2 of the 107 `natural_planet`
+objects also have strong secondaries** (near-equal eclipse depths), i.e. the same blind spot leaked a
+few EBs into the planet class too. Of the six morphology-resolvable residuals, two are now EBs; the
+other four are low-significance / asymmetric and remain unexplained (marginal), none a clean
+flat-bottomed occulter.
 
-| Test | Value | Reading |
-|---|---|---|
-| secondary eclipse depth | ≈ 0 (−0.0004) | no secondary → not a classic EB |
-| odd–even depth difference | 0.008 | none → not a 2×-period EB |
-| asymmetry | 0.028 | symmetric → not grazing/comet-tail |
-| flat-bottomedness | 0.67 | moderately flat (not V-shaped, not a perfect box) |
-| sinusoid variance (P, 2P) | 0.083 | not a rotational/ellipsoidal modulation |
-| difference-image centroid | on-target | not a background blend (passed k06) |
+## Integrity framing
 
-It survives the activity gate and the v4 activity-robust local detrend — the detrend was implemented
-specifically for this host (its sinusoid-activity index is 0.001 while it sits at the 94th percentile
-of residual-set photometric scatter, 1739 ppm; see `pipeline/IMPLEMENTATION_LOG.md`, P2-v4) — and the
-signal persists.
+T0T1T2 was already unblinded, and G < 13 is the manifest's faintest tier, so this fix is inherently
+**post-data / exploratory** under the registered stopping rule — it is **not** applied as a corrected
+confirmatory result. The frozen confirmatory output stands (the battery flagged residuals; Option A:
+reported, not adjudicated). This note + the exploratory re-vet are the *follow-up* that explains them —
+exactly the report-then-follow-up model the registration intends. The detection bars, the cohort
+nulls, the completeness `C_i`, and `f_max` are untouched. Logged in `AMENDMENTS.md` (post-data /
+exploratory) and `pipeline/IMPLEMENTATION_LOG.md`.
 
-### Radius
+## The general lesson
 
-Taking the depth at face value, R_p/R_★ = √(depth) ≈ 0.25–0.27. With R_★ ≈ 0.72 R_☉ (from T_eff,
-log g), this gives **R_p ≈ 1.7–1.9 R_J** — sub-stellar (below the battery's depth→radius
-eclipsing-binary cut at ~13% depth / 2.5 R_J), but at the **large** end of the gas-giant radius
-distribution.
-
-## Period-alias caveat (important)
-
-The multi-sector triage stage (k08) re-derived the period as 11.74 d — a **4× harmonic alias** of the
-true 2.94 d period. At the alias period the folded profile smears and the morphology metrics are
-corrupted: the triage CSV reports `flat_bottom = 1.00`, which is an artifact of folding at the wrong
-period, **not** a genuine flat-bottomed occulter. All metrics in the tables above are recomputed at
-the true 2.94 d period. (This aliasing is a methodological item flagged for the pipeline: k08's
-period should be reconciled to the k04 BLS period before its morphology metrics are used. See
-`pipeline/runners/plot_resolvable_residuals.py`.)
-
-## Catalogue cross-checks
-
-- **TESS / ExoFOP (TIC 156074324):** no TOI, no SPOC threshold-crossing event, no disposition, no
-  community observing notes. *Caveat:* the ExoFOP TCE record reflects TESS **2-minute** SPOC
-  processing; this detection is from FFI photometry, so the absence of a SPOC TCE may simply mean the
-  star was not a 2-minute target in the relevant sectors, rather than a non-detection by SPOC.
-- **SIMBAD:** no variable-star or eclipsing-binary type; no associated planet.
-- **Literature:** no references to this object as a variable, EB, or planet host.
-
-So it is uncatalogued as a transiting/variable object to the depth of these checks.
-
-## Interpretation — what it could be, and what it is not
-
-The morphology (symmetric, flat-ish, no secondary, no odd–even, stable depth, on-target) is
-**consistent with a genuine transit of a sub-stellar companion**. The two leading mundane hypotheses:
-
-1. **An uncatalogued transiting giant** — an inflated hot Jupiter at the large end of the radius
-   distribution, at a classic 2.94 d hot-Jupiter period. We cannot call it a planet: that requires a
-   **mass** (radial velocities), which we do not have. A ~1.8 R_J radius is large for a planet and is
-   itself worth noting.
-2. **A grazing or low-mass eclipsing binary** whose secondary eclipse is too faint to detect in this
-   band. The symmetric, flat-ish (not V-shaped) profile argues against a grazing geometry, and no
-   secondary or odd–even signal is seen — but photometry alone cannot exclude a sufficiently faint
-   stellar/sub-stellar companion.
-
-It is **not** a technosignature claim and **not** a confirmed planet. It is the one residual the
-frozen, pre-registered battery cannot classify — exactly the object such a search exists to surface,
-carried as *unexplained* under the registered report-don't-adjudicate rule.
-
-## Follow-up that would resolve it (external)
-
-- **Radial velocities** → a mass: planet vs. brown dwarf vs. low-mass star.
-- **Inspect any TESS 2-minute / QLP data** for a SPOC TCE and an independent depth.
-- **Reconnaissance spectroscopy** → confirm K1V, check for a double-lined (SB2) companion.
+In an agnostic deviation-search, surfaced anomalies = (real deviations) + (holes in the "natural"
+model). This object was the second kind. The episode is the methodology working as intended: a residual
+was surfaced and *not* explained away in prose, an external cross-check (SPOC) and a corrected test
+resolved it robustly, and the blind spot it exposed was closed. Every closed blind spot makes a
+surviving residual mean more.
 
 ---
 
-*Diagnostics, figures, and the reproducing scripts are committed:
-`figures/note_1397924585409290240_fold.png`, `figures/kdwarf_T0T1T2_standout_1397924585409290240.png`,
-`data/manifests/kdwarf_T0T1T2_resolvable_truePeriod_morphology.txt`,
-`pipeline/runners/plot_note_figure.py`. Search provenance: `docs/phase2_status.md`,
-`pipeline/IMPLEMENTATION_LOG.md` (P2-unblind / P2-unblind-resid).*
+*Reproducing artifacts: `pipeline/runners/revet_secondary.py` (re-vet),
+`data/manifests/kdwarf_T0T1T2_secondary_revet.csv` (per-object secondary metrics),
+`figures/note_1397924585409290240_fold.png`. SPOC DV: MAST TIC 156074324, sectors 14–78.*
