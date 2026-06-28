@@ -238,3 +238,17 @@ tagged artifact; the `k04 --unblind` blind-lift is **deferred to explicit human 
 
 **Note:** no `AMENDMENTS.md` entry — the frozen registered method was executed, not elaborated. Lists:
 `data/manifests/kdwarf_T0T1T2_{residuals,residuals_identity,residuals_centroid,residuals_multisector,recurring_triage}.csv`.
+
+**Correction (2026-06-28, same-day follow-up to P2-unblind-resid):** phase-folding the 6 resolvable
+residuals (`pipeline/runners/plot_resolvable_residuals.py`) showed the triage `flat_bottom`/`asymmetry`
+are computed at k08's multi-sector period, which is frequently a **harmonic alias** of the true BLS
+period (1397924585409290240: 11.74 ≈ 4×2.94 d) — smearing the fold and defeating the v4 detrend.
+Recomputed at each object's true BLS period (table
+`data/manifests/kdwarf_T0T1T2_resolvable_truePeriod_morphology.txt`), no object is cleanly flat (≈1)
+AND symmetric AND significant: the "2 flat-bottomed occulters" was an alias artifact, restoring
+consistency with the v3 paper §4.2. The correction came from folding at the detector's own period, not
+from adjusting any cut. The standout 1397924585409290240 remains — at true P=2.94 d a clean, deep
+(7.2%), symmetric (asym=0.03), recurring, sub-stellar (~1.9 R_J) uncatalogued deep transiter the
+battery cannot classify; carried as unexplained (Option A). **Open methodological item:** k08's
+multi-sector period can alias vs k04's BLS; resolvable-residual morphology should be verified at the
+BLS-consistent period (reconcile k08↔k04 period, or flag alias multiples).

@@ -148,13 +148,56 @@ established. **Not a detection; a follow-up candidate.** Needs human adjudicatio
 **Caveats to weigh (neutral, not adjudication):** (a) battery v4's local detrending materially shifts
 morphology metrics — e.g. 5427691493560560000 was natural_planet in T0T1/v3 with asym=0.0098, now
 RESIDUAL with asym=2.50; the detrending can reveal *or* distort shape, so v3↔v4 morphology should be
-compared. (b) Discrepancy to verify: the on-disk `kdwarf_T0_recurring_triage.csv` (Jun 11) shows 12
-RESIDUAL / max depth 2.69%, but the T0 status note below says 33 RESIDUAL / max 0.186% — these
-describe different runs/battery versions; reconcile before citing either.
+compared. (b) Discrepancy RESOLVED: the on-disk `kdwarf_T0_recurring_triage.csv` (12 RESIDUAL, max 2.69%) is a
+**battery-v3 artifact** — overwritten when the cascade was re-run with v3 (commit 2131ee6 "v3 cascade
+artifacts", touched again by 49814ae). The T0 status note below ("33 RESIDUAL, max 0.186%") describes
+the **superseded battery-v2** T0 run whose CSV no longer exists on disk. Cite the v3 file as the
+current T0, the v2 numbers only as historical. (Note the v3 on-disk T0 already contains
+1397924585409290240 at flat=1.0/2.69% — the paper §4.2 addresses it as the active-host deep transiter,
+consistent with the true-period correction above.)
 
-**Next:** phase-folded light curves of the 6 resolvable residuals (esp. the 2 flat-bottomed) for
-direct visual adjudication; decide reporting (the paper's Option A = report, not adjudicate); then
-paper update. Nothing committed/pushed yet.
+**CORRECTION (2026-06-28, after phase-folding — refines the "2 flat-bottomed" headline above).**
+The triage CSV computes morphology at k08's multi-sector period, which for several objects is a
+**harmonic alias** of the true BLS period (1397924585409290240: 11.74 ≈ 4×2.94 d). At an alias period
+the folded signal smears, so `flat_bottom` is unreliable *and* the v4 local detrend is defeated
+(windows land at the wrong phase). Recomputed at each object's true BLS period (with v4 detrend
+applied there) — `pipeline/runners/plot_resolvable_residuals.py` + table
+`data/manifests/kdwarf_T0T1T2_resolvable_truePeriod_morphology.txt`:
+
+| source_id | triage flat (alias) | flat @ trueP | asym @ trueP | depth | trueP | SDE |
+|---|---|---|---|---|---|---|
+| 1397924585409290240 | 1.00 | **0.67** | 0.03 | 7.2% | 2.94 | 11.0 |
+| 5427691493560560000 | 0.43 | 0.40 | 0.67 | 0.33% | 11.42 | 4.1 |
+| 431616180013613568 | 0.75 | 0.60 | 0.18 | 0.39% | 12.34 | 5.2 |
+| 2561459808901475584 | 0.38 | 0.75 | 1.47 | 0.79% | 1.82 | 10.2 |
+| 93357127133226496 | 0.29 | 0.75 | 1.34 | 0.58% | 3.20 | 9.9 |
+| 4589589824738659200 | 0.44 | 0.11 | 0.29 | 0.47% | 12.42 | 3.7 |
+
+At true periods **no object is cleanly flat (≈1) AND symmetric AND significant**: the ones that go
+flat (2561…, 93357…) are highly asymmetric (asym>1.3); the symmetric one (1397…) is only moderately
+flat (0.67). So the "2 flat-bottomed resolvable occulters" headline was an **alias artifact** — this
+restores consistency with the v3 paper §4.2 ("no genuine flat-bottomed occulter; flat≈1 is an
+activity/profile artifact"). **NOT a vindication-by-tuning:** the correction came from folding at the
+detector's own recovered period, not from adjusting any cut. f_max(box) zero-flat-bottom basis is
+**not** broken by an alias artifact — but the human should make the final call.
+
+**The standout survives the correction and is NOT explained away:** `1397924585409290240` at its true
+2.94 d period is a clean, deep (7.2%), strikingly symmetric (asym=0.03), recurring (12 sectors),
+sub-stellar-radius (~1.9 R_J) dip the battery cannot classify, in no catalogue, and it survived the v4
+activity fix built specifically for it (sin_r2=0.001). A real, uncatalogued deep transiter of
+undetermined nature (inflated HJ / brown dwarf / grazing low-mass companion / other) — a genuine
+follow-up target, carried as unexplained (paper Option A).
+
+**Methodological item to log/fix:** k08's multi-sector period re-derivation can alias relative to k04's
+single-pass BLS, corrupting the triage morphology metrics and defeating the v4 detrend. The resolvable
+residuals' morphology should be verified at the BLS-consistent period (as done here) before any are
+cited; consider reconciling k08's period to k04's or flagging alias multiples.
+
+Figures: `figures/kdwarf_T0T1T2_resolvable_residuals.png` (all 6, folded at true P),
+`figures/kdwarf_T0T1T2_standout_1397924585409290240.png` (harmonic check).
+
+**Next:** human adjudication of the standout + the period-alias fix; decide reporting; paper update to
+extend §4.2 to G<13. Nothing pushed yet.
 
 Original resume note (retained): a reboot interrupting `k04 --unblind` is **no harm** — it writes
 output only at the very end, so it leaves no partial file and is re-run from scratch (deterministic
