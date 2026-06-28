@@ -1,4 +1,4 @@
-# A Pre-Registered, Mechanism-Agnostic Search for Anomalous Transit Signatures Around Main-Sequence K Dwarfs: Bright-Tier (G < 12) Results
+# A Pre-Registered, Mechanism-Agnostic Search for Anomalous Transit Signatures Around Main-Sequence K Dwarfs: Bright-Tier (G < 13) Results
 
 **Tonio Loewald**
 
@@ -8,15 +8,20 @@ Independent Researcher · tloewald@gmail.com
 **Status: DRAFT for review.** Phase 2 of the program whose Phase 1 (white dwarfs) is published
 and registered at OSF [10.17605/OSF.IO/6YH7R](https://doi.org/10.17605/OSF.IO/6YH7R). The Phase-2
 plan was registered at OSF [osf.io/2akn3](https://osf.io/2akn3/) before any K-dwarf light curve was
-analysed; this paper reports the executed search over the two brightest tiers — T0 (G < 11), the
-registered headline tier, and a combined bright sample T0+T1 (G < 12) that tightens the
-flat-occulter limit threefold. The deeper search leaves a short list of morphology-resolvable
-residuals — none a flat occulter — reported transparently as residuals the frozen battery cannot
-auto-classify, with their committed diagnostics and the battery limitations they expose.
+analysed; this paper reports the executed search over three nested tiers — T0 (G < 11), the
+registered headline tier; a combined bright sample T0+T1 (G < 12) that tightens the flat-occulter
+limit threefold; and the full bright-to-mid sample T0T1T2 (G < 13), searched with an activity-robust
+battery refinement ("v4", §3.5), which tightens it further to f_max(box) ≈ 6.6×10⁻⁵. The deeper
+search leaves a short list of morphology-resolvable residuals — none a flat occulter — reported
+transparently as residuals the frozen battery cannot auto-classify, with their committed diagnostics
+and the battery limitations they expose; the brightest of them is shown, in exploratory post-search
+follow-up, to be an eclipsing binary our battery's secondary-eclipse test under-vetted (§4.2) — an
+illustration that the limiting factor on such a search is the fidelity of its natural-explanation
+battery, not its detector.
 
 ## Abstract
 
-We report the two-tier result of a pre-registered, mechanism-agnostic search for anomalous
+We report the three-tier result of a pre-registered, mechanism-agnostic search for anomalous
 transit signatures around main-sequence K dwarfs. Rather than assume what an enduring intelligence
 would build, the search looks only for a departure from the natural transit model — most powerfully
 a transit *shape* no natural occulter can produce — and attempts to explain every candidate away
@@ -25,25 +30,31 @@ but *computed* by a registered procedure (a per-noise-cohort empirical null cali
 bulk of the statistic, plus injection-recovery completeness) and frozen before the candidate tail is
 unblinded.
 
-Applied first to 12,100 bright (G < 11) K dwarfs and then to a combined 44,202-star bright sample
-(G < 12) with TESS photometry, the pipeline reduces the box-least-squares candidates through an
-identity cross-check, a difference-image centroid gate, a multi-sector recurrence test, and a
-multi-sector morphology triage. **No candidate is claimed as a detection.** In the regime where
-transit morphology is resolvable (depth ≳ 0.3%, the floor set by the pre-registered injection pilot),
-the automated battery leaves a short residual list — two objects in T0, two in the combined run,
-three distinct in all. **None is a flat-bottomed occulter.** We do not adjudicate them away one by one
+Applied first to 12,100 bright (G < 11) K dwarfs, then to a combined 44,202-star bright sample
+(G < 12), and finally to the full 61,178-star bright-to-mid sample (G < 13; searched with an
+activity-robust battery refinement) with TESS photometry, the pipeline reduces the box-least-squares
+candidates through an identity cross-check, a difference-image centroid gate, a multi-sector
+recurrence test, and a multi-sector morphology triage. **No candidate is claimed as a detection.** In
+the regime where transit morphology is resolvable (depth ≳ 0.3%, the floor set by the pre-registered
+injection pilot), the automated battery leaves a short residual list — two objects in T0, two in the
+T0+T1 run, six in the deepest G < 13 run. **None is a flat-bottomed occulter.** In exploratory
+post-search follow-up the brightest G < 13 residual is identified as an eclipsing binary (a secondary
+eclipse SPOC had catalogued but our battery's secondary test, on a too-wide window, had diluted away);
+the secondary test is corrected and a re-vet reclassifies it and several others — a worked example
+that in an agnostic deviation-search the surfaced residuals are bounded by the fidelity of the
+natural-explanation battery, which we treat as the object of study. We do not adjudicate them away one by one
 (that would be the candidate-by-candidate reasoning the registration forbids); we report them as
 residuals the frozen battery cannot auto-classify, with the committed diagnostic metrics that place
-each at the margins — a deep transit on a high-variability host the sinusoid activity gate cannot see,
+each at the margins — a deep dip on a high-variability host the sinusoid activity gate cannot see,
 a weak-statistic near-blend, an intermittent floor-depth signal — and defer their disposition to
 declared, uniformly-applied battery improvements (§3.5) rather than to prose. Completeness is
 classification-aware: an injected anomaly is counted only if it both is detected and survives the
 battery as a residual, bounding the anomaly→natural leakage directly in the limit. The result bounds
 the rate of **detectable anomalous transit *signatures* within the searched range** (period < 13 d,
 0.3% ≲ depth ≲ 13%, shape matching a forward-modelled family): for flat-occulter ("megastructure-like")
-morphologies at 1% depth **f_max ≈ 2.8×10⁻⁴ (T0) tightening to ≈ 8.3×10⁻⁵ (combined)** (a ~3% move
-from the battery refinement, within injection sampling); for disintegrating-tail-like ones
-**≈ 4.2×10⁻⁴ → ≈ 1.2×10⁻⁴** — the tail limit ~25% looser than an earlier draft after review showed the
+morphologies at 1% depth **f_max ≈ 2.8×10⁻⁴ (T0) tightening to ≈ 8.3×10⁻⁵ (T0+T1) and ≈ 6.6×10⁻⁵
+(G < 13)**; for disintegrating-tail-like ones
+**≈ 4.2×10⁻⁴ → ≈ 1.2×10⁻⁴ → ≈ 9.0×10⁻⁵** — the tail limit ~25% looser than an earlier draft after review showed the
 depth-variability test needed a red-noise-aware floor (§3.3), and intrinsically loose because a
 strongly-asymmetric tail is near-degenerate with a natural disintegrating body; an injection test
 confirms the red-noise floor does not over-suppress (tail recovery is flat with host brightness).
@@ -112,7 +123,7 @@ plan, Loewald 2026b); a reviewer judges adherence to the procedure, not the valu
 The parent sample is a frozen, checksummed manifest of 175,968 main-sequence K dwarfs from Gaia DR3
 (Gaia Collaboration et al. 2023; Teff 3900–5300 K, log g > 4.3, RUWE < 1.4, parallax_over_error > 10,
 within a main-sequence box; git tag `phase2-manifest-1.0`). The manifest is analysed in nested, brightest-first tiers, with the
-expansion trigger being available compute rather than any result. This paper reports two tiers. Tier
+expansion trigger being available compute rather than any result. This paper reports three tiers. Tier
 **T0 (G < 11)** is 12,100 stars with a usable TESS (Ricker et al. 2015) SPOC (Jenkins et al. 2016),
 TESS-SPOC (Caldwell et al. 2020), or QLP (Huang et al. 2020a, 2020b) light curve, detrended
 with an upward-only outlier clip so transits are preserved (the remaining ~400 of the tier are
@@ -122,7 +133,12 @@ tier and is searched jointly as **44,202 stars** with usable photometry, re-cali
 on the larger noise floor (so the combined limit is not a stitch of two per-tier limits but a single
 calibrated search; git tag `phase2-calibration-T0T1`). T0 is retained intact as the registered
 headline tier and is reported alongside the combined result rather than superseded; the combined
-calibration and residual lists are separate, immutable artifacts (`kdwarf_T0T1_*`).
+calibration and residual lists are separate, immutable artifacts (`kdwarf_T0T1_*`). The full sample
+**T0T1T2 (G < 13)** adds the G 12–13 tier and is searched jointly as **61,178 stars**, again
+re-calibrated from scratch (git tag `phase2-calibration-T0T1T2`) and run with the activity-robust
+battery refinement of §3.5 (frozen and validated on injection-recovery before this tier was
+unblinded); its calibration and residual lists are likewise separate, immutable artifacts
+(`kdwarf_T0T1T2_*`). Each tier is a self-contained calibrated search, not a stitch of per-tier limits.
 
 The activity-based youth floor named in the registration is **dropped** (§1) — a registered deviation,
 not deferred work — so the only sample cuts are the Teff / log g / RUWE / parallax / colour-magnitude
@@ -329,8 +345,10 @@ measured on the detrended, phase-folded light curve, and on a **photometrically 
 rotational variability survives the detrending and distorts the folded profile, inflating those
 metrics. The activity gate keys on sinusoid variance at the transit period and so catches clean
 rotational modulation, but not the irregular, multi-periodic variability that most corrupts the
-folded shape. One of the resolvable residuals (§4.2) is exactly this case — a real deep transit on an
-active host whose distorted profile, not a genuine occulter, drives its "anomalous" shape. An
+folded shape. One of the resolvable residuals (§4.2) presented exactly as this case — until the G < 13
+follow-up showed its shape metrics were corrupted by a harmonic-alias period and that it is in fact an
+eclipsing binary with a secondary our test had diluted away; both an activity-robust morphology and a
+duration-matched secondary test are needed (the latter now corrected, §4.2). An
 activity-robust morphology measurement (e.g. local per-transit detrending, or down-weighting
 high-variability hosts) is a needed refinement, deferred here and declared as a limitation rather
 than patched post hoc.
@@ -358,19 +376,30 @@ on-target (1,580 blends killed, 120 uncentroidable); recurrence confirmed 140 re
 recurring returned 17 eclipsing binaries, 92 transiting planets, 4 disintegrating bodies, and 27
 residuals — of which **two lie in the morphology-resolvable regime** (depth > 0.3%; §4.2), the
 remaining 25 being sub-resolution. (Two resolvable residuals likewise survive in T0 on its own; the
-union across both tiers is three distinct objects, examined individually in §4.2.) The full cascade
-for both tiers is shown in Figure 3.
+union across both tiers is three distinct objects, examined individually in §4.2.)
+
+**Full sample T0T1T2 (G < 13).** The deepest run adds the G 12–13 tier and is searched as **61,178
+stars**, re-calibrated from scratch on the larger noise floor (cohort scatter 629/1241/2248 ppm, bars
+7.1/8.3/9.0 SDE; tag `phase2-calibration-T0T1T2`) with the activity-robust **battery v4** of §3.5,
+frozen and validated on injection-recovery before this tier was unblinded. The search produced 22,606
+candidates above the bar; the battery left 4,501 residuals (9,394 planets, 7,421 eclipsing binaries,
+1,077 activity, 198 disintegrating). Identity cleared 306 known objects, leaving 4,195; the centroid
+gate kept 1,598 on-target (2,370 blends killed, 227 uncentroidable); recurrence confirmed 194 recurring
+transits (757 single-sector artifacts rejected, 647 recurrence-untestable). The deep triage of the 194
+returned 17 eclipsing binaries, 108 transiting planets, 5 disintegrating bodies, and **64 residuals**,
+of which **six lie in the morphology-resolvable regime** (depth > 0.3%; §4.2). The full cascade for all
+three tiers is shown in Figure 3.
 
 <figure>
-<img src="../figures/kdwarf_cascade.png" alt="The residual cascade for both tiers">
-<figcaption><b>Figure 3.</b> The residual cascade for the two tiers. Every BLS candidate above the
+<img src="../figures/kdwarf_cascade.png" alt="The residual cascade for the three tiers">
+<figcaption><b>Figure 3.</b> The residual cascade for the three tiers. Every BLS candidate above the
 per-cohort bar is either explained away by the fixed, pre-registered battery (light-curve morphology,
 identity cross-check, difference-image centroid, multi-sector recurrence) or carried forward — never
 tuned in or out. Box widths scale with the square root of the count. Side annotations give the natural
 classes the light-curve battery removes, and the by-product and data-limited deferred sets. The
-terminal residuals (12 in T0, 27 combined) are the objects the frozen battery cannot auto-classify;
-only those in the morphology-resolvable regime (depth&nbsp;&gt;&nbsp;0.3%; Figure 4) are examined
-individually.</figcaption>
+terminal residuals (12 in T0, 27 in T0+T1, 64 in the G&nbsp;&lt;&nbsp;13 run) are the objects the
+frozen battery cannot auto-classify; only those in the morphology-resolvable regime
+(depth&nbsp;&gt;&nbsp;0.3%; Figure 4) are examined individually.</figcaption>
 </figure>
 
 ### 4.2 The resolvable-regime residuals, and the upper limit
@@ -395,9 +424,10 @@ diagnostic metrics that place each at the margins:
   most variable in the residual set — single-sector scatter at the 94th percentile of planet hosts —
   yet its sinusoid-activity index is sin_r2 = 0.001, so the activity gate (which fires only on
   coherent sinusoidal modulation) registers nothing while the irregular variability that drives its
-  flat-bottom and asymmetry flags goes unmodelled (§3.5). A real, previously uncatalogued deep
-  transiter; whether its shape is intrinsic or an activity/detrending artifact the current battery
-  cannot decide.
+  flat-bottom and asymmetry flags goes unmodelled (§3.5). In the v3 battery this object's nature could
+  not be decided. **It is now resolved (G < 13 follow-up, below): an eclipsing binary** — TESS SPOC had
+  catalogued a secondary-eclipse event our secondary test diluted away; correcting the test recovers
+  the secondary at 77σ. It is retained here as the v3 battery reported it, with the resolution flagged.
 - **`5615925139763813248`** (G = 9.6, both tiers): on the stitched multi-sector data its detection
   statistic is weak (SDE 2.3, below the 8.7 bar — i.e. the signal *lost* significance when the
   additional sectors were added, the opposite of a real recurring transit) and its difference-image
@@ -420,9 +450,9 @@ flat-bottomedness versus light-curve asymmetry; none of the three is a flat-bott
 occulter would sit at flat-bottomedness&nbsp;→&nbsp;1 with low asymmetry). Right: per-sector coherence —
 depth dispersion versus the correlation between per-sector depth and per-sector scatter (noise-like
 signals, whose depth tracks scatter, fall to the upper right). Each residual sits at the margin of a
-natural class: the deep transit on an active host (its flat-bottomedness≈1 driven by an
-activity-distorted folded profile, not a genuine occulter; §3.5), the weak/near-blend, and the
-floor-depth intermittent dip. (The weak/near-blend object survived on a single discovery sector and so
+natural class: the deep eclipsing binary on an active host (its flat-bottomedness≈1 an artifact of a
+harmonic-alias fold, not a genuine occulter; resolved in the G < 13 follow-up, §4.2), the
+weak/near-blend, and the floor-depth intermittent dip. (The weak/near-blend object survived on a single discovery sector and so
 carries no multi-sector depth–scatter coherence metric; it appears in the left panel only.)</figcaption>
 </figure>
 
@@ -435,15 +465,42 @@ residual set as a whole, a non-trivial fraction are high-variability hosts the a
 5 of 12 (T0) and 4 of 27 (combined) sit above the planet-host 90th-percentile scatter, and the
 sinusoid gate fires on none of them — bounding the activity weakness as real but limited.
 
+**The G < 13 run, and a worked example of the battery's limiting role.** The deepest tier (v4
+battery) leaves 64 residuals, six in the resolvable regime. Their morphology must be read at each
+object's *true* BLS period: the multi-sector triage stage re-derived periods that, for several
+objects, are harmonic aliases of the true period (the brightest, `1397924585409290240`: 11.74 ≈
+4 × 2.94 d), at which the folded profile smears and the shape metrics are corrupted. Recomputed at the
+true period, none of the six is a flat-bottomed, symmetric, significant occulter — the ones that fold
+flat are strongly asymmetric or low-SDE — so, as in the brighter tiers, **no flat occulter survives**
+and f_max(box) is untouched. In **exploratory post-search follow-up** (not part of the frozen
+confirmatory result) we then resolved the brightest residual outright: `1397924585409290240`
+(= TIC 156074324) is an **eclipsing binary**. The TESS SPOC pipeline had already catalogued a
+secondary-eclipse threshold-crossing event (P = 2.935 d, half-phase offset, depth 1.7%); our battery
+missed it because its secondary-eclipse test took a median over a ±0.05-phase window — ≈ 3× the
+eclipse width, diluting a narrow secondary to ≈ 0 — and required a secondary deeper than 30% of the
+primary (here 1.7%/8.6% = 0.20). Measuring the secondary on a window matched to the transit duration
+recovers it at 77σ in our own data. The test is corrected (matched window + a significance criterion;
+the injection regression is preserved, so detection and the flat-occulter completeness behind
+f_max(box) are unchanged), and an exploratory re-vet reclassifies roughly five of the 64 residuals as
+eclipsing binaries and finds that a similar handful had leaked into the transiting-planet by-product
+class. This is logged as post-data and exploratory (AMENDMENTS.md): the frozen confirmatory limit is
+*not* recomputed from the re-vetted list. We highlight it because it is the central lesson of an
+agnostic deviation-search — the surfaced "anomalies" are the sum of real departures and blind spots in
+the natural-explanation battery, so the battery's fidelity, not the detector's, sets what a residual
+means. The episode is the method working as designed: a residual was surfaced, not explained away in
+prose; an external cross-check and a corrected test then resolved it; and the exposed blind spot was
+closed.
+
 **The limit.** Because the completeness is classification-aware (§3.2), the limit absorbs the
 battery's anomaly→natural leakage, small for the flat occulter (recovered-and-classified at
 C_i ≈ 0.95). The zero-detection bounds at 1% depth are, for flat-occulter anomalies, **f_max ≈ 2.8×10⁻⁴
-in T0** (Σ C_i ≈ 10,900) tightening to **≈ 8.3×10⁻⁵ in the combined sample** (Σ C_i ≈ 36,000); the
-combined value moved ~3% (8.1 → 8.3×10⁻⁵) from the battery refinement, comparable to the injection
+in T0** (Σ C_i ≈ 10,900) tightening to **≈ 8.3×10⁻⁵ in the T0+T1 sample** (Σ C_i ≈ 36,000) and
+**≈ 6.6×10⁻⁵ in the full G < 13 sample** (Σ C_i ≈ 45,476); the
+T0+T1 value moved ~3% (8.1 → 8.3×10⁻⁵) from the battery refinement, comparable to the injection
 sampling error (≈ 1.7% per cohort, ≈ 1.5% on the summed Σ C_i) — a sampling-level change, stated
 rather than smoothed. For
-disintegrating-tail-like anomalies the bounds are **≈ 4.2×10⁻⁴ → ≈ 1.2×10⁻⁴** (Σ C_i ≈ 7,200 →
-≈ 25,000), the tail limit having loosened ~25% when the depth-variability test was made red-noise-aware
+disintegrating-tail-like anomalies the bounds are **≈ 4.2×10⁻⁴ → ≈ 1.2×10⁻⁴ → ≈ 9.0×10⁻⁵** (Σ C_i ≈ 7,200 →
+≈ 25,000 → ≈ 33,376), the tail limit having loosened ~25% when the depth-variability test was made red-noise-aware
 (§3.3). That tail bound is intrinsically loose for a structural reason beyond the loosening: a
 genuinely disintegrating tail, the more strongly asymmetric it is, the more often it is (correctly)
 explained as a *natural* disintegrating body and so earns no anomaly-completeness — the tail anomaly
@@ -456,15 +513,16 @@ recovers at only C_i ≈ 0.06 (it is usually classified a planet), so **f_max(as
 ≈ 6×10⁻³ (T0) / 9×10⁻⁴ (combined)** — the search has little power on that morphology, and we report
 the weak bound rather than omit the family. All limits weaken toward shallower depths as C_i falls and
 lapse below ~0.3% depth, where the search places no anomaly constraint by construction. The full set
-of limits, by morphology family and as a function of depth for both tiers, is shown in Figure 5.
+of limits, by morphology family and as a function of depth for all three tiers, is shown in Figure 5.
 
 <figure>
 <img src="../figures/kdwarf_fmax_depth.png" alt="Population upper limit by morphology and depth">
 <figcaption><b>Figure 5.</b> The population upper limit. <i>f</i><sub>max</sub>, the 95%
 zero-detection bound on the prevalence of a detectable anomalous transit <i>signature</i>, versus
-transit depth, by morphology family, for T0 (dashed) and the combined T0+T1 sample (solid). The
-flat-occulter ("megastructure-like") limit is the search's one strong constraint —
-<i>f</i><sub>max</sub>&nbsp;≈&nbsp;2.8×10⁻⁴ (T0) tightening to ≈&nbsp;8.3×10⁻⁵ (combined) at 1% depth
+transit depth, by morphology family, for T0 (dashed), the combined T0+T1 sample (solid), and the full
+G&nbsp;&lt;&nbsp;13 sample (dotted). The flat-occulter ("megastructure-like") limit is the search's one
+strong constraint — <i>f</i><sub>max</sub>&nbsp;≈&nbsp;2.8×10⁻⁴ (T0) tightening to ≈&nbsp;8.3×10⁻⁵
+(T0+T1) and ≈&nbsp;6.6×10⁻⁵ (G&nbsp;&lt;&nbsp;13) at 1% depth
 — and holds only over the 0.3–13% depth window (grey bands: the morphology-resolution floor and the
 stellar-companion reclassification ceiling). Disintegrating-tail and asymmetric-occulter morphologies
 are bounded progressively more weakly — the latter near-uninformatively — because they are degenerate
@@ -476,14 +534,16 @@ with natural classes; the curves show exactly where the search has teeth and whe
 
 The search flags, as a by-product of value independent of the technosignature framing, eclipsing-
 binary and transiting-planet candidates among K dwarfs not previously catalogued as such: 5 + 35 in
-T0, and 17 + 92 in the combined sample (the depth→radius criterion of §3.3 moves several deep
-faint-companion systems into the eclipsing-binary column that the classical secondary/odd-even tests
-had left unclassified). Each recurs across sectors and is on-target by difference imaging. The
-planet count rose relative to an earlier draft because the red-noise-aware depth-variability test
-(§3.3) correctly returns to the planet class the shallow, noisy-but-real transiters that the previous
-white-noise floor had diverted into the residual list. One further notable by-product is the deep
-(2.69%), 12-sector transiter on an active host discussed in §4.2 — a genuine new transiting system
-whose classification awaits activity-robust re-analysis.
+T0, 17 + 92 in the T0+T1 sample, and 17 + 108 in the full G < 13 run (the depth→radius criterion of
+§3.3 moves several deep faint-companion systems into the eclipsing-binary column that the classical
+secondary/odd-even tests had left unclassified). Each recurs across sectors and is on-target by
+difference imaging. The planet count rose relative to an earlier draft because the red-noise-aware
+depth-variability test (§3.3) correctly returns to the planet class the shallow, noisy-but-real
+transiters that the previous white-noise floor had diverted into the residual list. We caution that
+this transiting-planet by-product list is *candidate* level, not vetted planets: the exploratory
+secondary-eclipse re-vet of §4.2 finds that a few of the G < 13 "planet" candidates are in fact
+eclipsing binaries with shallow secondaries the frozen battery missed, so the column is an
+input to follow-up, not a clean planet census.
 
 ### 4.4 Inconclusive sets — a follow-up roadmap
 
@@ -499,10 +559,10 @@ pipeline's inability to classify or to test, not by hand): the recurrence-untest
 extended-mission sectors (one further sector separates red noise from a long-lived occulter); the
 sub-resolution dips for higher-precision photometry (CHEOPS, Benz et al. 2021; PLATO, Rauer et al.
 2014) able to resolve their morphology;
-and the uncentroidable set for a re-run of the centroid gate. The deep transiter on an active host
-(§4.2, §4.3) is a separate, higher-value follow-up: an activity-robust re-analysis to recover its
-true transit shape. The same engine, re-run as those data arrive, clears the queue and tightens the
-limit with no change of method.
+and the uncentroidable set for a re-run of the centroid gate. (The deep signal on an active host once
+carried here has since been resolved as an eclipsing binary, §4.2, and needs no further follow-up.)
+The same engine, re-run as those data arrive, clears the queue and tightens the limit with no change
+of method.
 
 ## 5. Discussion
 
@@ -573,14 +633,19 @@ the look-elsewhere cost of the re-run family is largely self-correcting.
 
 ## 6. Conclusions
 
-The two brightest tiers of a pre-registered, mechanism-agnostic transit-anomaly search — 12,100
-K dwarfs (G < 11) and a combined 44,202-star bright sample (G < 12) — yield no anomaly claimed as a
-detection. The morphology-resolvable residuals the automated battery leaves (two per tier, three
-distinct objects, none a flat occulter) are reported as residuals it cannot auto-classify — with
-their committed diagnostic metrics, which place each at the margins — rather than explained away one
-by one; their disposition is deferred to declared, uniformly-applied battery improvements (§3.5,
-§4.2). The classification-aware population upper limits on flat-occulter ("megastructure-like") signatures
-tighten from f_max ≈ 2.8×10⁻⁴ to ≈ 8.3×10⁻⁵ at 1% depth (and ≈ 4.2×10⁻⁴ → ≈ 1.2×10⁻⁴ for
+Three nested tiers of a pre-registered, mechanism-agnostic transit-anomaly search — 12,100
+K dwarfs (G < 11), a combined 44,202-star bright sample (G < 12), and the full 61,178-star
+bright-to-mid sample (G < 13) — yield no anomaly claimed as a detection. The morphology-resolvable
+residuals the automated battery leaves (two each in T0 and T0+T1, six in the G < 13 run, none a flat
+occulter) are reported as residuals it cannot auto-classify — with their committed diagnostic metrics,
+which place each at the margins — rather than explained away one by one; their disposition is deferred
+to declared, uniformly-applied battery improvements (§3.5, §4.2). In exploratory post-search follow-up
+the brightest G < 13 residual proved to be an eclipsing binary our secondary-eclipse test had
+under-vetted; correcting the test (and re-vetting) is logged as exploratory and leaves the frozen
+limit unchanged, while underlining that in an agnostic deviation-search the natural-explanation
+battery — not the detector — sets what a residual means. The classification-aware population upper
+limits on flat-occulter ("megastructure-like") signatures tighten from f_max ≈ 2.8×10⁻⁴ to ≈ 8.3×10⁻⁵
+to ≈ 6.6×10⁻⁵ at 1% depth (and ≈ 4.2×10⁻⁴ → ≈ 1.2×10⁻⁴ → ≈ 9.0×10⁻⁵ for
 disintegrating-tail-like ones, the tail bound loosened by a red-noise-aware correction reported in
 §3.3). We are explicit about how narrow this tight constraint is: of the three modelled anomaly
 morphologies, only the flat occulter is strongly bounded, and only over 0.3% ≲ depth ≲ 13% and

@@ -100,11 +100,15 @@ def fig_cascade():
                      residuals=3036, cleared=215, survive=2821, blend=1580, on_target=1121, unc=120,
                      artifact=578, recurs=140, untestable=403,
                      EB=17, planet=92, disint=4, RESIDUAL=27),
+        "T0T1T2": dict(searched=61178, candidates=22606, planet_b=9394, eb_b=7421, act_b=1077, dis_b=198,
+                       residuals=4501, cleared=306, survive=4195, blend=2370, on_target=1598, unc=227,
+                       artifact=757, recurs=194, untestable=647,
+                       EB=17, planet=108, disint=5, RESIDUAL=64),
     }
     for run, p in tiers.items():
         cascade_counts(run, p)        # raises if the committed CSVs disagree with these numbers
 
-    fig, axes = plt.subplots(1, 2, figsize=(13, 7.2))
+    fig, axes = plt.subplots(1, 3, figsize=(18, 7.2))
     for ax, (run, p) in zip(axes, tiers.items()):
         stages = [
             (f"{p['searched']:,} stars searched", p["searched"], "#dfe6ee"),
@@ -136,7 +140,8 @@ def fig_cascade():
         ax.set_xlim(-0.05, 1.45)
         ax.set_ylim(-0.6, n - 0.4)
         ax.axis("off")
-        ax.set_title(f"{run}  (G < {'11' if run == 'T0' else '12'})", fontsize=12, fontweight="bold")
+        gcut = {"T0": "11", "T0T1": "12", "T0T1T2": "13"}[run]
+        ax.set_title(f"{run}  (G < {gcut})", fontsize=12, fontweight="bold")
     fig.suptitle("Residual cascade: every candidate is explained away or carried forward, "
                  "never tuned in or out", fontsize=12.5, y=0.99)
     fig.tight_layout(rect=(0, 0, 1, 0.97))
@@ -150,7 +155,7 @@ def fig_cascade():
 # Figure 2 -- the headline: f_max vs depth, by morphology family, both tiers
 # ---------------------------------------------------------------------------------------------
 def fig_fmax_depth():
-    runs = {"T0": ([0], "--", "o"), "T0T1": ([0, 1], "-", "s")}
+    runs = {"T0": ([0], "--", "o"), "T0T1": ([0, 1], "-", "s"), "T0T1T2": ([0, 1, 2], ":", "^")}
     fig, ax = plt.subplots(figsize=(8.4, 6.0))
     for run, (tiers, ls, mk) in runs.items():
         cal = load_cal(run)
@@ -172,7 +177,7 @@ def fig_fmax_depth():
     ax.set_xlabel("Transit depth (%)")
     ax.set_ylabel(r"$f_{\max}$  (95% upper limit on signature prevalence)")
     ax.set_title("Population upper limit by anomaly morphology\n"
-                 "(dashed = T0 G<11; solid = combined T0+T1 G<12)", fontsize=11)
+                 "(dashed = T0 G<11; solid = T0+T1 G<12; dotted = T0T1T2 G<13)", fontsize=11)
     ax.grid(True, which="both", alpha=0.25)
     ax.legend(fontsize=7.6, loc="upper left", framealpha=0.92)
     fig.tight_layout()

@@ -105,6 +105,17 @@ def main():
         resolvable_depths_by_id={"93357127133226496": 0.3, "5615925139763813248": 1.2},
         fmax=[("box", 8.34e-5, 0.35e-5), ("tail", 1.19e-4, 0.12e-4), ("triangle", 9.40e-4, 1.5e-4)]))
 
+    audit_tier("T0T1T2", dict(
+        bars=[7.1, 8.3, 9.0], scatter=[629, 1241, 2248], tiers=[0, 1, 2], searched=61178,
+        residuals=4501, survive=4195, cleared=306,
+        on_target=1598, blend=2370, uncentroidable=227,
+        recurs=194, artifact=757, untestable=647,
+        EB=17, planet=108, disint=5, RESIDUAL=64, resolvable=6,
+        resolvable_depths_by_id={"1397924585409290240": 2.69, "5427691493560560000": 1.93,
+                                 "431616180013613568": 0.38, "2561459808901475584": 0.31,
+                                 "93357127133226496": 0.3, "4589589824738659200": 0.3},
+        fmax=[("box", 6.60e-5, 0.4e-5), ("tail", 8.99e-5, 0.8e-5), ("triangle", 9.01e-4, 1.5e-4)]))
+
     print("\n" + ("ALL CHECKS PASS -- paper and artifacts agree." if ok_all
                   else "** DISCREPANCY -- paper and artifacts disagree; investigate **"))
     sys.exit(0 if ok_all else 1)

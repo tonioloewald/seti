@@ -962,3 +962,137 @@ The re-vet is informative. Let me look at the 5 flagged "planets" to judge wheth
 
 
 _[tools: Bash]_
+
+I'll give you the re-vet result quickly, because it's actually the most relevant evidence for the question you just asked.
+
+## Re-vet result (the technical task)
+
+The corrected secondary test (matched window + 5σ significance) flips **~5 of the 64 residuals to eclipsing binaries**, including the standout `1397924585409290240` at an overwhelming **77σ** secondary (and another resolvable one, `2561459808901475584`, near-equal eclipse depths). The validation check is the telling part: **2 of the 107 "natural_planet" objects also show strong secondaries** (19σ, 10σ, near-equal depths) — so the same bug was misclassifying EBs as *planets*, not just as residuals. Our battery was systematically under-vetting secondaries that SPOC catches.
+
+That's the honest setup for your question, so let me take it head-on.
+
+## Is this pointless?
+
+Today is a real data point on the skeptical side, and I won't soften it: our single "unexplained" object turned out to be an eclipsing binary that **SPOC had already detected and dispositioned** (TCE_1 + a secondary-eclipse TCE_2), with no technosignature thesis whatsoever — and we only got it right by *using SPOC's data to correct our own worse analysis*. In this instance, the thing was not just "detectable anyway," it was **already detected, more accurately, by the standard pipeline.**
+
+The general worry you're pointing at is valid and sharp:
+
+- **A truly thesis-free search is epistemically weak.** Without a model of the target you can't build a matched filter, so you're strictly *less* sensitive than a targeted search for any specific signal. What you surface as "anomalies" is then defined by what your vetting battery *fails* to classify — i.e. your anomalies are dominated by your **blind spots**, not by new phenomena. Today is a clean example: the "anomaly" was a hole in our secondary test.
+- **Standard pipelines already find everything with a periodic dip.** A megastructure-shaped transit *is* a SPOC TCE that fails planet-vetting. SPOC doesn't discard flat-bottomed things silently; it flags and dispositions them. So "we look at weird transits" is not, by itself, a capability SPOC lacks.
+
+So as a **discovery machine that beats SPOC on the same data, this project is unlikely to earn its keep** — and worse, if our vetting is less careful than SPOC's (it was), we generate false anomalies, not real ones.
+
+## Where the genuine value actually is (and what to stop claiming)
+
+I don't think it's pointless, but the value is narrower and more specific than "mechanism-agnostic anomaly discovery," which I'd argue you should drop as the framing:
+
+1. **A quantitative prevalence upper limit is real science that SPOC does not produce.** SPOC gives you TOIs; it does not give you "f_max < 6.6×10⁻⁵ for flat-bottomed, secondary-less, depth-stable occulters in the 0.3–13% window on 61,178 K dwarfs." A *pre-registered, reproducible null with a number* is publishable and useful precisely because it's a null. That's the honest deliverable, and it stands regardless of today.
+
+2. **You have a real, specific thesis — own it.** The strongest version of this isn't thesis-free. It's: "a Dyson-swarm/megastructure-like occulter would be flat-bottomed, lack a secondary, have stable depth, and sit in this depth range." That *is* a hypothesis with a matched morphology. The f_max is a limit on *that*. Branding it "agnostic" oversells it and invites exactly your critique; calling it a prevalence limit on a defined occulter class makes it defensible.
+
+3. **The defensible discovery edge is in the regimes SPOC throws away, not the ones it keeps.** SPOC requires repeating transits (≥2–3) and optimizes for planets. Genuine SPOC blind spots: **aperiodic / single deep dips, non-repeating dimming, Boyajian-star-like irregular fades** — your `single_event_detect` channel targets exactly this, and *that's* where you could find something SPOC structurally cannot. The periodic-transit channel (where we spent today) is the one most redundant with SPOC.
+
+4. **Cross-channel combination is the one thing no standard pipeline does.** "Is this star simultaneously weird in IR excess *and* transit morphology *and* accretion state?" — no SPOC/QLP/WISE pipeline asks that joint question. If there's novel discovery value, it's in the conjunction, not any single channel.
+
+## My honest synthesis
+
+The project is worthwhile **as a pre-registered prevalence-limit study on a specific occulter hypothesis**, and as a methodological demonstration. It is **not** worthwhile as a "we'll spot anomalies the pros miss" instrument on periodic transits — today proved the opposite, and the epistemics predict it. If you keep going, I'd point the discovery ambition at the aperiodic/non-repeating channel and the cross-channel conjunction (real SPOC blind spots), and let the transit channel be what it honestly is: a clean upper limit.
+
+That's my read. Whether that's worth your time is genuinely your call — but it's not "nothing," it's just a smaller, more honest "something" than the original framing.
+
+One loose end regardless of direction: the public note/record currently calls `1397924585409290240` an "uncatalogued deep transiter," which we now know is false — it's a SPOC-known EB. That should be corrected or pulled whatever you decide. Want me to do that now, and hold the rest of the re-vet write-up until you've decided where this is headed?
+
+### 🧑 Tonio
+
+My time is not that valuable. But I won’t spend it on something absolutely pointless. So I’d say let’s continue. I think we are pretty agnostic (Dyson swarm is not an assumption it’s an example of something we might detect).
+
+### 🤖 Claude
+
+Fair correction, and you're right — I overstated it. The thesis isn't "Dyson swarms exist"; it's a model of what's *natural* for these stars, with anomalies being deviations from that baseline — and a flat-bottomed occulter is just one illustrative deviation among the morphology families (box, tail, triangle, …). That's a genuinely agnostic stance, and it's different from a matched-filter search for one signal. I conflated "no target model" with "weak," which was wrong.
+
+The one durable consequence worth keeping: in agnostic deviation-detection, your anomalies are (real deviations) + (holes in your "natural" model) — so the **fidelity of the vetting battery is the whole game**. That's exactly why today matters and why the secondary-test fix isn't cleanup, it's the core work: every blind spot we close makes a surviving residual mean something. Let's continue on that basis.
+
+Proceeding with the authorized work — fix, re-vet (done), correct the record, log, assess paper. Let me set up the pieces.
+
+
+_[tools: Bash]_
+
+
+_[tools: Write]_
+
+The AMENDMENTS history is meticulous, and it shows the critical constraint clearly: the 2026-06-11 stopping rule says battery fixes are validated on injections *before* a tier is unblinded, never against the current candidate list — and **T0T1T2 is already unblinded**. There's also no fainter tier left (G<13 is the manifest's hard limit). So the secondary-test fix is *inherently* post-unblind here. That dictates the integrity-clean framing:
+
+- The **exploratory re-vet** (done) is the correction applied to the current data — clearly labeled exploratory, does not touch `f_max` or the bars.
+- The **frozen confirmatory result stands** (residuals reported under Option A); follow-up + SPOC now explain the resolvable ones as EBs. That's consistent with Option A, not a violation of it.
+- I'll fix the code for correctness/reproducibility going forward and validate it on injections, but I will **not** re-run the frozen search/calibration and present a cleaner null as confirmatory.
+
+Let me read the exact lines to edit the battery precisely.
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now validate the fix doesn't break detection/classification semantics — run the injection regression (`k04 --test`):
+
+
+_[tools: Bash]_
+
+While the regression runs, let me prepare the record corrections (independent of the code change). First the memory index, then rewrite the note to reflect reality.
+
+
+_[tools: Edit]_
+
+
+_[tools: Read]_
+
+Regression passes cleanly — **planet→natural_planet (23/24), box→RESIDUAL (22/24), triangle→natural_planet, tail→RESIDUAL**, all recovered 24/24. The fix adds EB sensitivity without disturbing the box→RESIDUAL completeness that `f_max(box)` rests on (injected occulters have no secondary, so they're not spuriously flagged). The fix is sound.
+
+Now correct the record. Rewriting the note to reflect what it actually is — a confirmed EB and a methodology case study:
+
+
+_[tools: Write]_
+
+Now the status doc — append the resolution (preserving the trail), then the AMENDMENTS and IMPLEMENTATION_LOG entries.
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now the AMENDMENTS.md entry (the integrity-critical record) — inserting before the closing footer:
+
+
+_[tools: Edit]_
+
+
+_[tools: Read]_
+
+
+_[tools: Edit]_
+
+Now the IMPLEMENTATION_LOG entry:
+
+
+_[tools: Bash]_
+
+Now update the project memory, then commit and push everything.
+
+
+_[tools: Edit]_
+
+
+_[tools: Edit]_
+
+Now commit and push everything:
+
+
+_[tools: Bash]_
