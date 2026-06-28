@@ -955,3 +955,8 @@ Search stopped cleanly. Let me confirm no partial output was left behind, then c
 
 
 _[tools: Bash]_
+
+Resume docs pushed (`cc541ed`, 0 unpushed). The memory files live in `~/.claude` (home dir survives reboot). Since this project treats transcripts as part of the scientific record and a reboot may prevent a clean Stop-hook export, let me archive this session's transcript now too, as insurance:
+
+
+_[tools: Bash]_

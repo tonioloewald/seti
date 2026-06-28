@@ -196,8 +196,19 @@ cited; consider reconciling k08's period to k04's or flagging alias multiples.
 Figures: `figures/kdwarf_T0T1T2_resolvable_residuals.png` (all 6, folded at true P),
 `figures/kdwarf_T0T1T2_standout_1397924585409290240.png` (harmonic check).
 
-**Next:** human adjudication of the standout + the period-alias fix; decide reporting; paper update to
-extend §4.2 to G<13. Nothing pushed yet.
+**Standout written up (2026-06-28): `paper/note_residual_TIC156074324.md`.** Full battery recomputed at
+the true 2.94d period: no secondary (≈0), no odd-even (0.008), symmetric (asym 0.028), flat 0.67, low
+sin_r2 (0.083), per-transit depth stable (CV 0.11, no dropouts), on-target centroid. Host = K1V,
+Teff 4866K, R★≈0.72R☉, RUWE 1.06 (clean single-star astrometry) → R_p≈1.7–1.9 R_J (sub-stellar, large
+for a planet). **Catalogue cross-checks: SIMBAD** = plain star, no variable/EB/planet type; **ExoFOP
+(TIC 156074324)** = no TOI, no SPOC TCE, no disposition, no notes (caveat: ExoFOP TCEs are 2-min SPOC;
+our detection is FFI, so absence may mean it wasn't a 2-min target); **literature** = nothing. So:
+genuinely uncatalogued; survives all discriminants at true period; most-likely mundane (inflated HJ or
+grazing/low-mass EB) but undetermined from photometry. **NOT a detection.** No solid *local* deeper-dive
+path remains (planet-vs-EB needs RV / 2-min data / spectroscopy = external follow-up).
+
+**Next:** continue the program (the period-alias k08↔k04 fix; paper §4.2 extension to G<13 remain open
+items). The note + cascade are committed and pushed to origin/main.
 
 Original resume note (retained): a reboot interrupting `k04 --unblind` is **no harm** — it writes
 output only at the very end, so it leaves no partial file and is re-run from scratch (deterministic
