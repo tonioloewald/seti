@@ -228,3 +228,13 @@ of the three resolvable residuals + the two validation systems (needs a MAST fet
 material box-completeness loss. Published T0 / T0+T1 results retain battery v3; v4 applies to the new
 combined **T0T1T2 (G<13)** run. Calibration re-run via `k03` over all three tiers → frozen as a new
 tagged artifact; the `k04 --unblind` blind-lift is **deferred to explicit human direction**.
+
+## Phase 2 — T0T1T2 (G<13) unblind execution + result (2026-06-28)
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| P2-unblind | Ran `KRUN=T0T1T2 k04_search.py --unblind` (human-directed 2026-06-26) against the frozen, tagged `phase2-calibration-T0T1T2` (61,178 stars; bars 7.1/8.3/9.0 SDE), then the full network cascade k05→k08. Re-run clean after a mid-search reboot (k04 writes only at the end; deterministic). | Execution of the registered confirmatory search on the new tier — no method change. Per-family f_max matched the frozen pre-data prediction exactly: box **6.60e-05** (ΣC_i 45,476), tail 8.99e-05, planet 9.19e-04, triangle 9.01e-04. Cascade: 4,501 residual → 4,195 identity → 1,598 on-target → 194 recurring → triage 108 planet / **64 RESIDUAL** / 17 EB / 5 disint. | prereg §4–5 (the search) |
+| P2-unblind-resid | **Result is NOT a clean zero-flat-bottom outcome.** 6 of 64 RESIDUAL are resolvable (depth>0.3%); **2 flat-bottomed** (flat≥0.5): `1397924585409290240` (flat=1.00, d=2.69%, P=11.74d, symmetric, no secondary, no odd-even, 12 sectors — *persists* from T0/v2 and survives the v4 detrend built specifically for it) and `431616180013613568` (flat=0.75, d=0.38%). Surfaced and flagged, **not adjudicated** (paper Option A). f_max(box) does **not** hold on a zero-flat-bottom basis for T0T1T2. | Honest reporting of the unblinded result; follow-up (phase-folded LCs, v3↔v4 morphology, host checks) pending human direction. No threshold touched. | prereg §6 (residual reporting) |
+
+**Note:** no `AMENDMENTS.md` entry — the frozen registered method was executed, not elaborated. Lists:
+`data/manifests/kdwarf_T0T1T2_{residuals,residuals_identity,residuals_centroid,residuals_multisector,recurring_triage}.csv`.

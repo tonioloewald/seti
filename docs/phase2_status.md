@@ -100,12 +100,65 @@ calibration is frozen — everything up to (but not including) the blind-lift:
   (tighter than T0+T1 from the larger sample). Logged in AMENDMENTS.md (pre-data/confirmatory) + IMPL_LOG.
 - Published T0 / T0+T1 results retain battery v3 (separate immutable artifacts); v4 is for the new tier.
 
-## G12-13 (T0T1T2) — UNBLIND AUTHORIZED & IN PROGRESS (human said "Unblind!" 2026-06-26)
+## G12-13 (T0T1T2) — UNBLIND DONE for search; cascade in progress (2026-06-26)
 
-The human directed the unblind. The blind is lifted; a fresh session may run the steps below freely.
-A machine reboot interrupted the run mid-search — **no harm**: `k04 --unblind` writes its output only at
-the very end, so an interrupted run leaves no partial file and is simply re-run from scratch
-(deterministic against the frozen, tagged calibration). **Resume from step 1.**
+The human directed the unblind. The blind is lifted.
+
+**Step 1 (k04 --unblind) — DONE 2026-06-26 (re-run clean after the reboot).** 61,178 stars searched
+against frozen bars 7.1/8.3/9.0 SDE → 22,606 candidates. Battery verdicts: 9,394 natural_planet,
+7,421 eclipsing_binary, **4,501 RESIDUAL**, 1,077 activity/variability, 198 disintegrating_body,
+15 unfoldable. Per-family f_max matched the frozen prediction **exactly**: box **6.60e-05** (sum C_i
+45,476), tail **8.99e-05** (33,376), planet 9.19e-04, triangle 9.01e-04. Residuals →
+`data/manifests/kdwarf_T0T1T2_residuals.csv` (NOT detections — each needs the centroid gate +
+identity/known-planet cross-check). Top residuals by SDE incl. 437785333585272192 (SDE 21.6, P=0.50d,
+d=0.15%) and 2628360590325729920 (SDE 19.1, d=2.49%, the deepest).
+
+**Steps 2-5 (cascade k05→k08) — DONE 2026-06-28.** Cascade: 4,501 raw residuals → k05 identity
+4,195 survive (134 known_binary, 62 known_planet, 58 known_variable, 46 TOI, 6 EB removed) → k06
+centroid **1,598 on-target** (2,370 background_blend rejected; transient fetch errors retried down to
+1 unfetchable TPF) → k07 multisector **194 recurring** (757 single-sector artifacts rejected, 230
+single-sector-only inconclusive, 417 no_data; recurs count stable under `--retry`) → k08 triage:
+**108 natural_planet, 64 RESIDUAL, 17 eclipsing_binary, 5 disintegrating_body** (timeouts retried to
+zero). Lists: `data/manifests/kdwarf_T0T1T2_residuals{,_identity,_centroid,_multisector}.csv` +
+`kdwarf_T0T1T2_recurring_triage.csv`.
+
+**RESOLVABLE-REGIME RESIDUALS (depth > 0.3%) — NOT a clean zero-flat-bottom outcome.** 6 of the 64
+RESIDUAL are in the resolvable regime; **2 are flat-bottomed (flat_bottom ≥ 0.5)** — unlike the
+published combined T0T1 (v3), which had none. Per human direction (2026-06-28): these are surfaced
+and flagged as interesting candidates, **not explained away**; f_max(box) does NOT hold on a
+zero-flat-bottom basis for T0T1T2 — there are flat-bottomed resolvable residuals to report.
+
+| source_id | sectors | P(d) | depth | flat | asym | sec | odd_even | depth_cv | host ppm |
+|---|---|---|---|---|---|---|---|---|---|
+| **1397924585409290240** | 12 | 11.74 | **2.69%** | **1.00** | 0.14 | ~0 | 0.0015 | 1.56 | 1739 |
+| 5427691493560560000 | 6 | 12.88 | 1.93% | 0.43 | **2.50** | ~0 | 0.004 | 1.22 | 2517 |
+| 431616180013613568 | 2 | 12.32 | 0.38% | **0.75** | 1.07 | ~0 | 0.22 | 5.10 | 752 |
+| 2561459808901475584 | 3 | 2.12 | 0.31% | 0.38 | 0.15 | ~0 | 0.013 | 1.29 | 1229 |
+| 93357127133226496 | 7 | 3.20 | 0.30% | 0.29 | 0.65 | ~0 | 0.10 | NaN | 1850 |
+| 4589589824738659200 | 5 | 12.40 | 0.30% | 0.44 | 0.15 | ~0 | 0.018 | NaN | 1646 |
+
+**Standout: `1397924585409290240`** — flat-bottomed (flat=1.0), symmetric (asym=0.14), deep (2.69%),
+recurs across **12 sectors**, no secondary eclipse, no odd-even depth difference. R_p/R_* ≈ √0.0269 ≈
+0.16 (sub-stellar). It is a *persistent* flat-bottomed resolvable residual: it appeared identically
+(flat=1.0, d=2.69%, P=11.74d) in the T0 (v2) triage CSV, and now survives the v4 activity-robust
+detrending — persistence is the opposite of what an activity artifact should do under detrending.
+It is a known active host (scatter 1739 ppm), so activity is *a* hypothesis, but it is not
+established. **Not a detection; a follow-up candidate.** Needs human adjudication + phase-folded LC.
+
+**Caveats to weigh (neutral, not adjudication):** (a) battery v4's local detrending materially shifts
+morphology metrics — e.g. 5427691493560560000 was natural_planet in T0T1/v3 with asym=0.0098, now
+RESIDUAL with asym=2.50; the detrending can reveal *or* distort shape, so v3↔v4 morphology should be
+compared. (b) Discrepancy to verify: the on-disk `kdwarf_T0_recurring_triage.csv` (Jun 11) shows 12
+RESIDUAL / max depth 2.69%, but the T0 status note below says 33 RESIDUAL / max 0.186% — these
+describe different runs/battery versions; reconcile before citing either.
+
+**Next:** phase-folded light curves of the 6 resolvable residuals (esp. the 2 flat-bottomed) for
+direct visual adjudication; decide reporting (the paper's Option A = report, not adjudicate); then
+paper update. Nothing committed/pushed yet.
+
+Original resume note (retained): a reboot interrupting `k04 --unblind` is **no harm** — it writes
+output only at the very end, so it leaves no partial file and is re-run from scratch (deterministic
+against the frozen, tagged calibration).
 
 Run from repo root, in order (each stage is `KRUN`-parameterized and writes `data/manifests/kdwarf_T0T1T2_*`):
 
