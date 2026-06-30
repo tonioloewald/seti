@@ -217,9 +217,17 @@ confirmatory result. Frozen confirmatory output stands (residuals reported under
 is the follow-up that explains them. Bars / cohort nulls / C_i / f_max untouched. Logged: `AMENDMENTS.md`
 + `pipeline/IMPLEMENTATION_LOG.md`.
 
-**Next:** paper §4.2 extension to G<13 (now incorporating the EB resolution + re-vet); the k08↔k04
-period reconciliation remains a code item. Discovery ambition → aperiodic + cross-channel regimes
-(see memory `search-value-proposition`).
+**Post-unblind follow-up — DONE (2026-06-30).** Three items closed in order: (1) **Paper extended to
+G<13** (`paper/phase2_T0_draft.md` now three-tier: title/abstract/§4.1/§4.2/§4.3/§6 + Figs 3,5
+regenerated; f_max(box) 6.6e-5; EB resolution folded in; `audit_T0_paper.py` extended, ALL CHECKS
+PASS; commit 01c94b9). (2) **k08 period reconciliation** — triage fold pinned to ±1% around the k04
+search period (`_periods_for`), so it can't alias; forward-only, frozen result not regenerated
+(commit cf2ca75). (3) **Planet-list EB contamination confirmed** — ≥2 of 108 "planet" candidates are
+EBs (near-equal eclipse depths, 19σ/10σ; not in SIMBAD), §4.3 caution made precise.
+
+**Submission items still open** (unchanged): author affiliation/ORCID, venue + AASTeX/LaTeX format,
+optional phase-folded LCs, nothing submitted. **Discovery ambition** → aperiodic + cross-channel
+regimes (see memory `search-value-proposition`).
 
 Original resume note (retained): a reboot interrupting `k04 --unblind` is **no harm** — it writes
 output only at the very end, so it leaves no partial file and is re-run from scratch (deterministic

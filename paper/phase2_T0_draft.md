@@ -541,9 +541,10 @@ difference imaging. The planet count rose relative to an earlier draft because t
 depth-variability test (§3.3) correctly returns to the planet class the shallow, noisy-but-real
 transiters that the previous white-noise floor had diverted into the residual list. We caution that
 this transiting-planet by-product list is *candidate* level, not vetted planets: the exploratory
-secondary-eclipse re-vet of §4.2 finds that a few of the G < 13 "planet" candidates are in fact
-eclipsing binaries with shallow secondaries the frozen battery missed, so the column is an
-input to follow-up, not a clean planet census.
+secondary-eclipse re-vet of §4.2 finds at least two of the G < 13 "planet" candidates to be eclipsing
+binaries — near-equal primary/secondary eclipse depths (ratio ≈ 0.75) at high significance (≈ 19σ and
+≈ 10σ), neither flagged as such in SIMBAD — with a few more marginal, so the column is an input to
+follow-up, not a clean planet census.
 
 ### 4.4 Inconclusive sets — a follow-up roadmap
 
