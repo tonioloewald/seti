@@ -31,6 +31,19 @@ PERIODS = np.arange(0.5, 13.0, 0.02)
 DURS = np.array([0.05, 0.1, 0.2])
 
 
+def _periods_for(p_k04):
+    """Period grid for the triage re-fit. Pinned to a narrow ±1% band around the k04 SEARCH period
+    (which defines the candidate and to which the calibration/completeness is keyed), so the longer
+    multi-sector baseline refines t0/duration/period *within* the search-grid uncertainty but cannot
+    lock onto a harmonic alias. An unconstrained re-search here aliased `1397924585409290240` to
+    11.74 d (= 4 × 2.94 d), corrupting its morphology/EB metrics (see IMPLEMENTATION_LOG, P2-k08-period).
+    Falls back to the full grid if no search period is carried."""
+    if p_k04 and np.isfinite(p_k04) and p_k04 > 0:
+        step = max(p_k04 * 0.0005, 0.001)
+        return np.arange(p_k04 * 0.99, p_k04 * 1.01 + step, step)
+    return PERIODS
+
+
 def _sector_coherence(secs, period, t0, dur):
     """Per-sector depth-coherence diagnostic (for the follow-up list). A clean recurring transit has
     a stable per-sector depth uncorrelated with per-sector scatter; a noise/systematics-driven flag
@@ -59,7 +72,7 @@ def _sector_coherence(secs, period, t0, dur):
 
 
 def _triage(task):
-    sid, ra, dec = task
+    sid, ra, dec, p_k04 = task
     dldir = tempfile.mkdtemp(prefix="tri_")
     try:
         secs = fetch_sectors(ra, dec, dldir)
@@ -67,7 +80,7 @@ def _triage(task):
             return {"source_id": sid, "n_sectors": 0, "verdict": "no_data"}
         t = np.concatenate([s[1] for s in secs]); f = np.concatenate([s[2] for s in secs])
         o = np.argsort(t); t, f = t[o], f[o]
-        r = bls_detect(t, f, PERIODS, DURS)
+        r = bls_detect(t, f, _periods_for(p_k04), DURS)
         b = battery(t, f, r["period"], r["t0"], robust_scatter(f), r["duration"])
         n_det, frac, scv, corr = _sector_coherence(secs, r["period"], r["t0"], r["duration"])
         return {"source_id": sid, "n_sectors": len(secs), "period": r["period"],
@@ -89,7 +102,9 @@ def main():
     ms = pd.read_csv(MS, dtype={"source_id": str})
     rec = ms[ms["ms_verdict"] == "recurs"].copy()
     print(f"recurring candidates to triage: {len(rec)} on {workers} workers", flush=True)
-    tasks = [(r["source_id"], r["ra_deg"], r["dec_deg"]) for _, r in rec.iterrows()]
+    has_p = "period" in rec.columns
+    tasks = [(r["source_id"], r["ra_deg"], r["dec_deg"], float(r["period"]) if has_p else np.nan)
+             for _, r in rec.iterrows()]
     rows = []; t0 = time.time(); n = 0
     with ProcessPoolExecutor(max_workers=workers) as ex:
         futs = [ex.submit(_triage, t) for t in tasks]

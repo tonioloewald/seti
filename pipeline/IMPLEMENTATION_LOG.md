@@ -263,3 +263,11 @@ BLS-consistent period (reconcile k08↔k04 period, or flag alias multiples).
 **Open code item:** k08's multi-sector period re-derivation can lock onto a harmonic alias of the k04
 BLS period (1397924585409290240: 11.74≈4×2.94d), corrupting the triage morphology/EB metrics. Reconcile
 k08's period to k04's (or flag alias multiples) before the triage morphology is used for adjudication.
+
+## Phase 2 — k08 triage period reconciliation (2026-06-30)
+
+| # | Decision | Rationale | Implements |
+|---|----------|-----------|------------|
+| P2-k08-period | `k08_triage._triage` now folds on a period grid **pinned to ±1% around the k04 search period** (carried in the multisector CSV) via `_periods_for(p_k04)`, instead of an unconstrained re-search over the full 0.5–13 d grid. The longer multi-sector baseline still refines t0/duration/period within the search-grid uncertainty, but cannot lock onto a harmonic alias. | The unconstrained re-search aliased `1397924585409290240` to 11.74 d (= 4 × 2.94 d), at which the folded profile smears and the morphology/EB metrics are corrupted (it produced the spurious `flat_bottom=1.00` and defeated the v4 detrend). The k04 search period defines the candidate and is what the calibration/completeness is keyed to, so the triage must fold there. Validated on the standout: pinned grid returns P=2.94 d and (with the corrected secondary test) verdict `eclipsing_binary` (sec σ≈91). | §5 triage ephemeris |
+
+**Forward-only / integrity:** like the secondary-test fix, this is a **post-unblind** correctness fix — the frozen confirmatory T0T1T2 triage CSV was produced by the prior (unconstrained) k08 and is **not** regenerated; the fix applies to future runs, and current-data correction is handled by the exploratory re-vet (`revet_secondary.py`, which already folds at true BLS periods). Resolves the open k08-aliasing item logged with P2-sec-fix.
