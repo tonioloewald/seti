@@ -2,7 +2,22 @@
 
 A single place to recover the state of work if a session is lost. The authoritative record is
 the git history + the OSF registration + the AI transcripts; this is the human-readable "where
-we are and how to continue." Last updated 2026-06-22.
+we are and how to continue." Last updated 2026-07-02.
+
+> **RESUME HERE (2026-07-02).** The G<13 (T0T1T2) unblind is **complete** and the post-unblind
+> follow-up is **closed** — all committed and pushed to `origin/main` (through commit `272f1e4`;
+> tree clean apart from the live transcript). Headline: f_max(box) **6.6×10⁻⁵** (= frozen
+> pre-data prediction, exact); the one resolvable "standout" `1397924585409290240` resolved as an
+> **eclipsing binary** (SPOC secondary TCE), which exposed + fixed a secondary-eclipse blind spot
+> (forward-only; frozen confirmatory result untouched). The K-dwarf paper `paper/phase2_T0_draft.md`
+> is now **three-tier (G<13)**, `audit_T0_paper.py` = ALL CHECKS PASS.
+>
+> **No analysis is in flight — nothing to re-run to recover state.** Next moves are a *choice*, not
+> a continuation: **(A)** paper submission mechanics (author affiliation/ORCID, venue + AASTeX/LaTeX,
+> optional phase-folded LCs, actual submission — none done); **(B)** the strategic pivot discussed —
+> point discovery ambition at the **aperiodic / single-dip** channel (`single_event_detect`) and the
+> **cross-channel conjunction**, the regimes not redundant with SPOC (see memory
+> `search-value-proposition`). See "Post-unblind follow-up — DONE" below for the detailed close-out.
 
 ## Registered
 
